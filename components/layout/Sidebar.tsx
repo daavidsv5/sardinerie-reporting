@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { BarChart2, LayoutDashboard, ShoppingCart, TrendingUp, Package, Brain, PieChart, Users, ShieldCheck, LogOut, X, GitMerge, KeyRound } from 'lucide-react';
+import { BarChart2, LayoutDashboard, ShoppingCart, TrendingUp, Package, Brain, PieChart, Users, ShieldCheck, LogOut, X, GitMerge, KeyRound, Activity } from 'lucide-react';
 import { useSession, signOut } from 'next-auth/react';
 import { useSidebar } from './ConditionalLayout';
 
@@ -15,6 +15,7 @@ const navItems = [
   { icon: PieChart, label: 'Maržový report', href: '/margin' },
   { icon: Users, label: 'Retenční analýza', href: '/retention' },
   { icon: GitMerge, label: 'Cross-sell potenciál', href: '/crosssell' },
+  { icon: Activity, label: 'Návštěvnost (GA4)', href: '/analytics' },
 ];
 
 export default function Sidebar() {
