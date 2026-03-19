@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { BarChart2, LayoutDashboard, ShoppingCart, TrendingUp, Package, Brain, PieChart, Users, ShieldCheck, LogOut, X, GitMerge } from 'lucide-react';
+import { BarChart2, LayoutDashboard, ShoppingCart, TrendingUp, Package, Brain, PieChart, Users, ShieldCheck, LogOut, X, GitMerge, KeyRound } from 'lucide-react';
 import { useSession, signOut } from 'next-auth/react';
 import { useSidebar } from './ConditionalLayout';
 
@@ -96,6 +96,18 @@ export default function Sidebar() {
             <p className="text-blue-400 text-xs truncate">{session.user.email}</p>
           </div>
         )}
+        <Link
+          href="/profile"
+          onClick={close}
+          className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors ${
+            pathname === '/profile'
+              ? 'bg-blue-600 text-white font-medium'
+              : 'text-blue-100 hover:bg-white/10 hover:text-white'
+          }`}
+        >
+          <KeyRound size={17} className={pathname === '/profile' ? 'text-white' : 'text-blue-300'} />
+          <span>Změnit heslo</span>
+        </Link>
         <button
           onClick={() => signOut({ callbackUrl: '/login' })}
           className="flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-sm text-blue-100 hover:bg-white/10 hover:text-white transition-colors"
