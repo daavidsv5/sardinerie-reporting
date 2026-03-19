@@ -14,17 +14,11 @@ interface TopBarProps {
 }
 
 const periodLabels: Record<TimePeriod, string> = {
-  current_year: 'Aktuální rok',
+  current_year:  'Aktuální rok',
   current_month: 'Aktuální měsíc',
-  last_14_days: 'Posledních 14 dní',
-  custom: 'Vlastní období',
-};
-
-const periodLabelsMobile: Record<TimePeriod, string> = {
-  current_year: 'Rok',
-  current_month: 'Měsíc',
-  last_14_days: '14 dní',
-  custom: 'Vlastní',
+  last_14_days:  'Posledních 14 dní',
+  last_year:     'Minulý rok',
+  custom:        'Vlastní období',
 };
 
 export default function TopBar({ filters, onChange }: TopBarProps) {
@@ -130,10 +124,7 @@ export default function TopBar({ filters, onChange }: TopBarProps) {
             className="border border-slate-200 rounded-lg px-2 md:px-3 py-1.5 text-sm text-slate-700 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           >
             {(Object.keys(periodLabels) as TimePeriod[]).map((p) => (
-              <option key={p} value={p}>
-                <span className="md:hidden">{periodLabelsMobile[p]}</span>
-                {periodLabels[p]}
-              </option>
+              <option key={p} value={p}>{periodLabels[p]}</option>
             ))}
           </select>
         </div>

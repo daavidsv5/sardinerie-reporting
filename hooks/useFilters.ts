@@ -41,6 +41,12 @@ export function getDateRange(filters: FilterState): DateRange {
       start.setDate(start.getDate() - 13);
       break;
     }
+    case 'last_year': {
+      const ly = TODAY.getFullYear() - 1;
+      start = new Date(ly, 0, 1);
+      end   = new Date(ly, 11, 31);
+      break;
+    }
     case 'custom': {
       start = filters.customStart ? new Date(filters.customStart) : new Date(TODAY.getFullYear(), TODAY.getMonth(), 1);
       end = filters.customEnd ? new Date(filters.customEnd) : new Date(TODAY);
