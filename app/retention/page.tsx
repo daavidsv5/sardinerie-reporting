@@ -138,7 +138,7 @@ export default function RetentionPage() {
               <CartesianGrid strokeDasharray="0" stroke="#f1f5f9" vertical={false} />
               <XAxis dataKey="date" tickFormatter={formatShortDate} tick={{ fontSize: 11, fill: '#94a3b8' }} axisLine={false} tickLine={false} interval="preserveStartEnd" />
               <YAxis tickFormatter={v => fmtYAxis(v, currency)} tick={{ fontSize: 11, fill: '#94a3b8' }} axisLine={false} tickLine={false} width={56} />
-              <Tooltip formatter={(v: number) => [fc(v), 'LTV / zákazník']} labelFormatter={formatShortDate} />
+              <Tooltip formatter={(v: any) => [fc(v as number), 'LTV / zákazník']} labelFormatter={(l: any) => formatShortDate(l as string)} />
               <Line type="monotone" dataKey="ltv" name="LTV" stroke="#0ea5e9" strokeWidth={2} dot={false} />
             </LineChart>
           </ResponsiveContainer>
@@ -150,7 +150,7 @@ export default function RetentionPage() {
               <CartesianGrid strokeDasharray="0" stroke="#f1f5f9" vertical={false} />
               <XAxis dataKey="date" tickFormatter={formatShortDate} tick={{ fontSize: 11, fill: '#94a3b8' }} axisLine={false} tickLine={false} interval="preserveStartEnd" />
               <YAxis tickFormatter={v => fmtYAxis(v, currency)} tick={{ fontSize: 11, fill: '#94a3b8' }} axisLine={false} tickLine={false} width={56} />
-              <Tooltip formatter={(v: number) => [fc(v), 'Ø objednávka']} labelFormatter={formatShortDate} />
+              <Tooltip formatter={(v: any) => [fc(v as number), 'Ø objednávka']} labelFormatter={(l: any) => formatShortDate(l as string)} />
               <Line type="monotone" dataKey="aov" name="Ø objednávka" stroke="#6366f1" strokeWidth={2} dot={false} />
             </LineChart>
           </ResponsiveContainer>
@@ -171,7 +171,7 @@ export default function RetentionPage() {
               <CartesianGrid strokeDasharray="0" stroke="#f1f5f9" vertical={false} />
               <XAxis dataKey="year" tick={{ fontSize: 11, fill: '#94a3b8' }} axisLine={false} tickLine={false} />
               <YAxis tickFormatter={v => fmtYAxis(v, currency)} tick={{ fontSize: 11, fill: '#94a3b8' }} axisLine={false} tickLine={false} width={60} />
-              <Tooltip formatter={(v: number) => [fc(v), 'Obrat']} />
+              <Tooltip formatter={(v: any) => [fc(v as number), 'Obrat']} />
               <Area type="monotone" dataKey="obrat" name="Obrat" stroke="#3b82f6" fill="url(#gradObrat)" strokeWidth={2} dot={{ r: 5, fill: '#3b82f6' }} />
             </AreaChart>
           </ResponsiveContainer>
@@ -183,7 +183,7 @@ export default function RetentionPage() {
               <CartesianGrid strokeDasharray="0" stroke="#f1f5f9" vertical={false} />
               <XAxis dataKey="label" tick={{ fontSize: 11, fill: '#94a3b8' }} axisLine={false} tickLine={false} />
               <YAxis tickFormatter={v => `${v.toFixed(0)} %`} tick={{ fontSize: 11, fill: '#94a3b8' }} axisLine={false} tickLine={false} width={44} />
-              <Tooltip formatter={(v: number) => [`${v.toFixed(1)} %`, 'Podíl zákazníků']} />
+              <Tooltip formatter={(v: any) => [`${(v as number).toFixed(1)} %`, 'Podíl zákazníků']} />
               <Bar dataKey="customersPct" name="Zákazníci %" fill="#3b82f6" radius={[4, 4, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
@@ -198,7 +198,7 @@ export default function RetentionPage() {
               <CartesianGrid strokeDasharray="0" stroke="#f1f5f9" vertical={false} />
               <XAxis dataKey="label" tick={{ fontSize: 11, fill: '#94a3b8' }} axisLine={false} tickLine={false} />
               <YAxis tickFormatter={v => `${v.toFixed(0)} %`} tick={{ fontSize: 11, fill: '#94a3b8' }} axisLine={false} tickLine={false} width={44} />
-              <Tooltip formatter={(v: number) => [`${v.toFixed(1)} %`, 'Podíl obratu']} />
+              <Tooltip formatter={(v: any) => [`${(v as number).toFixed(1)} %`, 'Podíl obratu']} />
               <Bar dataKey="revenuePct" name="Obrat %" fill="#0ea5e9" radius={[4, 4, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
@@ -210,7 +210,7 @@ export default function RetentionPage() {
               <CartesianGrid strokeDasharray="0" stroke="#f1f5f9" vertical={false} />
               <XAxis dataKey="label" tick={{ fontSize: 10, fill: '#94a3b8' }} axisLine={false} tickLine={false} />
               <YAxis tickFormatter={v => `${v.toFixed(0)} %`} tick={{ fontSize: 11, fill: '#94a3b8' }} axisLine={false} tickLine={false} width={44} />
-              <Tooltip formatter={(v: number) => [`${v.toFixed(1)} %`, 'Podíl']} />
+              <Tooltip formatter={(v: any) => [`${(v as number).toFixed(1)} %`, 'Podíl']} />
               <Bar dataKey="pct" name="Prodleva %" fill="#6366f1" radius={[4, 4, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
@@ -225,7 +225,7 @@ export default function RetentionPage() {
               <CartesianGrid strokeDasharray="0" stroke="#f1f5f9" vertical={false} />
               <XAxis dataKey="year" tick={{ fontSize: 11, fill: '#94a3b8' }} axisLine={false} tickLine={false} />
               <YAxis tickFormatter={v => fmtYAxis(v, currency)} tick={{ fontSize: 11, fill: '#94a3b8' }} axisLine={false} tickLine={false} width={56} />
-              <Tooltip formatter={(v: number) => [fc(v)]} />
+              <Tooltip formatter={(v: any) => [fc(v as number)]} />
               <Legend wrapperStyle={{ fontSize: 11, color: '#64748b' }} iconType="square" iconSize={9} />
               <Bar dataKey="avgFirstPurchase"  name="1. nákup"          fill="#3b82f6" radius={[3, 3, 0, 0]} barSize={24} />
               <Bar dataKey="avgRepeatPurchase" name="Opakovaný nákup"   fill="#0ea5e9" radius={[3, 3, 0, 0]} barSize={24} />
