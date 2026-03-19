@@ -39,3 +39,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# User data (contains hashed passwords)
+data/users.json
+
+# Update script log
+scripts/updateData.log
