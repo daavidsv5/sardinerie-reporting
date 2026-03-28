@@ -8,28 +8,12 @@ import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
   ResponsiveContainer, Cell,
 } from 'recharts';
+import StatCard from '@/components/kpi/StatCard';
+import { C } from '@/lib/chartColors';
 
 type Tab = 'cz' | 'sk';
 
-function StatCard({ title, value, sub, icon }: { title: string; value: string; sub?: string; icon: React.ReactNode }) {
-  return (
-    <div className="bg-white rounded-2xl shadow-sm border-2 border-blue-800 p-4 flex items-start justify-between">
-      <div className="min-w-0 flex-1 pr-3">
-        <p className="text-[11px] font-bold text-slate-600 uppercase tracking-wider mb-1">{title}</p>
-        <p className="text-2xl font-bold text-slate-800 leading-tight">{value}</p>
-        {sub && <p className="text-xs text-slate-400 mt-0.5">{sub}</p>}
-      </div>
-      <div className="w-10 h-10 bg-blue-50 rounded-xl flex items-center justify-center text-blue-600 flex-shrink-0">
-        {icon}
-      </div>
-    </div>
-  );
-}
-
-const COLORS = [
-  '#2563eb', '#3b82f6', '#60a5fa', '#93c5fd', '#bfdbfe',
-  '#1d4ed8', '#1e40af', '#1e3a8a', '#1447e6', '#4f46e5',
-];
+const COLORS = C.palette;
 
 export default function CrossSellPage() {
   const [tab, setTab] = useState<Tab>('cz');

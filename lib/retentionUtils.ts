@@ -122,22 +122,26 @@ export function computeYearCustomerMetrics(data: CustomerRetentionRecord[]): Yea
       if (inYearIndices.length === 0) continue;
 
       customers++;
+      // isNew = first order EVER is in this year
       const isNew = c.dates[0].startsWith(yearStr);
-      const hasOrdersBefore = c.dates.some(d => !d.startsWith(yearStr) && d < yearStr + '-01-01');
+      // isReturning = made at least one repeat purchase (2nd+ order ever) in this year
+      // This includes within-year repeat buyers (e.g. first bought June 2025, returned Sept 2025)
+      const hasRepeatInYear = inYearIndices.some(idx => idx > 0);
 
       if (isNew) {
         newCustomers++;
         firstPurchaseSum += c.revsVat[0];
         firstPurchaseCount++;
       }
-      if (hasOrdersBefore) {
+      if (hasRepeatInYear) {
         returningCustomers++;
       }
 
       for (const idx of inYearIndices) {
         orders++;
         revenueSum += c.revsVat[idx];
-        if (hasOrdersBefore) {
+        // idx > 0 = this is the customer's 2nd+ order ever → repeat purchase
+        if (idx > 0) {
           repeatPurchaseSum += c.revsVat[idx];
           repeatPurchaseCount++;
         }
@@ -277,6 +281,136 @@ export function computePurchaseDistribution(data: CustomerRetentionRecord[]): Pu
     revenue: revenues[i],
     revenuePct: totalRevenue > 0 ? (revenues[i] / totalRevenue) * 100 : 0,
   }));
+}
+
+// ── RFM Segmentation ─────────────────────────────────────────────────────────
+
+export type RfmSegment = 'champions' | 'loyal' | 'at_risk' | 'new' | 'one_time' | 'lost';
+
+export interface RfmSegmentData {
+  segment: RfmSegment;
+  label: string;
+  description: string;
+  action: string;
+  color: string;
+  textColor: string;
+  borderColor: string;
+  barColor: string;
+  count: number;
+  customersPct: number;
+  revenue: number;
+  revenuePct: number;
+  avgRecency: number;
+  avgFrequency: number;
+  avgMonetary: number;
+}
+
+const RFM_META: Record<RfmSegment, { label: string; description: string; action: string; color: string; textColor: string; borderColor: string; barColor: string }> = {
+  champions: {
+    label: 'Šampioni',
+    description: '≥ 3 nákupy · poslední ≤ 90 dní',
+    action: 'Odměňte věrnostním programem. Požádejte o recenzi. Exkluzivní přístup k novinkám.',
+    color: 'bg-emerald-50', textColor: 'text-emerald-700', borderColor: 'border-emerald-400', barColor: 'bg-emerald-500',
+  },
+  loyal: {
+    label: 'Věrní zákazníci',
+    description: '≥ 2 nákupy · poslední ≤ 180 dní',
+    action: 'Up-sell do vyšší kategorie. Referral program. Exkluzivní slevy.',
+    color: 'bg-blue-50', textColor: 'text-blue-700', borderColor: 'border-blue-400', barColor: 'bg-blue-500',
+  },
+  at_risk: {
+    label: 'Ohrožení',
+    description: '≥ 2 nákupy · poslední 180–365 dní',
+    action: 'Reaktivační e-mail se slevovým kódem. Připomeňte oblíbené produkty.',
+    color: 'bg-amber-50', textColor: 'text-amber-700', borderColor: 'border-amber-400', barColor: 'bg-amber-400',
+  },
+  new: {
+    label: 'Noví zákazníci',
+    description: '1 nákup · poslední ≤ 90 dní',
+    action: 'Onboarding e-mail. Cross-sell příbuzných produktů. Nabídněte druhý nákup se slevou.',
+    color: 'bg-sky-50', textColor: 'text-sky-700', borderColor: 'border-sky-400', barColor: 'bg-sky-400',
+  },
+  one_time: {
+    label: 'Jednorázové',
+    description: '1 nákup · poslední 90–365 dní',
+    action: 'Win-back kampaň s urgencí. Připomeňte novou kolekci nebo sezónní nabídku.',
+    color: 'bg-slate-50', textColor: 'text-slate-500', borderColor: 'border-slate-300', barColor: 'bg-slate-300',
+  },
+  lost: {
+    label: 'Ztracení zákazníci',
+    description: 'Poslední nákup > 365 dní',
+    action: 'Kampaň "Chybíš nám" s velkou slevou nebo průzkum důvodu odchodu.',
+    color: 'bg-rose-50', textColor: 'text-rose-700', borderColor: 'border-rose-400', barColor: 'bg-rose-400',
+  },
+};
+
+const RFM_ORDER: RfmSegment[] = ['champions', 'loyal', 'at_risk', 'new', 'one_time', 'lost'];
+
+export function computeRfmSegments(
+  data: CustomerRetentionRecord[],
+  refDate?: Date
+): RfmSegmentData[] {
+  // Reference date = most recent order in dataset (or provided date)
+  let refTs: number;
+  if (refDate) {
+    refTs = refDate.getTime();
+  } else {
+    let maxDate = '';
+    for (const c of data) {
+      const last = c.dates[c.dates.length - 1];
+      if (last > maxDate) maxDate = last;
+    }
+    refTs = maxDate ? new Date(maxDate + 'T12:00:00').getTime() : Date.now();
+  }
+
+  const agg: Record<RfmSegment, { count: number; revenue: number; rSum: number; fSum: number; mSum: number }> = {
+    champions: { count: 0, revenue: 0, rSum: 0, fSum: 0, mSum: 0 },
+    loyal:     { count: 0, revenue: 0, rSum: 0, fSum: 0, mSum: 0 },
+    at_risk:   { count: 0, revenue: 0, rSum: 0, fSum: 0, mSum: 0 },
+    new:       { count: 0, revenue: 0, rSum: 0, fSum: 0, mSum: 0 },
+    one_time:  { count: 0, revenue: 0, rSum: 0, fSum: 0, mSum: 0 },
+    lost:      { count: 0, revenue: 0, rSum: 0, fSum: 0, mSum: 0 },
+  };
+
+  let totalRevenue = 0;
+  const totalCustomers = data.length;
+
+  for (const c of data) {
+    const recency   = Math.round((refTs - new Date(c.dates[c.dates.length - 1] + 'T12:00:00').getTime()) / 86400000);
+    const frequency = c.dates.length;
+    const monetary  = c.revenues.reduce((s, v) => s + v, 0);
+
+    totalRevenue += monetary;
+
+    let seg: RfmSegment;
+    if      (recency > 365)                         seg = 'lost';
+    else if (frequency >= 3 && recency <= 90)       seg = 'champions';
+    else if (frequency >= 2 && recency <= 180)      seg = 'loyal';
+    else if (frequency >= 2)                        seg = 'at_risk';
+    else if (recency <= 90)                         seg = 'new';
+    else                                            seg = 'one_time';
+
+    agg[seg].count++;
+    agg[seg].revenue += monetary;
+    agg[seg].rSum    += recency;
+    agg[seg].fSum    += frequency;
+    agg[seg].mSum    += monetary;
+  }
+
+  return RFM_ORDER.map(seg => {
+    const a = agg[seg];
+    return {
+      segment: seg,
+      ...RFM_META[seg],
+      count:        a.count,
+      customersPct: totalCustomers > 0 ? (a.count   / totalCustomers) * 100 : 0,
+      revenue:      a.revenue,
+      revenuePct:   totalRevenue   > 0 ? (a.revenue / totalRevenue)   * 100 : 0,
+      avgRecency:   a.count > 0 ? Math.round(a.rSum / a.count) : 0,
+      avgFrequency: a.count > 0 ? Math.round((a.fSum / a.count) * 10) / 10 : 0,
+      avgMonetary:  a.count > 0 ? Math.round(a.mSum / a.count) : 0,
+    };
+  });
 }
 
 /** Histogram prodlevy mezi nákupy */

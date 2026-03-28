@@ -7,6 +7,7 @@ import {
 import { ChartDataPoint } from '@/hooks/useDashboardData';
 import { formatCurrency, formatShortDate } from '@/lib/formatters';
 import { Currency } from '@/data/types';
+import { C } from '@/lib/chartColors';
 
 interface Props {
   data: ChartDataPoint[];
@@ -87,13 +88,13 @@ export default function RevenueOrdersChart({ data, currency = 'CZK', hasPrevData
             iconType="square"
             iconSize={9}
           />
-          <Bar yAxisId="left" dataKey="revenue" name="Tržby (aktuální)" fill="#3b82f6" barSize={hasPrevData ? 5 : 8} radius={[3, 3, 0, 0]} />
+          <Bar yAxisId="left" dataKey="revenue" name="Tržby (aktuální)" fill={C.primary} barSize={hasPrevData ? 5 : 8} radius={[3, 3, 0, 0]} />
           {hasPrevData && (
-            <Bar yAxisId="left" dataKey="revenue_prev" name="Tržby (loňský rok)" fill="#bfdbfe" barSize={5} radius={[3, 3, 0, 0]} />
+            <Bar yAxisId="left" dataKey="revenue_prev" name="Tržby (loňský rok)" fill={C.primaryLight} barSize={5} radius={[3, 3, 0, 0]} />
           )}
-          <Line yAxisId="right" type="monotone" dataKey="orders" name="Objednávky (aktuální)" stroke="#8b5cf6" strokeWidth={2} dot={false} />
+          <Line yAxisId="right" type="monotone" dataKey="orders" name="Objednávky (aktuální)" stroke={C.secondary} strokeWidth={2} dot={false} />
           {hasPrevData && (
-            <Line yAxisId="right" type="monotone" dataKey="orders_prev" name="Objednávky (loňský rok)" stroke="#c4b5fd" strokeWidth={1.5} dot={false} strokeDasharray="4 3" />
+            <Line yAxisId="right" type="monotone" dataKey="orders_prev" name="Objednávky (loňský rok)" stroke={C.secondaryLight} strokeWidth={1.5} dot={false} strokeDasharray="4 3" />
           )}
         </ComposedChart>
       </ResponsiveContainer>

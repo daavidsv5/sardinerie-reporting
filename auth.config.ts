@@ -32,6 +32,8 @@ export const authConfig = {
   },
   session: {
     strategy: 'jwt' as const,
+    maxAge:    8 * 60 * 60, // 8 hodin
+    updateAge: 60 * 60,     // obnovit token každou hodinu
   },
   callbacks: {
     authorized({ auth, request: { nextUrl } }) {

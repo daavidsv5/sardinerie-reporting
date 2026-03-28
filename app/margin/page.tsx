@@ -7,11 +7,13 @@ import { marginDataSK } from '@/data/marginDataSK';
 import { realDataCZ } from '@/data/realDataCZ';
 import { realDataSK } from '@/data/realDataSK';
 import { formatCurrency, formatPercent, formatDate, formatNumber, formatShortDate } from '@/lib/formatters';
-import { Info } from 'lucide-react';
+import { Info, Wallet, Banknote, ShoppingCart, TrendingUp, Percent, BarChart2, DollarSign } from 'lucide-react';
+import StatCard from '@/components/kpi/StatCard';
 import {
   ComposedChart, Bar, Line, XAxis, YAxis,
   CartesianGrid, Tooltip, Legend, ResponsiveContainer,
 } from 'recharts';
+import { C } from '@/lib/chartColors';
 
 function fmtYAxis(v: number): string {
   if (v >= 1_000_000) return `${(v / 1_000_000).toFixed(1)}M`;
@@ -215,15 +217,15 @@ export default function MarginPage() {
   const marketLabel = isCZOnly ? 'CZ' : isSKOnly ? 'SK' : 'CZ + SK';
 
   const kpiCards = [
-    { title: 'Tržby s DPH',           value: formatCurrency(revVat, currency), subtitle: `z objednávek ${marketLabel}` },
-    { title: 'Tržby bez DPH',         value: formatCurrency(rev, currency),    subtitle: 'základ pro PNO a marži' },
-    { title: 'Počet objednávek',       value: formatNumber(orders),             subtitle: 'dokončené objednávky' },
-    { title: 'Marketingové investice', value: formatCurrency(cost, currency),   subtitle: 'Google + Facebook', negative: false },
-    { title: 'PNO (%)',                value: formatPercent(pno, 2),            subtitle: 'náklady / tržby bez DPH' },
-    { title: 'Marže',                  value: formatCurrency(margin, currency), subtitle: `tržby bez DPH − nákupní cena`, negative: margin < 0 },
-    { title: 'Marže %',                value: formatPercent(marginPct, 1),      subtitle: 'marže / tržby bez DPH', negative: marginPct < 0 },
-    { title: 'Hrubý zisk',             value: formatCurrency(grossProfit, currency), subtitle: 'marže − marketingové investice', negative: grossProfit < 0, highlight: true },
-    { title: 'Hrubý zisk %',           value: formatPercent(grossPct, 1),       subtitle: 'hrubý zisk / tržby bez DPH', negative: grossPct < 0, highlight: true },
+    { title: 'Tržby s DPH',           value: formatCurrency(revVat, currency), subtitle: `z objednávek ${marketLabel}`,          icon: <Wallet size={18} /> },
+    { title: 'Tržby bez DPH',         value: formatCurrency(rev, currency),    subtitle: 'základ pro PNO a marži',               icon: <Banknote size={18} /> },
+    { title: 'Počet objednávek',       value: formatNumber(orders),             subtitle: 'dokončené objednávky',                 icon: <ShoppingCart size={18} /> },
+    { title: 'Marketingové investice', value: formatCurrency(cost, currency),   subtitle: 'Google + Facebook', negative: false,  icon: <TrendingUp size={18} /> },
+    { title: 'PNO (%)',                value: formatPercent(pno, 2),            subtitle: 'náklady / tržby bez DPH',              icon: <Percent size={18} /> },
+    { title: 'Marže',                  value: formatCurrency(margin, currency), subtitle: `tržby bez DPH − nákupní cena`, negative: margin < 0,         icon: <BarChart2 size={18} /> },
+    { title: 'Marže %',                value: formatPercent(marginPct, 1),      subtitle: 'marže / tržby bez DPH', negative: marginPct < 0,             icon: <Percent size={18} /> },
+    { title: 'Hrubý zisk',             value: formatCurrency(grossProfit, currency), subtitle: 'marže − marketingové investice', negative: grossProfit < 0, highlight: true, icon: <DollarSign size={18} /> },
+    { title: 'Hrubý zisk %',           value: formatPercent(grossPct, 1),       subtitle: 'hrubý zisk / tržby bez DPH', negative: grossPct < 0, highlight: true,            icon: <Percent size={18} /> },
   ];
 
   const showSKNoPurchaseNote = !isCZOnly && !skHasPurchaseCost;
@@ -259,24 +261,15 @@ export default function MarginPage() {
       {/* KPI Cards */}
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
         {kpiCards.map((card) => (
-          <div
+          <StatCard
             key={card.title}
-            className={`rounded-2xl p-5 border-2 shadow-sm flex flex-col gap-3 ${
-              card.negative
-                ? 'bg-rose-50 border-rose-400'
-                : card.highlight
-                  ? 'bg-emerald-50 border-emerald-400'
-                  : 'bg-white border-blue-800'
-            }`}
-          >
-            <p className={`text-[11px] font-bold uppercase tracking-wider leading-snug ${card.highlight && !card.negative ? 'text-emerald-700' : 'text-slate-600'}`}>
-              {card.title}
-            </p>
-            <p className={`text-2xl md:text-4xl font-bold leading-none ${card.negative ? 'text-rose-600' : card.highlight ? 'text-emerald-700' : 'text-slate-800'}`}>
-              {card.value}
-            </p>
-            <p className="text-[11px] text-slate-400 leading-relaxed">{card.subtitle}</p>
-          </div>
+            title={card.title}
+            value={card.value}
+            icon={card.icon}
+            sub={card.subtitle}
+            negative={card.negative}
+            highlight={card.highlight && !card.negative}
+          />
         ))}
       </div>
 
@@ -315,8 +308,8 @@ export default function MarginPage() {
               />
               <Tooltip content={<MarzeTooltip currency={currency} />} cursor={{ fill: '#f8fafc' }} />
               <Legend wrapperStyle={{ fontSize: 11, paddingTop: 16, color: '#64748b' }} iconType="square" iconSize={9} />
-              <Bar yAxisId="left" dataKey="marze" name={`Marže (${currLabel})`} fill="#166534" radius={[3, 3, 0, 0]} barSize={8} />
-              <Line yAxisId="right" type="monotone" dataKey="marzePct" name="Marže %" stroke="#4ade80" strokeWidth={2} dot={false} />
+              <Bar yAxisId="left" dataKey="marze" name={`Marže (${currLabel})`} fill={C.margin} radius={[3, 3, 0, 0]} barSize={8} />
+              <Line yAxisId="right" type="monotone" dataKey="marzePct" name="Marže %" stroke={C.marginLight} strokeWidth={2} dot={false} />
             </ComposedChart>
           </ResponsiveContainer>
         </div>
@@ -354,8 +347,8 @@ export default function MarginPage() {
               />
               <Tooltip content={<MarzeTooltip currency={currency} />} cursor={{ fill: '#f8fafc' }} />
               <Legend wrapperStyle={{ fontSize: 11, paddingTop: 16, color: '#64748b' }} iconType="square" iconSize={9} />
-              <Bar yAxisId="left" dataKey="hrubyZisk" name={`Hrubý zisk (${currLabel})`} fill="#1d4ed8" radius={[3, 3, 0, 0]} barSize={8} />
-              <Line yAxisId="right" type="monotone" dataKey="hrubyZiskPct" name="Hrubý zisk %" stroke="#60a5fa" strokeWidth={2} dot={false} />
+              <Bar yAxisId="left" dataKey="hrubyZisk" name={`Hrubý zisk (${currLabel})`} fill={C.grossProfit} radius={[3, 3, 0, 0]} barSize={8} />
+              <Line yAxisId="right" type="monotone" dataKey="hrubyZiskPct" name="Hrubý zisk %" stroke={C.grossProfitLight} strokeWidth={2} dot={false} />
             </ComposedChart>
           </ResponsiveContainer>
         </div>

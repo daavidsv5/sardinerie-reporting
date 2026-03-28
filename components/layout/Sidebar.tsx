@@ -2,20 +2,22 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { BarChart2, LayoutDashboard, ShoppingCart, TrendingUp, Package, Brain, PieChart, Users, ShieldCheck, LogOut, X, GitMerge, KeyRound, Activity } from 'lucide-react';
+import { BarChart2, LayoutDashboard, ShoppingCart, TrendingUp, Package, Brain, PieChart, Users, ShieldCheck, LogOut, X, GitMerge, KeyRound, Activity, Truck, Archive } from 'lucide-react';
 import { useSession, signOut } from 'next-auth/react';
 import { useSidebar } from './ConditionalLayout';
 
 const navItems = [
-  { icon: LayoutDashboard, label: 'Statistiky a prodeje', href: '/dashboard' },
-  { icon: ShoppingCart, label: 'Objednávky', href: '/orders' },
-  { icon: TrendingUp, label: 'Marketingové investice', href: '/marketing' },
-  { icon: Package, label: 'Prodejnost produktů', href: '/products' },
-  { icon: Brain, label: 'Nákupní chování', href: '/behavior' },
-  { icon: PieChart, label: 'Maržový report', href: '/margin' },
-  { icon: Users, label: 'Retenční analýza', href: '/retention' },
-  { icon: GitMerge, label: 'Cross-sell potenciál', href: '/crosssell' },
-  { icon: Activity, label: 'Návštěvnost (GA4)', href: '/analytics' },
+  { icon: LayoutDashboard, label: 'Klíčové ukazatele (KPI)', href: '/dashboard' },
+  { icon: ShoppingCart,    label: 'Objednávky',               href: '/orders' },
+  { icon: TrendingUp,      label: 'Marketingové investice',   href: '/marketing' },
+  { icon: PieChart,        label: 'Maržový report',           href: '/margin' },
+  { icon: Truck,           label: 'Doprava a platba',         href: '/shipping' },
+  { icon: Package,         label: 'Prodejnost produktů',      href: '/products' },
+  { icon: Brain,           label: 'Nákupní chování',          href: '/behavior' },
+  { icon: GitMerge,        label: 'Cross-sell potenciál',     href: '/crosssell' },
+  { icon: Archive,         label: 'Stav skladu',              href: '/stock' },
+  { icon: Users,           label: 'Retenční analýza',         href: '/retention' },
+  { icon: Activity,        label: 'Návštěvnost (GA4)',        href: '/analytics' },
 ];
 
 export default function Sidebar() {

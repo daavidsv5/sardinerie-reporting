@@ -7,6 +7,7 @@ import {
 import { ChartDataPoint } from '@/hooks/useDashboardData';
 import { formatCurrency, formatShortDate } from '@/lib/formatters';
 import { Currency } from '@/data/types';
+import { C } from '@/lib/chartColors';
 
 interface Props {
   data: ChartDataPoint[];
@@ -88,13 +89,13 @@ export default function CostPnoChart({ data, currency = 'CZK', hasPrevData = tru
             iconType="square"
             iconSize={9}
           />
-          <Bar yAxisId="left" dataKey="cost" name="Náklady (aktuální)" fill="#e11d48" barSize={hasPrevData ? 5 : 8} radius={[3, 3, 0, 0]} />
+          <Bar yAxisId="left" dataKey="cost" name="Náklady (aktuální)" fill={C.cost} barSize={hasPrevData ? 5 : 8} radius={[3, 3, 0, 0]} />
           {hasPrevData && (
-            <Bar yAxisId="left" dataKey="cost_prev" name="Náklady (loňský rok)" fill="#fb923c" barSize={5} radius={[3, 3, 0, 0]} />
+            <Bar yAxisId="left" dataKey="cost_prev" name="Náklady (loňský rok)" fill={C.costLight} barSize={5} radius={[3, 3, 0, 0]} />
           )}
-          <Line yAxisId="right" type="monotone" dataKey="pno" name="PNO % (aktuální)" stroke="#0ea5e9" strokeWidth={2.5} dot={false} />
+          <Line yAxisId="right" type="monotone" dataKey="pno" name="PNO % (aktuální)" stroke={C.rate} strokeWidth={2.5} dot={false} />
           {hasPrevData && (
-            <Line yAxisId="right" type="monotone" dataKey="pno_prev" name="PNO % (loňský rok)" stroke="#7dd3fc" strokeWidth={1.5} dot={false} strokeDasharray="5 4" />
+            <Line yAxisId="right" type="monotone" dataKey="pno_prev" name="PNO % (loňský rok)" stroke={C.rateLight} strokeWidth={1.5} dot={false} strokeDasharray="5 4" />
           )}
         </ComposedChart>
       </ResponsiveContainer>

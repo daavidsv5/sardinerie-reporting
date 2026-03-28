@@ -5,7 +5,29 @@ import { useDashboardData } from '@/hooks/useDashboardData';
 import { mockData, getMarketingSourceData, getDailyMarketingData } from '@/data/mockGenerator';
 import KpiCard from '@/components/kpi/KpiCard';
 import CostPnoChart from '@/components/charts/CostPnoChart';
-import { formatCurrency, formatPercent, formatNumber, formatDate } from '@/lib/formatters';
+import { formatCurrency, formatPercent, formatNumber, formatDate, formatShortDate } from '@/lib/formatters';
+import { TrendingUp as TrendingUpIcon, TrendingUp, TrendingDown, Percent, Tag, Banknote, Share2, Search } from 'lucide-react';
+import {
+  ComposedChart, Bar, Line, XAxis, YAxis, CartesianGrid, Tooltip,
+  Legend, ResponsiveContainer,
+} from 'recharts';
+import { C } from '@/lib/chartColors';
+
+function yoyPct(curr: number, prev: number): number | null {
+  if (prev === 0) return null;
+  return ((curr - prev) / prev) * 100;
+}
+
+function YoyBadge({ pct, invert = false }: { pct: number | null; invert?: boolean }) {
+  if (pct === null || pct === 0) return null;
+  const positive = invert ? pct < 0 : pct > 0;
+  return (
+    <span className={`inline-flex items-center gap-0.5 text-xs font-bold px-1.5 py-0.5 rounded-md ${positive ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-500'}`}>
+      {positive ? <TrendingUp size={11} /> : <TrendingDown size={11} />}
+      {pct > 0 ? '+' : ''}{pct.toFixed(1)}%
+    </span>
+  );
+}
 
 function pnoColor(pno: number): string {
   if (pno < 15) return 'bg-green-100 text-green-800';
@@ -13,6 +35,7 @@ function pnoColor(pno: number): string {
   if (pno < 35) return 'bg-orange-100 text-orange-800';
   return 'bg-red-100 text-red-800';
 }
+
 
 export default function MarketingPage() {
   const { filters, eurToCzk } = useFilters();
@@ -28,25 +51,38 @@ export default function MarketingPage() {
   const dailyRevenue = chartData.map((d) => d.revenue);
 
   const kpiCards = [
-    { title: 'Marketingové investice', value: fc(kpi.cost),    yoy: yoy.cost,    sparklineData: dailyCost,    invertColors: true },
-    { title: 'PNO (%)',                value: formatPercent(kpi.pno), yoy: yoy.pno, sparklineData: dailyPno, invertColors: true },
-    { title: 'Cena za objednávku',     value: fc(kpi.cpa),    yoy: yoy.cpa,     sparklineData: dailyCpa,     invertColors: true },
-    { title: 'Tržby bez DPH',          value: fc(kpi.revenue),yoy: yoy.revenue, sparklineData: dailyRevenue },
+    { title: 'Marketingové investice', value: fc(kpi.cost),    yoy: yoy.cost,    sparklineData: dailyCost,    invertColors: true, icon: <TrendingUpIcon size={16} /> },
+    { title: 'PNO (%)',                value: formatPercent(kpi.pno), yoy: yoy.pno, sparklineData: dailyPno, invertColors: true, icon: <Percent size={16} /> },
+    { title: 'Cena za objednávku',     value: fc(kpi.cpa),    yoy: yoy.cpa,     sparklineData: dailyCpa,     invertColors: true, icon: <Tag size={16} /> },
+    { title: 'Tržby bez DPH',          value: fc(kpi.revenue),yoy: yoy.revenue, sparklineData: dailyRevenue, icon: <Banknote size={16} /> },
   ].map(c => ({ ...c, hasPrevData }));
 
-  // Daily marketing table with channel breakdown
+  const sym = currency === 'EUR' ? '€' : 'Kč';
+
+  // Daily marketing data — base for table + trend charts
   const { start: sDaily, end: eDaily } = getDateRange(filters);
-  const dailyRows = getDailyMarketingData(
+  const allDailyMarketing = getDailyMarketingData(
     sDaily.toISOString().split('T')[0],
     eDaily.toISOString().split('T')[0],
     filters.countries,
     eurToCzk
-  ).slice(0, 30).map(r => ({
+  );
+
+  const dailyRows = allDailyMarketing.slice(0, 30).map(r => ({
     ...r,
     pno: r.revenue > 0 ? (r.cost / r.revenue) * 100 : 0,
     cpa: r.orders > 0 ? r.cost / r.orders : 0,
     pno_fb: r.revenue > 0 ? (r.cost_facebook / r.revenue) * 100 : 0,
     pno_g:  r.revenue > 0 ? (r.cost_google   / r.revenue) * 100 : 0,
+  }));
+
+  // Ascending for trend charts
+  const marketingChartData = [...allDailyMarketing].reverse().map(r => ({
+    date: r.date,
+    clicks_fb: r.clicks_facebook,
+    clicks_g:  r.clicks_google,
+    cpc_fb: r.clicks_facebook > 0 ? Math.round(r.cost_facebook / r.clicks_facebook * 100) / 100 : null,
+    cpc_g:  r.clicks_google   > 0 ? Math.round(r.cost_google   / r.clicks_google   * 100) / 100 : null,
   }));
 
   // Source breakdown — use real data with date range + country context
@@ -56,6 +92,26 @@ export default function MarketingPage() {
     filters.countries,
     eurToCzk
   );
+
+  // Per-channel summary metrics
+  const fb = sourceData.find(s => s.source === 'Facebook Ads') ?? { cost: 0, clicks: 0, revenue: 0, cpa: 0, orders: 0, pno: 0 };
+  const gg = sourceData.find(s => s.source === 'Google Ads')   ?? { cost: 0, clicks: 0, revenue: 0, cpa: 0, orders: 0, pno: 0 };
+  const fbCpc  = fb.clicks > 0 ? fb.cost / fb.clicks : 0;
+  const gCpc   = gg.clicks > 0 ? gg.cost / gg.clicks : 0;
+
+  // Previous year channel data for YoY
+  const prevStart = new Date(sDaily); prevStart.setFullYear(prevStart.getFullYear() - 1);
+  const prevEnd   = new Date(eDaily); prevEnd.setFullYear(prevEnd.getFullYear() - 1);
+  const prevSourceData = hasPrevData ? getMarketingSourceData(
+    prevStart.toISOString().split('T')[0],
+    prevEnd.toISOString().split('T')[0],
+    filters.countries,
+    eurToCzk
+  ) : [];
+  const fbPrev = prevSourceData.find(s => s.source === 'Facebook Ads') ?? { cost: 0, clicks: 0 };
+  const ggPrev = prevSourceData.find(s => s.source === 'Google Ads')   ?? { cost: 0, clicks: 0 };
+  const fbCpcPrev = fbPrev.clicks > 0 ? fbPrev.cost / fbPrev.clicks : 0;
+  const gCpcPrev  = ggPrev.clicks > 0 ? ggPrev.cost / ggPrev.clicks : 0;
 
   return (
     <div className="space-y-6">
@@ -74,6 +130,107 @@ export default function MarketingPage() {
 
       {/* Chart */}
       <CostPnoChart data={chartData} currency={currency} hasPrevData={hasPrevData} />
+
+      {/* Per-channel performance */}
+      <div className="space-y-4">
+        <div>
+          <h2 className="text-base font-semibold text-gray-800">Výkon per channel</h2>
+        </div>
+
+        {/* FB + Google summary cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {/* Facebook Ads */}
+          <div className="bg-white rounded-2xl border-2 border-blue-800 p-4 space-y-3">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-bold uppercase tracking-wider text-blue-700">Facebook Ads</span>
+              <div className="w-8 h-8 bg-blue-50 rounded-lg flex items-center justify-center text-blue-600">
+                <Share2 size={15} />
+              </div>
+            </div>
+            <div className="grid grid-cols-3 gap-3">
+              <div>
+                <p className="text-[10px] text-slate-400 uppercase tracking-wider">Náklady</p>
+                <p className="text-xl font-bold text-slate-900">{fc(fb.cost)}</p>
+                <YoyBadge pct={yoyPct(fb.cost, fbPrev.cost)} invert />
+              </div>
+              <div>
+                <p className="text-[10px] text-slate-400 uppercase tracking-wider">Kliky</p>
+                <p className="text-xl font-bold text-slate-900">{formatNumber(fb.clicks)}</p>
+                <YoyBadge pct={yoyPct(fb.clicks, fbPrev.clicks)} />
+              </div>
+              <div>
+                <p className="text-[10px] text-slate-400 uppercase tracking-wider">CPC</p>
+                <p className="text-xl font-bold text-slate-900">{fbCpc.toFixed(2)} {sym}</p>
+                <YoyBadge pct={yoyPct(fbCpc, fbCpcPrev)} invert />
+              </div>
+            </div>
+          </div>
+
+          {/* Google Ads */}
+          <div className="bg-white rounded-2xl border-2 border-blue-800 p-4 space-y-3">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-bold uppercase tracking-wider text-green-700">Google Ads</span>
+              <div className="w-8 h-8 bg-green-50 rounded-lg flex items-center justify-center text-green-600">
+                <Search size={15} />
+              </div>
+            </div>
+            <div className="grid grid-cols-3 gap-3">
+              <div>
+                <p className="text-[10px] text-slate-400 uppercase tracking-wider">Náklady</p>
+                <p className="text-xl font-bold text-slate-900">{fc(gg.cost)}</p>
+                <YoyBadge pct={yoyPct(gg.cost, ggPrev.cost)} invert />
+              </div>
+              <div>
+                <p className="text-[10px] text-slate-400 uppercase tracking-wider">Kliky</p>
+                <p className="text-xl font-bold text-slate-900">{formatNumber(gg.clicks)}</p>
+                <YoyBadge pct={yoyPct(gg.clicks, ggPrev.clicks)} />
+              </div>
+              <div>
+                <p className="text-[10px] text-slate-400 uppercase tracking-wider">CPC</p>
+                <p className="text-xl font-bold text-slate-900">{gCpc.toFixed(2)} {sym}</p>
+                <YoyBadge pct={yoyPct(gCpc, gCpcPrev)} invert />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* CPC + clicks trend */}
+        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
+          <h3 className="text-sm font-semibold text-gray-800 mb-4">CPC a kliky v čase</h3>
+          <ResponsiveContainer width="100%" height={260}>
+            <ComposedChart data={marketingChartData} margin={{ top: 5, right: 20, left: 10, bottom: 5 }}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+              <XAxis
+                dataKey="date"
+                tickFormatter={formatShortDate}
+                tick={{ fontSize: 11, fill: '#9ca3af' }}
+                interval="preserveStartEnd"
+              />
+              <YAxis yAxisId="left" tick={{ fontSize: 11, fill: '#9ca3af' }} width={45} />
+              <YAxis
+                yAxisId="right"
+                orientation="right"
+                tickFormatter={v => `${v} ${sym}`}
+                tick={{ fontSize: 11, fill: '#9ca3af' }}
+                width={65}
+              />
+              <Tooltip
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                formatter={(value: any, name: any) => {
+                  if (name === 'FB kliky' || name === 'Google kliky') return [formatNumber(Number(value)), String(name)];
+                  return [`${Number(value).toFixed(2)} ${sym}`, String(name)];
+                }}
+              />
+              <Legend wrapperStyle={{ fontSize: 12 }} />
+              <Bar yAxisId="left" dataKey="clicks_fb" name="FB kliky"     fill={C.facebook}    opacity={0.7} stackId="c" />
+              <Bar yAxisId="left" dataKey="clicks_g"  name="Google kliky" fill={C.google}      opacity={0.7} stackId="c" />
+              <Line yAxisId="right" type="monotone" dataKey="cpc_fb" name="CPC Facebook" stroke={C.facebookDark} strokeWidth={2} dot={false} connectNulls />
+              <Line yAxisId="right" type="monotone" dataKey="cpc_g"  name="CPC Google"   stroke={C.googleDark}   strokeWidth={2} dot={false} connectNulls />
+            </ComposedChart>
+          </ResponsiveContainer>
+        </div>
+
+      </div>
 
       {/* Tables */}
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">

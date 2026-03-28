@@ -12,6 +12,7 @@ import {
   computeMonthlyChartData,
   computePurchaseDistribution,
   computeDaysBetweenHistogram,
+  computeRfmSegments,
 } from '@/lib/retentionUtils';
 import { formatCurrency, formatPercent, formatNumber, formatShortDate } from '@/lib/formatters';
 import {
@@ -19,22 +20,10 @@ import {
   XAxis, YAxis, CartesianGrid, Tooltip, Legend,
   ResponsiveContainer,
 } from 'recharts';
+import { C } from '@/lib/chartColors';
+import StatCard from '@/components/kpi/StatCard';
 
 type Tab = 'cz' | 'sk';
-
-function StatCard({ title, value, icon }: { title: string; value: string; icon: React.ReactNode }) {
-  return (
-    <div className="bg-white rounded-2xl shadow-sm border-2 border-blue-800 p-4 flex items-start justify-between">
-      <div className="min-w-0 flex-1 pr-3">
-        <p className="text-[11px] font-bold text-slate-600 uppercase tracking-wider mb-1">{title}</p>
-        <p className="text-2xl font-bold text-slate-800 leading-tight">{value}</p>
-      </div>
-      <div className="w-10 h-10 bg-blue-50 rounded-xl flex items-center justify-center text-blue-600 flex-shrink-0">
-        {icon}
-      </div>
-    </div>
-  );
-}
 
 function ChartCard({ title, children }: { title: string; children: React.ReactNode }) {
   return (
@@ -74,6 +63,7 @@ export default function RetentionPage() {
   const fc = (v: number) => formatCurrency(v, currency);
   const fp = (v: number) => formatPercent(v, 1);
 
+  const rfmSegments  = useMemo(() => computeRfmSegments(data), [data]);
   const kpis         = useMemo(() => computeRetentionKpis(data), [data]);
   const yearCustomer = useMemo(() => computeYearCustomerMetrics(data), [data]);
   const yearRetention= useMemo(() => computeYearRetentionMetrics(data), [data]);
@@ -103,8 +93,12 @@ export default function RetentionPage() {
             <button
               key={t}
               onClick={() => setTab(t)}
-              className={`flex items-center gap-1.5 px-4 py-1.5 rounded-md text-sm font-medium transition-colors ${
-                tab === t ? 'bg-white text-slate-800 shadow-sm' : 'text-gray-500 hover:text-slate-600'
+              className={`flex items-center gap-1.5 px-4 py-1.5 rounded-md text-sm font-semibold transition-all ${
+                tab === t
+                  ? t === 'cz'
+                    ? 'bg-blue-700 text-white shadow-sm'
+                    : 'bg-red-600 text-white shadow-sm'
+                  : 'text-gray-500 hover:text-slate-700'
               }`}
             >
               <span>{t === 'cz' ? '🇨🇿' : '🇸🇰'}</span> {t.toUpperCase()}
@@ -130,6 +124,82 @@ export default function RetentionPage() {
         <StatCard title="LTV / zákazník"      value={fc(kpis.ltvPerCustomer)}                       icon={<TrendingUp size={18} />} />
       </div>
 
+      {/* RFM Segmentace */}
+      <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5 space-y-5">
+        <div>
+          <h2 className="text-sm font-semibold text-slate-700">RFM Segmentace zákazníků</h2>
+          <p className="text-xs text-slate-400 mt-0.5">
+            R = Recency (dní od posledního nákupu) · F = Frequency (počet nákupů) · M = Monetary (celkový obrat bez DPH)
+          </p>
+        </div>
+
+        {/* Segment cards 2×3 grid */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+          {rfmSegments.map(seg => (
+            <div key={seg.segment} className={`rounded-xl border-2 ${seg.borderColor} ${seg.color} p-3 space-y-2`}>
+              <div>
+                <p className={`text-[11px] font-bold uppercase tracking-wider ${seg.textColor}`}>{seg.label}</p>
+                <p className="text-[10px] text-slate-400 mt-0.5">{seg.description}</p>
+              </div>
+              <div className="flex items-end gap-3">
+                <div>
+                  <p className={`text-2xl font-bold ${seg.textColor}`}>{formatNumber(seg.count)}</p>
+                  <p className="text-[10px] text-slate-400">{seg.customersPct.toFixed(1)} % zákazníků</p>
+                </div>
+                <div className="pb-0.5">
+                  <p className="text-sm font-semibold text-slate-700">{seg.revenuePct.toFixed(1)} %</p>
+                  <p className="text-[10px] text-slate-400">obratu</p>
+                </div>
+              </div>
+              <div className="flex gap-3 text-[10px] text-slate-500">
+                <span>Ø R: <strong className="text-slate-700">{seg.avgRecency} dní</strong></span>
+                <span>Ø F: <strong className="text-slate-700">{seg.avgFrequency}×</strong></span>
+                <span>Ø M: <strong className="text-slate-700">{fc(seg.avgMonetary)}</strong></span>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Distribution bar */}
+        <div>
+          <p className="text-[10px] text-slate-400 mb-1.5 uppercase tracking-wider">Distribuce zákazníků</p>
+          <div className="flex h-3 rounded-full overflow-hidden gap-px">
+            {rfmSegments.filter(s => s.count > 0).map(seg => (
+              <div
+                key={seg.segment}
+                className={`${seg.barColor} transition-all`}
+                style={{ width: `${seg.customersPct}%` }}
+                title={`${seg.label}: ${formatNumber(seg.count)} (${seg.customersPct.toFixed(1)} %)`}
+              />
+            ))}
+          </div>
+          <div className="flex flex-wrap gap-x-4 gap-y-1 mt-2">
+            {rfmSegments.filter(s => s.count > 0).map(seg => (
+              <span key={seg.segment} className="flex items-center gap-1 text-[10px] text-slate-500">
+                <span className={`inline-block w-2 h-2 rounded-sm ${seg.barColor}`} />
+                {seg.label} ({seg.customersPct.toFixed(0)} %)
+              </span>
+            ))}
+          </div>
+        </div>
+
+        {/* Action table */}
+        <div>
+          <p className="text-[10px] text-slate-400 mb-2 uppercase tracking-wider">Doporučené akce</p>
+          <div className="space-y-2">
+            {rfmSegments.filter(s => s.count > 0).map(seg => (
+              <div key={seg.segment} className={`flex gap-3 items-start rounded-lg px-3 py-2.5 border ${seg.borderColor} ${seg.color}`}>
+                <div className="flex-shrink-0 w-24">
+                  <p className={`text-[11px] font-bold ${seg.textColor}`}>{seg.label}</p>
+                  <p className="text-[10px] text-slate-400">{formatNumber(seg.count)} zákazníků</p>
+                </div>
+                <p className="text-xs text-slate-600 leading-relaxed">{seg.action}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
       {/* Charts — řada 1: LTV + AOV */}
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
         <ChartCard title="Vývoj LTV v čase">
@@ -139,7 +209,7 @@ export default function RetentionPage() {
               <XAxis dataKey="date" tickFormatter={formatShortDate} tick={{ fontSize: 11, fill: '#94a3b8' }} axisLine={false} tickLine={false} interval="preserveStartEnd" />
               <YAxis tickFormatter={v => fmtYAxis(v, currency)} tick={{ fontSize: 11, fill: '#94a3b8' }} axisLine={false} tickLine={false} width={56} />
               <Tooltip formatter={(v: any) => [fc(v as number), 'LTV / zákazník']} labelFormatter={(l: any) => formatShortDate(l as string)} />
-              <Line type="monotone" dataKey="ltv" name="LTV" stroke="#0ea5e9" strokeWidth={2} dot={false} />
+              <Line type="monotone" dataKey="ltv" name="LTV" stroke={C.rate} strokeWidth={2} dot={false} />
             </LineChart>
           </ResponsiveContainer>
         </ChartCard>
@@ -151,7 +221,7 @@ export default function RetentionPage() {
               <XAxis dataKey="date" tickFormatter={formatShortDate} tick={{ fontSize: 11, fill: '#94a3b8' }} axisLine={false} tickLine={false} interval="preserveStartEnd" />
               <YAxis tickFormatter={v => fmtYAxis(v, currency)} tick={{ fontSize: 11, fill: '#94a3b8' }} axisLine={false} tickLine={false} width={56} />
               <Tooltip formatter={(v: any) => [fc(v as number), 'Ø objednávka']} labelFormatter={(l: any) => formatShortDate(l as string)} />
-              <Line type="monotone" dataKey="aov" name="Ø objednávka" stroke="#6366f1" strokeWidth={2} dot={false} />
+              <Line type="monotone" dataKey="aov" name="Ø objednávka" stroke={C.aov} strokeWidth={2} dot={false} />
             </LineChart>
           </ResponsiveContainer>
         </ChartCard>
@@ -164,15 +234,15 @@ export default function RetentionPage() {
             <AreaChart data={yearRevenueChart} margin={{ top: 4, right: 16, left: 4, bottom: 4 }}>
               <defs>
                 <linearGradient id="gradObrat" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3} />
-                  <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
+                  <stop offset="5%" stopColor={C.primary} stopOpacity={0.3} />
+                  <stop offset="95%" stopColor={C.primary} stopOpacity={0} />
                 </linearGradient>
               </defs>
               <CartesianGrid strokeDasharray="0" stroke="#f1f5f9" vertical={false} />
               <XAxis dataKey="year" tick={{ fontSize: 11, fill: '#94a3b8' }} axisLine={false} tickLine={false} />
               <YAxis tickFormatter={v => fmtYAxis(v, currency)} tick={{ fontSize: 11, fill: '#94a3b8' }} axisLine={false} tickLine={false} width={60} />
               <Tooltip formatter={(v: any) => [fc(v as number), 'Obrat']} />
-              <Area type="monotone" dataKey="obrat" name="Obrat" stroke="#3b82f6" fill="url(#gradObrat)" strokeWidth={2} dot={{ r: 5, fill: '#3b82f6' }} />
+              <Area type="monotone" dataKey="obrat" name="Obrat" stroke={C.primary} fill="url(#gradObrat)" strokeWidth={2} dot={{ r: 5, fill: C.primary }} />
             </AreaChart>
           </ResponsiveContainer>
         </ChartCard>
@@ -184,7 +254,7 @@ export default function RetentionPage() {
               <XAxis dataKey="label" tick={{ fontSize: 11, fill: '#94a3b8' }} axisLine={false} tickLine={false} />
               <YAxis tickFormatter={v => `${v.toFixed(0)} %`} tick={{ fontSize: 11, fill: '#94a3b8' }} axisLine={false} tickLine={false} width={44} />
               <Tooltip formatter={(v: any) => [`${(v as number).toFixed(1)} %`, 'Podíl zákazníků']} />
-              <Bar dataKey="customersPct" name="Zákazníci %" fill="#3b82f6" radius={[4, 4, 0, 0]} />
+              <Bar dataKey="customersPct" name="Zákazníci %" fill={C.primary} radius={[4, 4, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </ChartCard>
@@ -199,7 +269,7 @@ export default function RetentionPage() {
               <XAxis dataKey="label" tick={{ fontSize: 11, fill: '#94a3b8' }} axisLine={false} tickLine={false} />
               <YAxis tickFormatter={v => `${v.toFixed(0)} %`} tick={{ fontSize: 11, fill: '#94a3b8' }} axisLine={false} tickLine={false} width={44} />
               <Tooltip formatter={(v: any) => [`${(v as number).toFixed(1)} %`, 'Podíl obratu']} />
-              <Bar dataKey="revenuePct" name="Obrat %" fill="#0ea5e9" radius={[4, 4, 0, 0]} />
+              <Bar dataKey="revenuePct" name="Obrat %" fill={C.rate} radius={[4, 4, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </ChartCard>
@@ -211,7 +281,7 @@ export default function RetentionPage() {
               <XAxis dataKey="label" tick={{ fontSize: 10, fill: '#94a3b8' }} axisLine={false} tickLine={false} />
               <YAxis tickFormatter={v => `${v.toFixed(0)} %`} tick={{ fontSize: 11, fill: '#94a3b8' }} axisLine={false} tickLine={false} width={44} />
               <Tooltip formatter={(v: any) => [`${(v as number).toFixed(1)} %`, 'Podíl']} />
-              <Bar dataKey="pct" name="Prodleva %" fill="#6366f1" radius={[4, 4, 0, 0]} />
+              <Bar dataKey="pct" name="Prodleva %" fill={C.aov} radius={[4, 4, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </ChartCard>
@@ -227,13 +297,13 @@ export default function RetentionPage() {
               <YAxis tickFormatter={v => fmtYAxis(v, currency)} tick={{ fontSize: 11, fill: '#94a3b8' }} axisLine={false} tickLine={false} width={56} />
               <Tooltip formatter={(v: any) => [fc(v as number)]} />
               <Legend wrapperStyle={{ fontSize: 11, color: '#64748b' }} iconType="square" iconSize={9} />
-              <Bar dataKey="avgFirstPurchase"  name="1. nákup"          fill="#3b82f6" radius={[3, 3, 0, 0]} barSize={24} />
-              <Bar dataKey="avgRepeatPurchase" name="Opakovaný nákup"   fill="#0ea5e9" radius={[3, 3, 0, 0]} barSize={24} />
+              <Bar dataKey="avgFirstPurchase"  name="1. nákup"          fill={C.primary} radius={[3, 3, 0, 0]} barSize={24} />
+              <Bar dataKey="avgRepeatPurchase" name="Opakovaný nákup"   fill={C.rate}    radius={[3, 3, 0, 0]} barSize={24} />
             </BarChart>
           </ResponsiveContainer>
         </ChartCard>
 
-        <ChartCard title="Noví vs. stávající zákazníci">
+        <ChartCard title="Noví vs. stávající zákazníci (zákazník může být v obou kategoriích)">
           <ResponsiveContainer width="100%" height={260}>
             <BarChart data={yearCustomer} margin={{ top: 4, right: 16, left: 4, bottom: 4 }}>
               <CartesianGrid strokeDasharray="0" stroke="#f1f5f9" vertical={false} />
@@ -241,15 +311,15 @@ export default function RetentionPage() {
               <YAxis tick={{ fontSize: 11, fill: '#94a3b8' }} axisLine={false} tickLine={false} width={40} />
               <Tooltip />
               <Legend wrapperStyle={{ fontSize: 11, color: '#64748b' }} iconType="square" iconSize={9} />
-              <Bar dataKey="newCustomers"       name="Noví zákazníci"      fill="#22c55e" radius={[3, 3, 0, 0]} barSize={24} />
-              <Bar dataKey="returningCustomers" name="Stávající zákazníci" fill="#3b82f6" radius={[3, 3, 0, 0]} barSize={24} />
+              <Bar dataKey="newCustomers"       name="Noví zákazníci"      fill={C.newCustomers} radius={[3, 3, 0, 0]} barSize={24} />
+              <Bar dataKey="returningCustomers" name="Stávající zákazníci" fill={C.primary}      radius={[3, 3, 0, 0]} barSize={24} />
             </BarChart>
           </ResponsiveContainer>
         </ChartCard>
       </div>
 
       {/* Zákaznické metriky */}
-      <TableCard title="Zákaznické metriky">
+      <TableCard title="Zákaznické metriky — Noví = 1. nákup vůbec; Stávající = měli v daném roce 2.+ nákup (zákazník může být v obou)">
         <table className="w-full text-sm">
           <thead>
             <tr className="bg-blue-900 border-b border-blue-800">

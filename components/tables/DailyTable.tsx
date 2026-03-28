@@ -5,9 +5,15 @@ import { DailyRecord, EUR_TO_CZK, Currency, getDisplayCurrency } from '@/data/ty
 import { formatCurrency, formatPercent, formatNumber, formatDate } from '@/lib/formatters';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
+interface MarginRecord {
+  date: string;
+  purchaseCost: number;
+}
+
 interface Props {
   data: DailyRecord[];
   eurToCzk?: number;
+  marginData?: MarginRecord[];
 }
 
 interface AggregatedRow {
@@ -19,6 +25,9 @@ interface AggregatedRow {
   cost: number;
   pno: number;
   cpa: number;
+  purchaseCost: number;
+  grossProfit: number;
+  grossProfitPct: number;
 }
 
 function pnoBadge(pno: number) {
@@ -31,19 +40,28 @@ function pnoBadge(pno: number) {
 
 const PAGE_SIZE = 20;
 
-export default function DailyTable({ data, eurToCzk = EUR_TO_CZK }: Props) {
+export default function DailyTable({ data, eurToCzk = EUR_TO_CZK, marginData }: Props) {
   const [page, setPage] = useState(0);
 
   const countries = [...new Set(data.map(r => r.country))];
   const currency: Currency = getDisplayCurrency(countries);
   const mult = (r: DailyRecord) => currency === 'CZK' && r.currency === 'EUR' ? eurToCzk : 1;
   const fc = (v: number) => formatCurrency(v, currency);
+  const showMargin = !!marginData && marginData.length > 0;
+
+  // Build margin lookup by date
+  const marginByDate: Record<string, number> = {};
+  if (marginData) {
+    for (const m of marginData) {
+      marginByDate[m.date] = (marginByDate[m.date] || 0) + m.purchaseCost;
+    }
+  }
 
   const byDate: Record<string, AggregatedRow> = {};
   for (const r of data) {
     const m = mult(r);
     if (!byDate[r.date]) {
-      byDate[r.date] = { date: r.date, revenue_vat: 0, revenue: 0, orders: 0, aov: 0, cost: 0, pno: 0, cpa: 0 };
+      byDate[r.date] = { date: r.date, revenue_vat: 0, revenue: 0, orders: 0, aov: 0, cost: 0, pno: 0, cpa: 0, purchaseCost: 0, grossProfit: 0, grossProfitPct: 0 };
     }
     byDate[r.date].revenue_vat += r.revenue_vat * m;
     byDate[r.date].revenue     += r.revenue     * m;
@@ -53,23 +71,34 @@ export default function DailyTable({ data, eurToCzk = EUR_TO_CZK }: Props) {
 
   const rows: AggregatedRow[] = Object.values(byDate)
     .sort((a, b) => b.date.localeCompare(a.date))
-    .map(r => ({
-      ...r,
-      aov: r.orders > 0 ? r.revenue_vat / r.orders : 0,
-      pno: r.revenue > 0 ? (r.cost / r.revenue) * 100 : 0,
-      cpa: r.orders > 0 ? r.cost / r.orders : 0,
-    }));
+    .map(r => {
+      const purchaseCost  = marginByDate[r.date] ?? 0;
+      const grossProfit   = r.revenue - purchaseCost - r.cost;
+      const grossProfitPct = r.revenue > 0 ? (grossProfit / r.revenue) * 100 : 0;
+      return {
+        ...r,
+        aov: r.orders > 0 ? r.revenue_vat / r.orders : 0,
+        pno: r.revenue > 0 ? (r.cost / r.revenue) * 100 : 0,
+        cpa: r.orders > 0 ? r.cost / r.orders : 0,
+        purchaseCost,
+        grossProfit,
+        grossProfitPct,
+      };
+    });
 
   const totalPages = Math.ceil(rows.length / PAGE_SIZE);
   const pageRows   = rows.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE);
 
-  const totalRevVat  = rows.reduce((s, r) => s + r.revenue_vat, 0);
-  const totalRev     = rows.reduce((s, r) => s + r.revenue, 0);
-  const totalOrders  = rows.reduce((s, r) => s + r.orders, 0);
-  const totalCost    = rows.reduce((s, r) => s + r.cost, 0);
-  const totalAov     = totalOrders > 0 ? totalRevVat / totalOrders : 0;
-  const totalPno     = totalRev    > 0 ? (totalCost / totalRev) * 100 : 0;
-  const totalCpa     = totalOrders > 0 ? totalCost / totalOrders : 0;
+  const totalRevVat      = rows.reduce((s, r) => s + r.revenue_vat, 0);
+  const totalRev         = rows.reduce((s, r) => s + r.revenue, 0);
+  const totalOrders      = rows.reduce((s, r) => s + r.orders, 0);
+  const totalCost        = rows.reduce((s, r) => s + r.cost, 0);
+  const totalPurchase    = rows.reduce((s, r) => s + r.purchaseCost, 0);
+  const totalGrossProfit = totalRev - totalPurchase - totalCost;
+  const totalGrossPct    = totalRev > 0 ? (totalGrossProfit / totalRev) * 100 : 0;
+  const totalAov         = totalOrders > 0 ? totalRevVat / totalOrders : 0;
+  const totalPno         = totalRev    > 0 ? (totalCost / totalRev) * 100 : 0;
+  const totalCpa         = totalOrders > 0 ? totalCost / totalOrders : 0;
 
   const thClass = 'px-4 py-3 text-[11px] font-semibold text-white uppercase tracking-wider';
 
@@ -92,6 +121,8 @@ export default function DailyTable({ data, eurToCzk = EUR_TO_CZK }: Props) {
               <th className={`${thClass} text-right`}>Náklady</th>
               <th className={`${thClass} text-right`}>PNO</th>
               <th className={`${thClass} text-right`}>CPA</th>
+              {showMargin && <th className={`${thClass} text-right`}>Hrubý zisk</th>}
+              {showMargin && <th className={`${thClass} text-right`}>Hrubý zisk %</th>}
             </tr>
           </thead>
           <tbody>
@@ -120,7 +151,7 @@ export default function DailyTable({ data, eurToCzk = EUR_TO_CZK }: Props) {
                   <td className="px-4 py-2.5 text-right text-slate-600 tabular-nums">
                     {fc(r.aov)}
                   </td>
-                  <td className="px-4 py-2.5 text-right text-slate-800 font-bold tabular-nums text-base">
+                  <td className="px-4 py-2.5 text-right text-slate-800 font-bold tabular-nums">
                     {fc(r.cost)}
                   </td>
                   <td className="px-4 py-2.5 text-right">
@@ -131,6 +162,18 @@ export default function DailyTable({ data, eurToCzk = EUR_TO_CZK }: Props) {
                   <td className="px-4 py-2.5 text-right text-slate-500 tabular-nums">
                     {fc(r.cpa)}
                   </td>
+                  {showMargin && (
+                    <td className={`px-4 py-2.5 text-right font-semibold tabular-nums ${r.grossProfit >= 0 ? 'text-emerald-600' : 'text-rose-500'}`}>
+                      {fc(r.grossProfit)}
+                    </td>
+                  )}
+                  {showMargin && (
+                    <td className="px-4 py-2.5 text-right">
+                      <span className={`px-2 py-0.5 rounded-lg text-sm font-bold ${r.grossProfitPct >= 30 ? 'bg-emerald-50 text-emerald-700' : r.grossProfitPct >= 15 ? 'bg-amber-50 text-amber-700' : r.grossProfitPct >= 0 ? 'bg-orange-50 text-orange-700' : 'bg-rose-50 text-rose-600'}`}>
+                        {formatPercent(r.grossProfitPct)}
+                      </span>
+                    </td>
+                  )}
                 </tr>
               );
             })}
@@ -142,13 +185,25 @@ export default function DailyTable({ data, eurToCzk = EUR_TO_CZK }: Props) {
               <td className="px-4 py-3 text-right text-slate-700 font-semibold tabular-nums">{fc(totalRev)}</td>
               <td className="px-4 py-3 text-right text-slate-600 tabular-nums">{formatNumber(totalOrders)}</td>
               <td className="px-4 py-3 text-right text-slate-600 tabular-nums">{fc(totalAov)}</td>
-              <td className="px-4 py-3 text-right text-slate-800 font-bold tabular-nums text-base">{fc(totalCost)}</td>
+              <td className="px-4 py-3 text-right text-slate-800 font-bold tabular-nums">{fc(totalCost)}</td>
               <td className="px-4 py-3 text-right">
                 <span className={`px-2 py-0.5 rounded-lg text-sm font-bold ${pnoBadge(totalPno)}`}>
                   {formatPercent(totalPno)}
                 </span>
               </td>
               <td className="px-4 py-3 text-right text-slate-500 tabular-nums">{fc(totalCpa)}</td>
+              {showMargin && (
+                <td className={`px-4 py-3 text-right font-semibold tabular-nums ${totalGrossProfit >= 0 ? 'text-emerald-600' : 'text-rose-500'}`}>
+                  {fc(totalGrossProfit)}
+                </td>
+              )}
+              {showMargin && (
+                <td className="px-4 py-3 text-right">
+                  <span className={`px-2 py-0.5 rounded-lg text-sm font-bold ${totalGrossPct >= 30 ? 'bg-emerald-50 text-emerald-700' : totalGrossPct >= 15 ? 'bg-amber-50 text-amber-700' : totalGrossPct >= 0 ? 'bg-orange-50 text-orange-700' : 'bg-rose-50 text-rose-600'}`}>
+                    {formatPercent(totalGrossPct)}
+                  </span>
+                </td>
+              )}
             </tr>
           </tfoot>
         </table>

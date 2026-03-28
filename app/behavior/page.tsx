@@ -17,6 +17,7 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from 'recharts';
+import { C } from '@/lib/chartColors';
 
 const DAY_NAMES = ['Neděle', 'Pondělí', 'Úterý', 'Středa', 'Čtvrtek', 'Pátek', 'Sobota'];
 const DAY_SHORT = ['Ne', 'Po', 'Út', 'St', 'Čt', 'Pá', 'So'];
@@ -175,7 +176,7 @@ export default function BehaviorPage() {
                 formatter={(v: any) => [`${Number(v).toFixed(1)} obj.`, 'Průměr objednávek']}
                 labelFormatter={(l) => chartData.find(d => d.name === l)?.fullName ?? l}
               />
-              <Bar dataKey="orders" name="Objednávky" fill="#166534" radius={[3, 3, 0, 0]} />
+              <Bar dataKey="orders" name="Objednávky" fill={C.secondary} radius={[3, 3, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </div>
@@ -201,7 +202,7 @@ export default function BehaviorPage() {
                 formatter={(v: any) => [fc(Number(v)), 'Průměr tržeb bez DPH']}
                 labelFormatter={(l) => chartData.find(d => d.name === l)?.fullName ?? l}
               />
-              <Bar dataKey="revenue" name="Tržby bez DPH" fill="#3b82f6" radius={[3, 3, 0, 0]} />
+              <Bar dataKey="revenue" name="Tržby bez DPH" fill={C.primary} radius={[3, 3, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </div>
@@ -224,7 +225,7 @@ export default function BehaviorPage() {
               formatter={(v: any) => [fc(Number(v)), 'Průměr tržeb bez DPH']}
               contentStyle={{ fontSize: 11, borderRadius: 8, border: '1px solid #e2e8f0' }}
             />
-            <Bar dataKey="revenue" name="Tržby bez DPH" fill="#3b82f6" radius={[3, 3, 0, 0]} />
+            <Bar dataKey="revenue" name="Tržby bez DPH" fill={C.primary} radius={[3, 3, 0, 0]} />
           </BarChart>
         </ResponsiveContainer>
       </div>
