@@ -35,7 +35,7 @@ export default function TopBar({ filters, onChange }: TopBarProps) {
     try {
       const res = await fetch('/api/update', { method: 'POST' });
       const json = await res.json();
-      setUpdateMsg(json.ok ? 'Data aktualizována — obnovte stránku.' : 'Chyba při aktualizaci.');
+      setUpdateMsg(json.ok ? 'Data aktualizována — obnovte stránku.' : `Chyba: ${json.log ?? json.error ?? 'neznámá chyba'}`);
     } catch {
       setUpdateMsg('Chyba při aktualizaci.');
     } finally {
@@ -161,7 +161,10 @@ export default function TopBar({ filters, onChange }: TopBarProps) {
         {/* Update button */}
         <div className="flex items-center gap-2 flex-shrink-0">
           {updateMsg && (
-            <span className={`text-xs font-medium hidden sm:inline ${updateMsg.startsWith('Chyba') ? 'text-rose-500' : 'text-emerald-600'}`}>
+            <span
+              title={updateMsg}
+              className={`text-xs font-medium max-w-xs truncate ${updateMsg.startsWith('Chyba') ? 'text-rose-500' : 'text-emerald-600'}`}
+            >
               {updateMsg}
             </span>
           )}
