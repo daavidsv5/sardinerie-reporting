@@ -977,6 +977,27 @@ async function main() {
     log(`SK stock: ${stockSK.length} products | ${stockSK.filter(r => r.stock === 0).length} out of stock`);
 
     log('=== Data update finished successfully ===');
+
+    // ── Auto-deploy: commit updated data files and push to GitHub ─────────────
+    // Vercel picks up the push and rebuilds the app with fresh data.
+    const { execSync } = require('child_process');
+    const repoRoot = path.join(__dirname, '..');
+    const today = new Date().toISOString().split('T')[0];
+    try {
+      execSync('git add data/', { cwd: repoRoot, stdio: 'pipe' });
+      // Check if there is anything to commit
+      const status = execSync('git status --porcelain data/', { cwd: repoRoot }).toString().trim();
+      if (status) {
+        execSync(`git commit -m "data: auto-update ${today}"`, { cwd: repoRoot, stdio: 'pipe' });
+        execSync('git push origin main', { cwd: repoRoot, stdio: 'pipe' });
+        log(`Auto-deploy: committed and pushed data update (${today})`);
+      } else {
+        log('Auto-deploy: no data changes to commit');
+      }
+    } catch (gitErr) {
+      log(`Auto-deploy WARNING: git push failed — ${gitErr.message}`);
+      log('Data files were updated locally but Vercel was NOT redeployed.');
+    }
   } catch (err) {
     log(`ERROR: ${err.message}`);
     process.exit(1);
