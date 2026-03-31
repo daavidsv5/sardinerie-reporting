@@ -129,11 +129,11 @@ export default function RetentionPage() {
       {/* Noví vs. stávající zákazníci — měsíční stacked bar */}
       <ChartCard title="Noví vs. stávající zákazníci — vývoj po měsících">
         <ResponsiveContainer width="100%" height={260}>
-          <BarChart data={monthlyNewVsRet} margin={{ top: 4, right: 16, left: 4, bottom: 4 }} stackOffset="expand">
+          <BarChart data={monthlyNewVsRet} margin={{ top: 4, right: 16, left: 4, bottom: 4 }}>
             <CartesianGrid strokeDasharray="0" stroke="#f1f5f9" vertical={false} />
             <XAxis dataKey="date" tickFormatter={formatShortDate} tick={{ fontSize: 11, fill: '#94a3b8' }} axisLine={false} tickLine={false} interval="preserveStartEnd" />
-            <YAxis tickFormatter={v => `${Math.round(v * 100)} %`} tick={{ fontSize: 11, fill: '#94a3b8' }} axisLine={false} tickLine={false} width={44} />
-            <Tooltip formatter={(v: any, name: any) => [`${Math.round((v as number) * 100)} %`, name]} labelFormatter={(l: any) => formatShortDate(l as string)} />
+            <YAxis tick={{ fontSize: 11, fill: '#94a3b8' }} axisLine={false} tickLine={false} width={36} allowDecimals={false} />
+            <Tooltip formatter={(v: any, name: any) => [formatNumber(v as number), name]} labelFormatter={(l: any) => formatShortDate(l as string)} />
             <Legend wrapperStyle={{ fontSize: 11, color: '#64748b' }} iconType="square" iconSize={9} />
             <Bar dataKey="noví"      name="Noví zákazníci"      stackId="a" fill={C.newCustomers} />
             <Bar dataKey="stávající" name="Stávající zákazníci" stackId="a" fill={C.primary}      radius={[3, 3, 0, 0]} />
