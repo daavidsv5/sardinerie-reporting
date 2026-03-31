@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { usePathname } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 import { FilterState, Country, TimePeriod } from '@/data/types';
 import { getDateRange } from '@/hooks/useFilters';
 import { formatDate } from '@/lib/formatters';
@@ -27,6 +28,8 @@ export default function TopBar({ filters, onChange }: TopBarProps) {
   const [updateMsg, setUpdateMsg] = useState<string | null>(null);
   const { toggle } = useSidebar();
   const pathname = usePathname();
+  const { data: session } = useSession();
+  const isAdmin = (session?.user as { role?: string })?.role === 'admin';
   const isRetention = pathname === '/retention' || pathname === '/crosssell';
 
   const handleUpdate = async () => {
@@ -158,8 +161,9 @@ export default function TopBar({ filters, onChange }: TopBarProps) {
         {/* Spacer */}
         <div className="flex-1 min-w-0" />
 
-        {/* Update button */}
+        {/* Update button — admin only */}
         <div className="flex items-center gap-2 flex-shrink-0">
+        {isAdmin && (<>
           {updateMsg && (
             <span
               title={updateMsg}
@@ -177,6 +181,7 @@ export default function TopBar({ filters, onChange }: TopBarProps) {
             <RefreshCw size={13} className={updating ? 'animate-spin' : ''} />
             <span className="hidden md:inline">{updating ? 'Aktualizuji…' : 'Aktualizovat data'}</span>
           </button>
+        </>)}
         </div>
       </div>
     </div>
