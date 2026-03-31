@@ -159,13 +159,13 @@ export default function TopBar({ filters, onChange }: TopBarProps) {
           <span className="font-medium text-slate-700">{formatDate(end)}</span>
         </div>
 
+        {/* Spacer */}
+        <div className="flex-1 min-w-0" />
+
         {/* Last update label */}
         <div className="text-xs text-slate-400 hidden md:block flex-shrink-0">
           Data: <span className="font-medium text-slate-500">{new Date(lastUpdate).toLocaleString('cs-CZ', { day: 'numeric', month: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</span>
         </div>
-
-        {/* Spacer */}
-        <div className="flex-1 min-w-0" />
 
         {/* Update button — admin only */}
         <div className="flex items-center gap-2 flex-shrink-0">
