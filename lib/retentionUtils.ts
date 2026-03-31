@@ -259,6 +259,39 @@ export function computeMonthlyChartData(data: CustomerRetentionRecord[]): Monthl
   });
 }
 
+export interface MonthlyNewVsReturningPoint {
+  date: string;       // 'YYYY-MM-01'
+  noví: number;
+  stávající: number;
+}
+
+/** Měsíční počty nových vs. stávajících zákazníků pro stacked bar chart */
+export function computeMonthlyNewVsReturning(data: CustomerRetentionRecord[]): MonthlyNewVsReturningPoint[] {
+  const byMonth: Record<string, { noví: number; stávající: number }> = {};
+
+  for (const c of data) {
+    const firstDate = c.dates[0];
+    if (!firstDate) continue;
+    const firstMonth = firstDate.substring(0, 7);
+
+    // Track which months this customer placed orders in
+    const orderMonths = new Set(c.dates.map(d => d.substring(0, 7)));
+
+    for (const month of orderMonths) {
+      if (!byMonth[month]) byMonth[month] = { noví: 0, stávající: 0 };
+      if (month === firstMonth) {
+        byMonth[month].noví++;
+      } else {
+        byMonth[month].stávající++;
+      }
+    }
+  }
+
+  return Object.keys(byMonth)
+    .sort()
+    .map(month => ({ date: month + '-01', ...byMonth[month] }));
+}
+
 /** Distribuce zákazníků a obratu podle počtu nákupů (1, 2, 3, 4+) */
 export function computePurchaseDistribution(data: CustomerRetentionRecord[]): PurchaseDistPoint[] {
   const counts = [0, 0, 0, 0];

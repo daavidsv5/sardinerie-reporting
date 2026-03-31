@@ -10,6 +10,7 @@ import {
   computeYearRetentionMetrics,
   computeYearRevenueMetrics,
   computeMonthlyChartData,
+  computeMonthlyNewVsReturning,
   computePurchaseDistribution,
   computeDaysBetweenHistogram,
   computeRfmSegments,
@@ -63,9 +64,10 @@ export default function RetentionPage() {
   const fc = (v: number) => formatCurrency(v, currency);
   const fp = (v: number) => formatPercent(v, 1);
 
-  const rfmSegments  = useMemo(() => computeRfmSegments(data), [data]);
-  const kpis         = useMemo(() => computeRetentionKpis(data), [data]);
-  const yearCustomer = useMemo(() => computeYearCustomerMetrics(data), [data]);
+  const rfmSegments       = useMemo(() => computeRfmSegments(data), [data]);
+  const kpis              = useMemo(() => computeRetentionKpis(data), [data]);
+  const yearCustomer      = useMemo(() => computeYearCustomerMetrics(data), [data]);
+  const monthlyNewVsRet   = useMemo(() => computeMonthlyNewVsReturning(data), [data]);
   const yearRetention= useMemo(() => computeYearRetentionMetrics(data), [data]);
   const yearRevenue  = useMemo(() => computeYearRevenueMetrics(data), [data]);
   const monthly      = useMemo(() => computeMonthlyChartData(data), [data]);
@@ -123,6 +125,21 @@ export default function RetentionPage() {
         <StatCard title="Ø dní mezi nákupy"   value={`${Math.round(kpis.avgDaysBetween)} dní`}      icon={<Calendar size={18} />} />
         <StatCard title="LTV / zákazník"      value={fc(kpis.ltvPerCustomer)}                       icon={<TrendingUp size={18} />} />
       </div>
+
+      {/* Noví vs. stávající zákazníci — měsíční stacked bar */}
+      <ChartCard title="Noví vs. stávající zákazníci — vývoj po měsících">
+        <ResponsiveContainer width="100%" height={260}>
+          <BarChart data={monthlyNewVsRet} margin={{ top: 4, right: 16, left: 4, bottom: 4 }} stackOffset="expand">
+            <CartesianGrid strokeDasharray="0" stroke="#f1f5f9" vertical={false} />
+            <XAxis dataKey="date" tickFormatter={formatShortDate} tick={{ fontSize: 11, fill: '#94a3b8' }} axisLine={false} tickLine={false} interval="preserveStartEnd" />
+            <YAxis tickFormatter={v => `${Math.round(v * 100)} %`} tick={{ fontSize: 11, fill: '#94a3b8' }} axisLine={false} tickLine={false} width={44} />
+            <Tooltip formatter={(v: any, name: any) => [`${Math.round((v as number) * 100)} %`, name]} labelFormatter={(l: any) => formatShortDate(l as string)} />
+            <Legend wrapperStyle={{ fontSize: 11, color: '#64748b' }} iconType="square" iconSize={9} />
+            <Bar dataKey="noví"      name="Noví zákazníci"      stackId="a" fill={C.newCustomers} />
+            <Bar dataKey="stávající" name="Stávající zákazníci" stackId="a" fill={C.primary}      radius={[3, 3, 0, 0]} />
+          </BarChart>
+        </ResponsiveContainer>
+      </ChartCard>
 
       {/* RFM Segmentace */}
       <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5 space-y-5">
