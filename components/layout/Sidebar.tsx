@@ -1,8 +1,9 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
-import { BarChart2, LayoutDashboard, ShoppingCart, TrendingUp, Package, Brain, PieChart, Users, ShieldCheck, LogOut, X, GitMerge, KeyRound, Activity, Truck, Archive } from 'lucide-react';
+import { LayoutDashboard, ShoppingCart, TrendingUp, Package, Brain, PieChart, Users, ShieldCheck, LogOut, X, GitMerge, KeyRound, Activity, Truck, Archive } from 'lucide-react';
 import { useSession, signOut } from 'next-auth/react';
 import { useSidebar } from './ConditionalLayout';
 
@@ -34,15 +35,16 @@ export default function Sidebar() {
       style={{ backgroundColor: '#1e3a5f' }}
     >
       {/* Logo + close button (mobile) */}
-      <div className="flex items-center gap-3 px-5 py-4 border-b border-white/10">
-        <BarChart2 className="text-blue-300 flex-shrink-0" size={22} />
-        <span className="text-white font-semibold text-base leading-tight flex-1">
-          Shoptet<br />
-          <span className="text-blue-300 text-sm font-normal">Reporting</span>
-        </span>
+      <div className="flex items-center gap-3 px-4 py-3 border-b border-white/10">
+        <div className="flex-1 min-w-0">
+          <div className="bg-white rounded-lg px-2 py-1.5 flex items-center justify-center">
+            <Image src="/logo.png" alt="Sardinerie" width={140} height={47} className="object-contain" priority />
+          </div>
+          <p className="text-blue-300 text-[10px] text-center mt-1.5 font-medium tracking-wide uppercase">Manažerský reporting</p>
+        </div>
         <button
           onClick={close}
-          className="md:hidden text-blue-300 hover:text-white p-1 -mr-1"
+          className="md:hidden text-blue-300 hover:text-white p-1 -mr-1 flex-shrink-0"
           aria-label="Zavřít menu"
         >
           <X size={18} />
