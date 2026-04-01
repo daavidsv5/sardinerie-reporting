@@ -37,10 +37,10 @@ export default function Sidebar() {
       {/* Logo + close button (mobile) */}
       <div className="flex items-center gap-3 px-4 py-3 border-b border-white/10">
         <div className="flex-1 min-w-0">
-          <div className="bg-white rounded-lg px-2 py-1.5 flex items-center justify-center">
-            <Image src="/logo.png" alt="Sardinerie" width={140} height={47} className="object-contain" priority />
+          <div className="bg-white rounded-md px-1.5 py-1 inline-flex items-center justify-center">
+            <Image src="/logo.png" alt="Sardinerie" width={80} height={27} className="object-contain" priority />
           </div>
-          <p className="text-blue-300 text-[10px] text-center mt-1.5 font-medium tracking-wide uppercase">Manažerský reporting</p>
+          <p className="text-white text-base font-semibold mt-2 leading-tight">Manažerský reporting</p>
         </div>
         <button
           onClick={close}
