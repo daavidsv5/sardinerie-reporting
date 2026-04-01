@@ -38,12 +38,17 @@ app/(dashboard|orders|marketing|products|margin|analytics|behavior|crosssell|ret
 
 ### Aktualizace dat na Vercelu
 
-- `scripts/updateData.js` běží lokálně denně v 05:00 (Windows Task Scheduler)
+- `scripts/updateData.js` běží lokálně denně v 06:00 (Windows Task Scheduler)
 - Na konci skriptu se provede `git commit + push` → Vercel automaticky nasadí nová data
 - Tlačítko **Aktualizovat data** (viditelné pouze adminům) volá `/api/update`:
   - Na Vercelu: spustí Vercel Deploy Hook (`VERCEL_DEPLOY_HOOK_URL` env proměnná)
   - Lokálně: spustí `node updateData.js` přímo
 - `data/lastUpdate.ts` — auto-gen timestamp poslední aktualizace, zobrazen v TopBaru vpravo
+
+**Windows Task Scheduler** — tasky `Shoptet Reporting - Update Data` a `ShoptetReportingUpdate`:
+- Spustitelný soubor: `cmd.exe`, argument: `/c "C:\Users\daavi\Desktop\VIBECODING\Shoptet reporting\shoptet-reporting\scripts\updateData.bat"`
+- Uvozovky jsou nutné kvůli mezeře v cestě
+- `DisallowStartIfOnBatteries` = false (taska se spustí i na baterii)
 
 ### Stránky
 
@@ -190,6 +195,24 @@ Výpočet v `lib/retentionUtils.ts` → `computeRfmSegments()`. Referenční dat
 - **Noví** = zákazník, jehož úplně první nákup je v daném roce
 - **Stávající** = zákazník, který měl v daném roce svůj 2.+ nákup vůbec (zahrnuje i opakované nákupy ve stejném roce)
 - Jeden zákazník **může být v obou kategoriích** v jednom roce (poprvé koupil a vrátil se ve stejném roce)
+
+### Filtr období (TopBar)
+
+Dostupné možnosti `TimePeriod` v `data/types.ts`:
+- `current_year` — Aktuální rok
+- `current_month` — Aktuální měsíc
+- `last_month` — Minulý měsíc (1. den – poslední den předchozího měsíce)
+- `last_14_days` — Posledních 14 dní
+- `last_year` — Minulý rok
+- `custom` — Vlastní období (customStart, customEnd)
+
+Logika datových rozsahů je v `hooks/useFilters.ts` → `getDateRange()`.
+
+### Selektor Trh (TopBar)
+
+- Stránky `/shipping` a `/analytics` mají skrytou možnost **Vše** — zobrazují pouze CZ a SK.
+- Stránky `/retention` a `/crosssell` mají selektor trhu zcela skrytý.
+- Ostatní stránky zobrazují všechny tři možnosti (Vše, CZ, SK).
 
 ### Konstanta `TODAY` (defaulty pro datum)
 
