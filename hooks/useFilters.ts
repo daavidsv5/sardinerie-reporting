@@ -35,6 +35,12 @@ export function getDateRange(filters: FilterState): DateRange {
       end = new Date(TODAY);
       break;
     }
+    case 'last_month': {
+      const lm = new Date(TODAY.getFullYear(), TODAY.getMonth() - 1, 1);
+      start = lm;
+      end = new Date(TODAY.getFullYear(), TODAY.getMonth(), 0);
+      break;
+    }
     case 'last_14_days': {
       end = new Date(TODAY);
       start = new Date(TODAY);

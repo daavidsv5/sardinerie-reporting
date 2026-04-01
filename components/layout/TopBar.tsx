@@ -18,6 +18,7 @@ interface TopBarProps {
 const periodLabels: Record<TimePeriod, string> = {
   current_year:  'Aktuální rok',
   current_month: 'Aktuální měsíc',
+  last_month:    'Minulý měsíc',
   last_14_days:  'Posledních 14 dní',
   last_year:     'Minulý rok',
   custom:        'Vlastní období',
