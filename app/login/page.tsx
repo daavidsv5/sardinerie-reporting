@@ -3,8 +3,7 @@
 import { useState } from 'react';
 import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import { Loader2, Eye, EyeOff } from 'lucide-react';
-import Image from 'next/image';
+import { BarChart2, Loader2, Eye, EyeOff } from 'lucide-react';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -43,10 +42,13 @@ export default function LoginPage() {
       <div className="w-full max-w-sm px-4 sm:px-0">
         {/* Logo */}
         <div className="flex flex-col items-center mb-8">
-          <div className="bg-white rounded-2xl px-6 py-4 mb-4 shadow-lg">
-            <Image src="/logo.png" alt="Sardinerie" width={200} height={67} className="object-contain" priority />
+          <div
+            className="flex items-center justify-center w-14 h-14 rounded-2xl mb-4"
+            style={{ backgroundColor: 'rgba(255,255,255,0.1)' }}
+          >
+            <BarChart2 className="text-blue-300" size={28} />
           </div>
-          <h1 className="text-white text-xl font-semibold">Manažerský reporting</h1>
+          <h1 className="text-white text-2xl font-semibold">Shoptet Reporting</h1>
           <p className="text-blue-300 text-sm mt-1">Přihlaste se ke svému účtu</p>
         </div>
 
@@ -118,7 +120,7 @@ export default function LoginPage() {
         </div>
 
         <p className="text-center text-blue-400 text-xs mt-6">
-          © 2026 Sardinerie Fish Boutique
+          © 2026 Shoptet
         </p>
       </div>
     </div>
