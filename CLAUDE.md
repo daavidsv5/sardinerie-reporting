@@ -23,7 +23,7 @@ Next.js 16 (App Router), React 19, TypeScript, Tailwind CSS 4, Recharts, NextAut
 
 ```
 Google Sheets (CSV)
-       ↓  scripts/updateData.js  (denně v 05:00 via Windows Task Scheduler)
+       ↓  scripts/updateData.js  (denně v 06:00 via Windows Task Scheduler)
        ↓  na konci skriptu: git commit + push → Vercel automaticky redeploy
 data/realDataCZ.ts + realDataSK.ts + productData* + marginData* + hourlyData* +
 crossSellData* + retentionData* + orderValueData* + shippingPaymentData* + lastUpdate.ts
@@ -263,6 +263,21 @@ NextAuth 5 (beta). Uživatelé jsou uloženi v `data/users.json` (bcrypt hesla).
 
 - Tlačítko **Aktualizovat data** v TopBaru je viditelné **pouze adminům** (kontrola přes `useSession`)
 - Ostatní uživatelé tlačítko nevidí
+
+### Názvy měsíců v grafech
+
+Grafy s rozpadem po měsících zobrazují české zkratky měsíců (`formatMonthYear` z `lib/formatters.ts`), ne číselný formát.
+
+- **`/margin`** — useMemo vrací `isMonthly: dayCount > 60`; komponenta volí `dateTickFormatter = isMonthly ? formatMonthYear : formatShortDate` pro osu X i tooltip (`MarzeTooltip` přijímá prop `isMonthly`)
+- **`/shipping`** — `formatPeriodLabel(key, 'month')` vrací `Bře 2024` pomocí lokální konstanty `MONTHS_CS`
+- **`/retention`** — měsíční graf Noví vs. stávající zákazníci vždy používá `formatMonthYear`
+
+### Branding a název aplikace
+
+- Název aplikace: **Manažerský reporting** (sidebar, login stránka, browser tab)
+- Logo: `public/logo.png` (Sardinerie Fish Boutique, modré logo na bílém pozadí)
+- Logo je zobrazeno v sidebaru a na login stránce
+- Sidebar: logo v bílém kontejneru + text "Manažerský / reporting" pod ním
 
 ### Pre-existing TS chyby
 
