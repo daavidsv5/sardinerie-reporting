@@ -249,8 +249,8 @@ export default function AnalyticsPage() {
                 <YAxis tick={{ fontSize: 11, fill: '#94a3b8' }} unit="%" />
                 <Tooltip formatter={(v: unknown, name: unknown) => [`${Number(v).toFixed(2)} %`, String(name)]} />
                 <Legend />
-                <Line type="monotone" dataKey="cvr"      name="Konverzní poměr"        stroke={C.cvr} strokeWidth={2}   dot={false} />
-                <Line type="monotone" dataKey="cvr_prev" name="Konverzní poměr (loni)"  stroke={C.cvr} strokeWidth={1.5} strokeDasharray="4 3" dot={false} opacity={0.5} />
+                <Line type="monotone" dataKey="cvr"      name="Konverzní poměr"        stroke={C.primary}      strokeWidth={2}   dot={false} />
+                <Line type="monotone" dataKey="cvr_prev" name="Konverzní poměr (loni)"  stroke={C.primaryLight} strokeWidth={1.5} strokeDasharray="4 3" dot={false} />
               </LineChart>
             </ResponsiveContainer>
           </div>
@@ -267,8 +267,8 @@ export default function AnalyticsPage() {
                   <YAxis tick={{ fontSize: 11, fill: '#94a3b8' }} unit="%" domain={[0, 100]} />
                   <Tooltip formatter={(v: unknown, name: unknown) => [`${v} %`, String(name)]} />
                   <Legend />
-                  <Line type="monotone" dataKey="bounceRate"      name="Bounce rate"       stroke={C.cvr} strokeWidth={2}   dot={false} />
-                  <Line type="monotone" dataKey="bounceRate_prev" name="Bounce rate (loni)" stroke={C.cvr} strokeWidth={1.5} strokeDasharray="4 3" dot={false} opacity={0.5} />
+                  <Line type="monotone" dataKey="bounceRate"      name="Bounce rate"       stroke={C.primary}      strokeWidth={2}   dot={false} />
+                  <Line type="monotone" dataKey="bounceRate_prev" name="Bounce rate (loni)" stroke={C.primaryLight} strokeWidth={1.5} strokeDasharray="4 3" dot={false} />
                 </LineChart>
               </ResponsiveContainer>
             </div>
@@ -283,8 +283,8 @@ export default function AnalyticsPage() {
                   <YAxis tick={{ fontSize: 11, fill: '#94a3b8' }} />
                   <Tooltip formatter={(v: unknown, name: unknown) => [`${v} s`, String(name)]} />
                   <Legend />
-                  <Line type="monotone" dataKey="avgDuration"      name="Délka návštěvy"       stroke={C.duration} strokeWidth={2}   dot={false} />
-                  <Line type="monotone" dataKey="avgDuration_prev" name="Délka návštěvy (loni)" stroke={C.duration} strokeWidth={1.5} strokeDasharray="4 3" dot={false} opacity={0.5} />
+                  <Line type="monotone" dataKey="avgDuration"      name="Délka návštěvy"       stroke={C.primary}      strokeWidth={2}   dot={false} />
+                  <Line type="monotone" dataKey="avgDuration_prev" name="Délka návštěvy (loni)" stroke={C.primaryLight} strokeWidth={1.5} strokeDasharray="4 3" dot={false} />
                 </LineChart>
               </ResponsiveContainer>
             </div>
@@ -391,7 +391,7 @@ export default function AnalyticsPage() {
                     type="monotone"
                     dataKey={`purchase_${funnelDevice}`}
                     name="CVR trychtýře"
-                    stroke={C.margin}
+                    stroke={C.primary}
                     strokeWidth={2.5}
                     dot={false}
                     activeDot={{ r: 4 }}

@@ -38,14 +38,15 @@ app/(dashboard|orders|marketing|products|margin|analytics|behavior|crosssell|ret
 
 ### Aktualizace dat na Vercelu
 
-- `scripts/updateData.js` běží lokálně denně v 06:00 (Windows Task Scheduler)
+- **Primárně:** `.github/workflows/update-data.yml` — GitHub Actions spouští `node scripts/updateData.js` každý den v 05:00 UTC (= 06:00 CET / 07:00 CEST), nezávisle na stavu počítače
 - Na konci skriptu se provede `git commit + push` → Vercel automaticky nasadí nová data
+- Workflow lze spustit i ručně: GitHub → Actions → Update Data → Run workflow
 - Tlačítko **Aktualizovat data** (viditelné pouze adminům) volá `/api/update`:
   - Na Vercelu: spustí Vercel Deploy Hook (`VERCEL_DEPLOY_HOOK_URL` env proměnná)
   - Lokálně: spustí `node updateData.js` přímo
 - `data/lastUpdate.ts` — auto-gen timestamp poslední aktualizace, zobrazen v TopBaru vpravo
 
-**Windows Task Scheduler** — tasky `Shoptet Reporting - Update Data` a `ShoptetReportingUpdate`:
+**Windows Task Scheduler** — tasky `Shoptet Reporting - Update Data` a `ShoptetReportingUpdate` (záloha, primárně nahrazeno GitHub Actions):
 - Spustitelný soubor: `cmd.exe`, argument: `/c "C:\Users\daavi\Desktop\VIBECODING\Shoptet reporting\shoptet-reporting\scripts\updateData.bat"`
 - Uvozovky jsou nutné kvůli mezeře v cestě
 - `DisallowStartIfOnBatteries` = false (taska se spustí i na baterii)
@@ -59,7 +60,8 @@ app/(dashboard|orders|marketing|products|margin|analytics|behavior|crosssell|ret
 | `/marketing` | Marketingové investice — CPC per channel (FB/Google), trend kliky+CPC (ROAS odstraněn) |
 | `/products` | Prodejnost produktů — ABC analýza (A/B/C segmenty), sortovatelná tabulka, YoY, CSV export |
 | `/margin` | Maržový report — marže %, hrubý zisk, grafy |
-| `/analytics` | GA4 integrace — sessions, CVR, sources+devices (YoY), vstupní stránky; zatím jen CZ |
+| `/analytics` | GA4 integrace — sessions, CVR, sources+devices (YoY), vstupní stránky; zatím jen CZ; všechny grafy tmavě modrá křivka (`C.primary`) kromě průchodnosti košíkem |
+| `/meta` | Meta Ads — KPI boxy s YoY (útrata, dosah, imprese, kliky, CTR, CPC, nákupy, tržby z reklam, CPA, ROAS), grafy CPC/CPA/Nákupy/ROAS po dnech, tabulka kreativ s filtrem kampaně+sady reklam |
 | `/behavior` | Nákupní chování — týdenní srovnání, hourly grid (all-time agregace) |
 | `/crosssell` | Cross-sell potenciál — top 100 produktových párů |
 | `/retention` | Retenční analýza — RFM segmentace, LTV, AOV, repeat purchase rate, měsíční graf Noví vs. stávající zákazníci (100% stacked bar) |
@@ -97,7 +99,9 @@ app/(dashboard|orders|marketing|products|margin|analytics|behavior|crosssell|ret
 | `data/orderValueDataCZ.ts` / `orderValueDataSK.ts` | Per-order košík bez DPH `{ date, value }[]` — auto-gen |
 | `data/shippingPaymentDataCZ.ts` / `shippingPaymentDataSK.ts` | Doprava+platby po dnech — auto-gen |
 | `lib/retentionUtils.ts` | Všechny výpočty pro `/retention` (KPI, YoY, RFM segmentace, distribuce, měsíční Noví vs. stávající) |
-| `lib/formatters.ts` | `formatCurrency`, `formatPercent`, `formatNumber`, `formatDate`, `formatShortDate`, `formatMonthYear` |
+| `lib/formatters.ts` | `formatCurrency`, `formatPercent`, `formatNumber`, `formatDate`, `formatShortDate`, `formatMonthYear`, `localIsoDate` |
+| `app/api/meta/route.ts` | Meta Marketing API — KPI + denní breakdown + kreativy; filtruje kampaně obsahující "myfish" |
+| `app/meta/page.tsx` | Meta Ads stránka — KPI s YoY, grafy po dnech, tabulka kreativ s filtrem |
 | `components/kpi/StatCard.tsx` | Sdílená KPI karta (border-2 border-blue-800, icon vpravo); prop `negative` = rose varianta; props `yoy`, `hasPrevData`, `invertYoy` pro YoY badge |
 | `components/kpi/KpiCard.tsx` | KPI karta se sparkline a YoY badge; prop `variant: 'default' \| 'green' \| 'red'` mění barvu rámečku, ikony a hodnoty |
 | `hooks/useFilters.ts` | `FiltersProvider` + `useFilters()` + `getDateRange()` + live EUR rate |
@@ -114,9 +118,15 @@ Dva typy KPI karet — **neměnit vzájemně**:
   - `'green'` — tmavě zelený rámeček + zelená hodnota (Hrubý zisk)
   - `'red'` — červený rámeček + červená hodnota (ztráta dopravy)
 
+### `localIsoDate(d: Date)`
+
+Funkce v `lib/formatters.ts` — vrací datum jako `"YYYY-MM-DD"` v **lokálním čase** (bez UTC konverze). Používat všude místo `.toISOString().split('T')[0]`, jinak v CEST (UTC+2) dochází k posunutí data o den zpět.
+
 ### `/dashboard` — Klíčové ukazatele (KPI)
 
 KPI boxy (11 + 2 ve vlastním řádku): Tržby s/bez DPH, Počet obj., AOV, Marketing. investice, PNO, CPA, Marže, Marže %, Cena za nového zákazníka, Hrubý zisk na objednávku + **samostatný řádek: Hrubý zisk, Hrubý zisk %** (variant='green').
+
+**Grafy (4 celkem, 2×2 mřížka):** Tržby+Objednávky, Náklady+PNO, AOV (YoY), Cena za objednávku/CPA (YoY) — komponenty `AovChart` a `CpaChart` z `components/charts/AovCpaChart.tsx`.
 
 **Odstraněno:** Storna, Podíl storen (odstraněno na žádost uživatele).
 
@@ -278,6 +288,27 @@ Grafy s rozpadem po měsících zobrazují české zkratky měsíců (`formatMon
 - Logo: `public/logo.png` (Sardinerie Fish Boutique, modré logo na bílém pozadí)
 - Logo je zobrazeno v sidebaru a na login stránce
 - Sidebar: logo v bílém kontejneru + text "Manažerský / reporting" pod ním
+
+### `/meta` — Meta Ads
+
+Stránka volá `app/api/meta/route.ts` který fetchuje Meta Marketing API v21.0.
+
+**Env proměnné:**
+```
+META_ACCESS_TOKEN=...          # System User token (trvalý)
+META_AD_ACCOUNT_ID_CZ=act_...  # CZ reklamní účet
+META_AD_ACCOUNT_ID_SK=act_...  # SK reklamní účet
+```
+
+**Filtr MyFish:** Kampaně obsahující `"myfish"` (case-insensitive) jsou **vyloučeny ze všech metrik** — KPI, denní grafy i tabulka kreativ. Konstanta `EXCLUDE_CAMPAIGN = 'myfish'` v `route.ts`.
+
+**KPI agregace:** Počítá se na úrovni `level=campaign` (ne account-level), aby šlo filtrovat MyFish před součtem.
+
+**Selektor trhu:** Přepíná mezi CZ a SK Ad Account. Možnost "Vše" je skryta (stejně jako `/analytics`) — Meta má oddělené účty per trh.
+
+**Tabulka kreativ:** Filtrovatelná dle kampaně a sady reklam (dropdowny nad tabulkou). Výběr kampaně resetuje filtr sady reklam a nabízí pouze relevantní sady.
+
+**YoY:** API fetchuje předchozí rok posunutím `time_range` o -1 rok. YoY badge zobrazuje % změnu; pro Útrata/CPA/CPC je logika invertovaná (pokles = zelená).
 
 ### Pre-existing TS chyby
 
