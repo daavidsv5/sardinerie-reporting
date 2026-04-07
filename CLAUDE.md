@@ -264,6 +264,23 @@ Hourly grid na stránce `/behavior` je **all-time agregace** — nezohledňuje v
 
 Nákupní ceny pro SK nejsou dostupné — `marginDataSK` obsahuje nuly v `costPrice`. Maržový report pro SK je nepřesný.
 
+### SK launch date
+
+SK e-shop spuštěn **1. června 2024**. Data před tímto datem jsou testovací objednávky a nesmí vstupovat do žádných reportů.
+
+Konstanta `SK_LAUNCH_DATE = '2024-06-01'` v `data/types.ts` — používat všude jako filtr SK dat.
+
+**Filtrování je aplikováno na těchto místech:**
+- `data/mockGenerator.ts` — `mockData` obsahuje SK záznamy pouze od `SK_LAUNCH_DATE`; mock data pro SK zcela odstraněna (e-shop před červnem 2024 neexistoval)
+- `app/dashboard/page.tsx` — `marginDataSK`
+- `app/hlavni-dashboard/page.tsx` — `marginDataSK`
+- `app/margin/page.tsx` — `marginDataSK`, `realDataSK`
+- `app/orders/page.tsx` — `orderValueDataSK`
+- `app/shipping/page.tsx` — `shippingPaymentDataSK`
+- `app/retention/page.tsx` — zákazníci s prvním nákupem před `SK_LAUNCH_DATE` vyloučeni
+
+**Při přidávání nových SK datasetů** vždy filtrovat: `data.filter(r => r.date >= SK_LAUNCH_DATE)`.
+
 ### GA4
 
 GA4 je napojeno pouze pro **CZ**. SK bude řešeno samostatně v budoucnu.
