@@ -1,88 +1,7 @@
-import { DailyRecord, Country, EUR_TO_CZK, SK_LAUNCH_DATE } from './types';
+import { DailyRecord, EUR_TO_CZK, SK_LAUNCH_DATE } from './types';
 import { realDataCZ } from './realDataCZ';
 import { realDataSK } from './realDataSK';
 
-// Real data start dates — earlier dates use mock data for YoY base comparisons
-const REAL_CZ_START = '2025-05-25';
-const REAL_SK_START = SK_LAUNCH_DATE; // SK e-shop launched June 2024; earlier records are test orders
-
-function seededRandom(seed: number): () => number {
-  let s = seed;
-  return function () {
-    s = (s * 1664525 + 1013904223) & 0xffffffff;
-    return (s >>> 0) / 0xffffffff;
-  };
-}
-
-function getSeasonalFactor(month: number): number {
-  const factors: Record<number, number> = {
-    1: 0.70, 2: 0.72, 3: 0.85, 4: 0.90,
-    5: 0.95, 6: 0.90, 7: 0.85, 8: 0.88,
-    9: 0.95, 10: 1.05, 11: 1.35, 12: 1.50,
-  };
-  return factors[month] ?? 1.0;
-}
-
-function getWeekdayFactor(dayOfWeek: number): number {
-  const factors: Record<number, number> = {
-    0: 0.80, 1: 0.85, 2: 1.05, 3: 1.10,
-    4: 1.10, 5: 1.08, 6: 0.95,
-  };
-  return factors[dayOfWeek] ?? 1.0;
-}
-
-function getYearGrowth(year: number): number {
-  if (year === 2024) return 1.0;
-  if (year === 2025) return 1.15;
-  if (year === 2026) return 1.15 * 1.17;
-  return 1.0;
-}
-
-function generateRecordsForCountry(country: Country): DailyRecord[] {
-  const records: DailyRecord[] = [];
-  const rng = seededRandom(country === 'cz' ? 42 : 137);
-
-  const startDate = new Date(2024, 0, 1);
-  const endDate = new Date(2026, 2, 14);
-
-  // SK mock base values in EUR, CZ in CZK
-  const isSK = country === 'sk';
-  const baseRevenue = isSK ? 300 : 19000;  // EUR for SK, CZK for CZ
-  const baseOrders  = isSK ? 5 : 27;
-  const baseCost    = isSK ? 52 : 3200;
-  const vatRate     = isSK ? 1.20 : 1.21;
-
-  const current = new Date(startDate);
-  while (current <= endDate) {
-    const year      = current.getFullYear();
-    const month     = current.getMonth() + 1;
-    const dayOfWeek = current.getDay();
-
-    const seasonal   = getSeasonalFactor(month);
-    const weekday    = getWeekdayFactor(dayOfWeek);
-    const yearGrowth = getYearGrowth(year);
-    const noise      = () => 0.70 + rng() * 0.60;
-
-    const revenue = Math.round(baseRevenue * seasonal * weekday * yearGrowth * noise());
-    const orders  = Math.max(1, Math.round(baseOrders * seasonal * weekday * yearGrowth * noise()));
-    const cost    = Math.round(baseCost * seasonal * weekday * yearGrowth * noise());
-
-    records.push({
-      date: current.toISOString().split('T')[0],
-      country,
-      currency: isSK ? 'EUR' : 'CZK',
-      revenue,
-      revenue_vat: Math.round(revenue * vatRate * 100) / 100,
-      orders,
-      orders_cancelled: 0,
-      cost,
-    });
-
-    current.setDate(current.getDate() + 1);
-  }
-
-  return records;
-}
 
 // CZ: real data only — e-shop launched May 2025, no prior year data exists
 const realCZ: DailyRecord[] = realDataCZ.map(r => ({
@@ -90,8 +9,7 @@ const realCZ: DailyRecord[] = realDataCZ.map(r => ({
   orders: r.orders, orders_cancelled: r.orders_cancelled, revenue_vat: r.revenue_vat, revenue: r.revenue, cost: r.cost,
 }));
 
-// SK: mock before launch date (EUR scale, for YoY base), then real data from launch onwards
-const mockSK = generateRecordsForCountry('sk').filter(r => r.date < REAL_SK_START);
+// SK: real data only from launch date — no mock data (e-shop did not exist before June 2024)
 const realSK: DailyRecord[] = realDataSK
   .filter(r => r.date >= SK_LAUNCH_DATE)
   .map(r => ({
@@ -101,7 +19,7 @@ const realSK: DailyRecord[] = realDataSK
 
 export const mockData: DailyRecord[] = [
   ...realCZ,
-  ...mockSK, ...realSK,
+  ...realSK,
 ];
 
 // Daily marketing data with per-channel breakdown
