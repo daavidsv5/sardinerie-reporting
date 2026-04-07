@@ -8,8 +8,10 @@ import KpiCard from '@/components/kpi/KpiCard';
 import { formatCurrency, formatNumber, formatPercent, formatDate, formatShortDate, localIsoDate } from '@/lib/formatters';
 import { Wallet, Banknote, ShoppingCart, BarChart2, XCircle, AlertTriangle, Lightbulb, CalendarDays } from 'lucide-react';
 import { orderValueDataCZ } from '@/data/orderValueDataCZ';
-import { orderValueDataSK } from '@/data/orderValueDataSK';
-import { getDisplayCurrency } from '@/data/types';
+import { orderValueDataSK as _orderValueDataSK } from '@/data/orderValueDataSK';
+import { getDisplayCurrency, SK_LAUNCH_DATE } from '@/data/types';
+
+const orderValueDataSK = _orderValueDataSK.filter(r => r.date >= SK_LAUNCH_DATE);
 import { C } from '@/lib/chartColors';
 import {
   ComposedChart,

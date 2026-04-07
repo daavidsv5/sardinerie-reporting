@@ -3,8 +3,10 @@
 import { useState, useMemo, useEffect, useRef } from 'react';
 import { useFilters, getDateRange } from '@/hooks/useFilters';
 import { shippingPaymentDataCZ } from '@/data/shippingPaymentDataCZ';
-import { shippingPaymentDataSK } from '@/data/shippingPaymentDataSK';
-import { getDisplayCurrency } from '@/data/types';
+import { shippingPaymentDataSK as _shippingPaymentDataSK } from '@/data/shippingPaymentDataSK';
+import { getDisplayCurrency, SK_LAUNCH_DATE } from '@/data/types';
+
+const shippingPaymentDataSK = _shippingPaymentDataSK.filter(r => r.date >= SK_LAUNCH_DATE);
 import { formatCurrency, formatNumber, formatDate, localIsoDate } from '@/lib/formatters';
 import { Truck, CreditCard, DollarSign, Banknote, Star, Award, Gift, Save, RotateCcw } from 'lucide-react';
 

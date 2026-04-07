@@ -15,6 +15,9 @@ export interface DailyRecord {
 /** Exchange rate used when combining CZK + EUR in a single view */
 export const EUR_TO_CZK = 25;
 
+/** SK e-shop launch date — data before this date are test orders and should be excluded */
+export const SK_LAUNCH_DATE = '2024-06-01';
+
 export interface KpiData {
   revenuevat: number;
   revenue: number;

@@ -1,10 +1,10 @@
-import { DailyRecord, Country, EUR_TO_CZK } from './types';
+import { DailyRecord, Country, EUR_TO_CZK, SK_LAUNCH_DATE } from './types';
 import { realDataCZ } from './realDataCZ';
 import { realDataSK } from './realDataSK';
 
 // Real data start dates — earlier dates use mock data for YoY base comparisons
 const REAL_CZ_START = '2025-05-25';
-const REAL_SK_START = '2024-03-24';
+const REAL_SK_START = SK_LAUNCH_DATE; // SK e-shop launched June 2024; earlier records are test orders
 
 function seededRandom(seed: number): () => number {
   let s = seed;
@@ -90,12 +90,14 @@ const realCZ: DailyRecord[] = realDataCZ.map(r => ({
   orders: r.orders, orders_cancelled: r.orders_cancelled, revenue_vat: r.revenue_vat, revenue: r.revenue, cost: r.cost,
 }));
 
-// SK: mock before real data start (EUR scale, for YoY base), then real data
+// SK: mock before launch date (EUR scale, for YoY base), then real data from launch onwards
 const mockSK = generateRecordsForCountry('sk').filter(r => r.date < REAL_SK_START);
-const realSK: DailyRecord[] = realDataSK.map(r => ({
-  date: r.date, country: r.country, currency: 'EUR' as const,
-  orders: r.orders, orders_cancelled: r.orders_cancelled, revenue_vat: r.revenue_vat, revenue: r.revenue, cost: r.cost,
-}));
+const realSK: DailyRecord[] = realDataSK
+  .filter(r => r.date >= SK_LAUNCH_DATE)
+  .map(r => ({
+    date: r.date, country: r.country, currency: 'EUR' as const,
+    orders: r.orders, orders_cancelled: r.orders_cancelled, revenue_vat: r.revenue_vat, revenue: r.revenue, cost: r.cost,
+  }));
 
 export const mockData: DailyRecord[] = [
   ...realCZ,

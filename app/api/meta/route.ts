@@ -130,15 +130,17 @@ export async function GET(req: NextRequest) {
     // Sesbírej unikátní ad_id pro thumbnail
     const adIds = [...new Set(adsRaw.map(a => a.ad_id).filter(Boolean))];
 
-    // Fetch thumbnails pro všechny ads najednou
+    // Fetch thumbnails + status pro všechny ads najednou
     const thumbMap: Record<string, string> = {};
+    const statusMap: Record<string, string> = {};
     if (adIds.length > 0) {
       const thumbRes = await fetch(
-        `${BASE}?ids=${adIds.join(',')}&fields=creative{thumbnail_url,title}&access_token=${TOKEN}`
+        `${BASE}?ids=${adIds.join(',')}&fields=creative{thumbnail_url,title},effective_status&access_token=${TOKEN}`
       );
       const thumbJson = await thumbRes.json();
       for (const [id, val] of Object.entries(thumbJson as Record<string, any>)) {
         thumbMap[id] = val?.creative?.thumbnail_url ?? '';
+        statusMap[id] = val?.effective_status ?? '';
       }
     }
 
@@ -154,6 +156,7 @@ export async function GET(req: NextRequest) {
           campaignName: a.campaign_name ?? '–',
           adsetName:    a.adset_name ?? '–',
           thumbnail:    thumbMap[a.ad_id] ?? '',
+          status:       statusMap[a.ad_id] ?? '',
           spend:        adSpend,
           reach:        Number(a.reach ?? 0),
           impressions:  Number(a.impressions ?? 0),

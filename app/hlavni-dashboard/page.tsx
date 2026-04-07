@@ -7,10 +7,13 @@ import {
 } from 'recharts';
 import { mockData } from '@/data/mockGenerator';
 import { marginDataCZ } from '@/data/marginDataCZ';
-import { marginDataSK } from '@/data/marginDataSK';
+import { marginDataSK as _marginDataSK } from '@/data/marginDataSK';
 import { useFilters } from '@/hooks/useFilters';
 import { useHlavniDashboard } from '@/hooks/useHlavniDashboard';
+import { SK_LAUNCH_DATE } from '@/data/types';
 import type { Country } from '@/data/types';
+
+const marginDataSK = _marginDataSK.filter(r => r.date >= SK_LAUNCH_DATE);
 
 // ─── Constants ───────────────────────────────────────────────────────────────
 

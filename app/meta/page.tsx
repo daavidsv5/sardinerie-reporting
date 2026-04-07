@@ -40,13 +40,14 @@ interface MetaAd {
   addToCart: number;
   cpa: number;
   roas: number;
+  status: string;
 }
 
-type SortKey = 'spend' | 'reach' | 'clicks' | 'ctr' | 'purchases' | 'cpa' | 'roas' | 'addToCart';
+type SortKey = 'spend' | 'reach' | 'clicks' | 'ctr' | 'purchases' | 'purchaseValue' | 'cpa' | 'roas' | 'addToCart';
 
 const SORT_LABELS: Record<SortKey, string> = {
   spend: 'Útrata', reach: 'Dosah', clicks: 'Kliky', ctr: 'CTR',
-  purchases: 'Nákupy', cpa: 'CPA', roas: 'ROAS', addToCart: 'Košík',
+  purchases: 'Nákupy', purchaseValue: 'Tržby z reklam', cpa: 'CPA', roas: 'ROAS', addToCart: 'Košík',
 };
 
 function pct(v: number) {
@@ -62,6 +63,16 @@ function roasColor(v: number) {
 function yoyChange(cur: number, prev: number): number | null {
   if (prev === 0) return null;
   return ((cur - prev) / prev) * 100;
+}
+
+function adStatusBadge(status: string) {
+  if (status === 'ACTIVE') {
+    return <span className="inline-flex items-center gap-1 text-[10px] font-semibold px-1.5 py-0.5 rounded-full bg-emerald-100 text-emerald-700"><span className="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block" />Aktivní</span>;
+  }
+  if (status.includes('PAUSED')) {
+    return <span className="inline-flex items-center gap-1 text-[10px] font-semibold px-1.5 py-0.5 rounded-full bg-amber-100 text-amber-700"><span className="w-1.5 h-1.5 rounded-full bg-amber-400 inline-block" />Pozastaveno</span>;
+  }
+  return null;
 }
 
 function cpaColor(v: number, avg: number) {
@@ -353,6 +364,7 @@ export default function MetaPage() {
                     <th className={`${thBase} text-right`} onClick={() => toggleSort('ctr')}>CTR</th>
                     <th className={`${thBase} text-right`} onClick={() => toggleSort('addToCart')}>Košík</th>
                     <th className={`${thBase} text-right`} onClick={() => toggleSort('purchases')}>Nákupy</th>
+                    <th className={`${thBase} text-right`} onClick={() => toggleSort('purchaseValue')}>Tržby z reklam</th>
                     <th className={`${thBase} text-right`} onClick={() => toggleSort('cpa')}>CPA</th>
                     <th className={`${thBase} text-right`} onClick={() => toggleSort('roas')}>ROAS</th>
                   </tr>
@@ -377,7 +389,10 @@ export default function MetaPage() {
                               <Image size={16} className="text-slate-300" />
                             </div>
                           )}
-                          <p className="text-slate-700 text-xs font-medium leading-snug line-clamp-2" style={{ maxWidth: 180 }}>{ad.name}</p>
+                          <div>
+                            <p className="text-slate-700 text-xs font-medium leading-snug line-clamp-2" style={{ maxWidth: 180 }}>{ad.name}</p>
+                            {ad.status && <div className="mt-1">{adStatusBadge(ad.status)}</div>}
+                          </div>
                         </div>
                       </td>
                       <td className="px-3 py-2.5 text-left">
@@ -392,6 +407,7 @@ export default function MetaPage() {
                       <td className="px-3 py-2.5 text-right text-slate-500 tabular-nums">{pct(ad.ctr)}</td>
                       <td className="px-3 py-2.5 text-right text-slate-600 tabular-nums">{formatNumber(ad.addToCart)}</td>
                       <td className="px-3 py-2.5 text-right text-slate-700 font-semibold tabular-nums">{formatNumber(ad.purchases)}</td>
+                      <td className="px-3 py-2.5 text-right text-slate-700 tabular-nums">{ad.purchaseValue > 0 ? fc(ad.purchaseValue) : '–'}</td>
                       <td className={`px-3 py-2.5 text-right font-semibold tabular-nums ${cpaColor(ad.cpa, avgCpa)}`}>
                         {ad.cpa > 0 ? fc(ad.cpa) : '–'}
                       </td>
@@ -402,7 +418,7 @@ export default function MetaPage() {
                   ))}
                   {sortedAds.length === 0 && (
                     <tr>
-                      <td colSpan={11} className="px-4 py-8 text-center text-slate-400 text-sm">
+                      <td colSpan={12} className="px-4 py-8 text-center text-slate-400 text-sm">
                         Žádná data pro vybrané období
                       </td>
                     </tr>

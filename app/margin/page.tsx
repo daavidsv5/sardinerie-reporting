@@ -3,9 +3,13 @@
 import { useMemo } from 'react';
 import { useFilters, getDateRange } from '@/hooks/useFilters';
 import { marginDataCZ } from '@/data/marginDataCZ';
-import { marginDataSK } from '@/data/marginDataSK';
+import { marginDataSK as _marginDataSK } from '@/data/marginDataSK';
 import { realDataCZ } from '@/data/realDataCZ';
-import { realDataSK } from '@/data/realDataSK';
+import { realDataSK as _realDataSK } from '@/data/realDataSK';
+import { SK_LAUNCH_DATE } from '@/data/types';
+
+const marginDataSK = _marginDataSK.filter(r => r.date >= SK_LAUNCH_DATE);
+const realDataSK   = _realDataSK.filter(r => r.date >= SK_LAUNCH_DATE);
 import { formatCurrency, formatPercent, formatDate, formatNumber, formatShortDate, formatMonthYear, localIsoDate } from '@/lib/formatters';
 import { Info, Wallet, Banknote, ShoppingCart, TrendingUp, Percent, BarChart2, DollarSign } from 'lucide-react';
 import StatCard from '@/components/kpi/StatCard';

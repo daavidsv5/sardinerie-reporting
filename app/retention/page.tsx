@@ -3,7 +3,11 @@
 import { useState, useMemo } from 'react';
 import { Users, DollarSign, ShoppingCart, RefreshCw, Calendar, TrendingUp } from 'lucide-react';
 import { retentionDataCZ } from '@/data/retentionDataCZ';
-import { retentionDataSK } from '@/data/retentionDataSK';
+import { retentionDataSK as _retentionDataSK } from '@/data/retentionDataSK';
+import { SK_LAUNCH_DATE } from '@/data/types';
+
+// Exclude customers whose first purchase was before SK launch (test orders)
+const retentionDataSK = _retentionDataSK.filter(c => c.dates[0] >= SK_LAUNCH_DATE);
 import {
   computeRetentionKpis,
   computeYearCustomerMetrics,
