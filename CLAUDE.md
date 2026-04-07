@@ -55,6 +55,7 @@ app/(dashboard|orders|marketing|products|margin|analytics|behavior|crosssell|ret
 
 | Stránka | Popis |
 |---------|-------|
+| `/hlavni-dashboard` | **Hlavní Dashboard** — měsíční přehled 8 KPI metrik jako grouped bar charty (Tržby bez DPH, Hrubý zisk, Počet obj., Mark. investice, PNO %, AOV, Marže %, CPA). Selektor trhu + rok vs. rok v TopBaru (nahrazuje standardní Trh/Období filtry). Výchozí přesměrování z `/`. |
 | `/dashboard` | **Klíčové ukazatele (KPI)** — Tržby s/bez DPH, Počet obj., AOV, Marketing. investice, PNO, CPA, Marže, Marže %, Cena za nového zákazníka, Hrubý zisk na obj. + samostatný řádek Hrubý zisk + Hrubý zisk % |
 | `/orders` | Objednávky — tržby vs počet, distribuce hodnot košíku (histogram), rozložení CZ/SK |
 | `/marketing` | Marketingové investice — CPC per channel (FB/Google), trend kliky+CPC (ROAS odstraněn) |
@@ -82,6 +83,20 @@ app/(dashboard|orders|marketing|products|margin|analytics|behavior|crosssell|ret
 - **SK má YoY** — reálná data od března 2024; mock SK data (seeded RNG) doplňují leden–únor 2024 jako základ pro YoY.
 - `hasPrevData` předávej do `KpiCard`, `RevenueOrdersChart` a `CostPnoChart`, aby šlo podmíněně skrýt YoY badge a "minulý rok" řady v grafech.
 
+### Hlavní Dashboard (`/hlavni-dashboard`)
+
+Výchozí stránka aplikace (redirect z `/`). Zobrazuje 8 grouped bar chartů s měsíčními daty pro 2 vybrané roky.
+
+**Selektory** — zobrazují se v TopBaru místo standardních Trh/Období filtrů, když je aktivní cesta `/hlavni-dashboard`:
+- Přepínač **Vše / CZ / SK** — trh
+- Dropdown **Rok vs. Rok** — automaticky detekuje dostupné roky z `mockData`
+
+**Stav** — spravován v `hooks/useHlavniDashboard.tsx` (`HlavniDashboardProvider` je v `ConditionalLayout`). Stránka stav pouze čte přes `useHlavniDashboard()`, lokální state nepoužívá.
+
+**Grafy (2×4 grid):** Tržby bez DPH (modrá), Hrubý zisk (zelená), Počet objednávek (modrá), Marketingové investice (červená), PNO % (cyan), AOV (indigo), Marže % (zelená), CPA (fialová). Světlejší barva = starší rok, tmavší = novější rok.
+
+**Hrubý zisk** = `marginRev - purchaseCost - cost` (marže minus marketingové náklady). Pokud `marginData*` pro daný rok/měsíc neexistuje, zobrazí 0.
+
 ### Klíčové soubory
 
 | Soubor | Účel |
@@ -106,6 +121,8 @@ app/(dashboard|orders|marketing|products|margin|analytics|behavior|crosssell|ret
 | `components/kpi/KpiCard.tsx` | KPI karta se sparkline a YoY badge; prop `variant: 'default' \| 'green' \| 'red'` mění barvu rámečku, ikony a hodnoty |
 | `hooks/useFilters.ts` | `FiltersProvider` + `useFilters()` + `getDateRange()` + live EUR rate |
 | `hooks/useDashboardData.ts` | Filtruje, agreguje, normalizuje měny, počítá KPI + chartData + YoY |
+| `app/hlavni-dashboard/page.tsx` | Hlavní Dashboard — 8 monthly grouped bar chartů, čte stav z `useHlavniDashboard` |
+| `hooks/useHlavniDashboard.tsx` | Context pro Hlavní Dashboard — `market`, `yearA`, `yearB`, `yearOptions`; provider v `ConditionalLayout` |
 | `scripts/updateData.js` | Čistý Node.js — stáhne CSV z Google Sheets, generuje všechny data/*.ts soubory, pak git push |
 | `app/api/update/route.ts` | POST endpoint — admin only; na Vercelu volá Deploy Hook, lokálně spustí skript |
 

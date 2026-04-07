@@ -2,11 +2,12 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { BarChart2, LayoutDashboard, ShoppingCart, TrendingUp, Package, Brain, PieChart, Users, ShieldCheck, LogOut, X, GitMerge, KeyRound, Activity, Truck, Archive, Facebook } from 'lucide-react';
+import { BarChart2, LayoutDashboard, ShoppingCart, TrendingUp, Package, Brain, PieChart, Users, ShieldCheck, LogOut, X, GitMerge, KeyRound, Activity, Truck, Archive, Facebook, BarChart, Home } from 'lucide-react';
 import { useSession, signOut } from 'next-auth/react';
 import { useSidebar } from './ConditionalLayout';
 
 const navItems = [
+  { icon: Home,            label: 'Hlavní Dashboard',         href: '/hlavni-dashboard' },
   { icon: LayoutDashboard, label: 'Klíčové ukazatele (KPI)', href: '/dashboard' },
   { icon: ShoppingCart,    label: 'Objednávky',               href: '/orders' },
   { icon: TrendingUp,      label: 'Marketingové investice',   href: '/marketing' },
@@ -19,6 +20,7 @@ const navItems = [
   { icon: Users,           label: 'Retenční analýza',         href: '/retention' },
   { icon: Activity,        label: 'Návštěvnost (GA4)',        href: '/analytics' },
   { icon: Facebook,        label: 'Meta Ads',                 href: '/meta' },
+  { icon: BarChart,        label: 'Google Ads',               href: '/google-ads' },
 ];
 
 export default function Sidebar() {

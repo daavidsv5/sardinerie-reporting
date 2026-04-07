@@ -9,6 +9,7 @@ import { formatDate } from '@/lib/formatters';
 import { RefreshCw, Menu } from 'lucide-react';
 import { useSidebar } from './ConditionalLayout';
 import { lastUpdate } from '@/data/lastUpdate';
+import { useHlavniDashboard, HlavniMarket } from '@/hooks/useHlavniDashboard';
 
 interface TopBarProps {
   filters: FilterState;
@@ -34,6 +35,8 @@ export default function TopBar({ filters, onChange }: TopBarProps) {
   const isAdmin = (session?.user as { role?: string })?.role === 'admin';
   const isRetention = pathname === '/retention' || pathname === '/crosssell';
   const hideAll = pathname === '/shipping' || pathname === '/analytics' || pathname === '/meta';
+  const isHlavniDashboard = pathname === '/hlavni-dashboard';
+  const dash = useHlavniDashboard();
 
   const handleUpdate = async () => {
     setUpdating(true);
@@ -76,90 +79,138 @@ export default function TopBar({ filters, onChange }: TopBarProps) {
           <Menu size={20} />
         </button>
 
-        {/* Country segmented control — hidden on retention page */}
-        {!isRetention && (
-          <div className="flex items-center gap-1.5 flex-shrink-0">
-            <span className="text-xs text-slate-400 font-medium hidden sm:inline">Trh:</span>
-            <div className="flex rounded-lg border border-slate-200 overflow-hidden bg-white">
-              {([
-                { label: 'Vše', value: 'all' },
-                { label: '🇨🇿', value: 'cz' },
-                { label: '🇸🇰', value: 'sk' },
-              ] as { label: string; value: 'all' | Country }[]).filter(({ value }) => !(hideAll && value === 'all')).map(({ label, value }, idx) => {
-                const isActive =
-                  value === 'all'
-                    ? filters.countries.length === 2
-                    : filters.countries.length === 1 && filters.countries[0] === value;
-                const select = () => {
-                  if (value === 'all') onChange({ ...filters, countries: ['cz', 'sk'] });
-                  else onChange({ ...filters, countries: [value as Country] });
-                };
-                return (
+        {/* ── Hlavní Dashboard selectors ── */}
+        {isHlavniDashboard ? (
+          <>
+            {/* Market toggle */}
+            <div className="flex items-center gap-1.5 flex-shrink-0">
+              <div className="flex rounded-lg border border-slate-200 overflow-hidden bg-white">
+                {([
+                  { label: 'Vše', value: 'all' },
+                  { label: '🇨🇿 CZ', value: 'cz' },
+                  { label: '🇸🇰 SK', value: 'sk' },
+                ] as { label: string; value: HlavniMarket }[]).map(({ label, value }, idx) => (
                   <button
                     key={value}
-                    onClick={select}
+                    onClick={() => dash.setMarket(value)}
                     className={`px-2.5 md:px-4 py-1.5 text-sm font-medium transition-colors focus:outline-none ${
                       idx > 0 ? 'border-l border-slate-200' : ''
                     } ${
-                      isActive
+                      dash.market === value
                         ? 'bg-blue-600 text-white'
                         : 'text-slate-600 hover:bg-slate-50'
                     }`}
                   >
-                    {/* Show CZ/SK text only on sm+ */}
-                    <span className="sm:hidden">{label}</span>
-                    <span className="hidden sm:inline">
-                      {value === 'all' ? 'Vše' : value === 'cz' ? '🇨🇿 CZ' : '🇸🇰 SK'}
-                    </span>
+                    {label}
                   </button>
-                );
-              })}
+                ))}
+              </div>
             </div>
-          </div>
+
+            {/* Divider */}
+            <div className="h-6 w-px bg-slate-100 hidden md:block flex-shrink-0" />
+
+            {/* Year comparison */}
+            <div className="flex items-center gap-1.5 flex-shrink-0">
+              <span className="text-xs text-slate-400 font-medium hidden sm:inline">Rok:</span>
+              <select
+                value={dash.selectedPairIdx === -1 ? 0 : dash.selectedPairIdx}
+                onChange={e => dash.setYearPairByIdx(+e.target.value)}
+                className="border border-slate-200 rounded-lg px-2 md:px-3 py-1.5 text-sm text-slate-700 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                {dash.yearOptions.map(([a, b], i) => (
+                  <option key={i} value={i}>{a} vs. {b}</option>
+                ))}
+              </select>
+            </div>
+          </>
+        ) : (
+          <>
+            {/* Country segmented control — hidden on retention page */}
+            {!isRetention && (
+              <div className="flex items-center gap-1.5 flex-shrink-0">
+                <span className="text-xs text-slate-400 font-medium hidden sm:inline">Trh:</span>
+                <div className="flex rounded-lg border border-slate-200 overflow-hidden bg-white">
+                  {([
+                    { label: 'Vše', value: 'all' },
+                    { label: '🇨🇿', value: 'cz' },
+                    { label: '🇸🇰', value: 'sk' },
+                  ] as { label: string; value: 'all' | Country }[]).filter(({ value }) => !(hideAll && value === 'all')).map(({ label, value }, idx) => {
+                    const isActive =
+                      value === 'all'
+                        ? filters.countries.length === 2
+                        : filters.countries.length === 1 && filters.countries[0] === value;
+                    const select = () => {
+                      if (value === 'all') onChange({ ...filters, countries: ['cz', 'sk'] });
+                      else onChange({ ...filters, countries: [value as Country] });
+                    };
+                    return (
+                      <button
+                        key={value}
+                        onClick={select}
+                        className={`px-2.5 md:px-4 py-1.5 text-sm font-medium transition-colors focus:outline-none ${
+                          idx > 0 ? 'border-l border-slate-200' : ''
+                        } ${
+                          isActive
+                            ? 'bg-blue-600 text-white'
+                            : 'text-slate-600 hover:bg-slate-50'
+                        }`}
+                      >
+                        <span className="sm:hidden">{label}</span>
+                        <span className="hidden sm:inline">
+                          {value === 'all' ? 'Vše' : value === 'cz' ? '🇨🇿 CZ' : '🇸🇰 SK'}
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
+            {/* Divider — desktop only */}
+            {!isRetention && <div className="h-6 w-px bg-slate-100 hidden md:block flex-shrink-0" />}
+
+            {/* Time period */}
+            <div className="flex items-center gap-1.5 flex-shrink-0">
+              <span className="text-xs text-slate-400 font-medium hidden sm:inline">Období:</span>
+              <select
+                value={filters.timePeriod}
+                onChange={(e) => handlePeriodChange(e.target.value as TimePeriod)}
+                className="border border-slate-200 rounded-lg px-2 md:px-3 py-1.5 text-sm text-slate-700 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              >
+                {(Object.keys(periodLabels) as TimePeriod[]).map((p) => (
+                  <option key={p} value={p}>{periodLabels[p]}</option>
+                ))}
+              </select>
+            </div>
+
+            {/* Custom date range */}
+            {filters.timePeriod === 'custom' && (
+              <div className="flex items-center gap-1.5 flex-wrap flex-shrink-0">
+                <input
+                  type="date"
+                  value={toInputValue(filters.customStart)}
+                  onChange={(e) => handleCustomDate('customStart', e.target.value)}
+                  className="border border-slate-200 rounded-lg px-2 py-1.5 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+                <span className="text-slate-400 text-xs">–</span>
+                <input
+                  type="date"
+                  value={toInputValue(filters.customEnd)}
+                  onChange={(e) => handleCustomDate('customEnd', e.target.value)}
+                  className="border border-slate-200 rounded-lg px-2 py-1.5 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+            )}
+
+            {/* Date range label — hidden on small mobile */}
+            <div className="text-xs md:text-sm text-slate-500 hidden sm:block flex-shrink-0">
+              <span className="font-medium text-slate-700">{formatDate(start)}</span>
+              <span className="mx-1.5 text-slate-300">–</span>
+              <span className="font-medium text-slate-700">{formatDate(end)}</span>
+            </div>
+          </>
         )}
-
-        {/* Divider — desktop only */}
-        {!isRetention && <div className="h-6 w-px bg-slate-100 hidden md:block flex-shrink-0" />}
-
-        {/* Time period */}
-        <div className="flex items-center gap-1.5 flex-shrink-0">
-          <span className="text-xs text-slate-400 font-medium hidden sm:inline">Období:</span>
-          <select
-            value={filters.timePeriod}
-            onChange={(e) => handlePeriodChange(e.target.value as TimePeriod)}
-            className="border border-slate-200 rounded-lg px-2 md:px-3 py-1.5 text-sm text-slate-700 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-          >
-            {(Object.keys(periodLabels) as TimePeriod[]).map((p) => (
-              <option key={p} value={p}>{periodLabels[p]}</option>
-            ))}
-          </select>
-        </div>
-
-        {/* Custom date range */}
-        {filters.timePeriod === 'custom' && (
-          <div className="flex items-center gap-1.5 flex-wrap flex-shrink-0">
-            <input
-              type="date"
-              value={toInputValue(filters.customStart)}
-              onChange={(e) => handleCustomDate('customStart', e.target.value)}
-              className="border border-slate-200 rounded-lg px-2 py-1.5 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-            <span className="text-slate-400 text-xs">–</span>
-            <input
-              type="date"
-              value={toInputValue(filters.customEnd)}
-              onChange={(e) => handleCustomDate('customEnd', e.target.value)}
-              className="border border-slate-200 rounded-lg px-2 py-1.5 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-        )}
-
-        {/* Date range label — hidden on small mobile */}
-        <div className="text-xs md:text-sm text-slate-500 hidden sm:block flex-shrink-0">
-          <span className="font-medium text-slate-700">{formatDate(start)}</span>
-          <span className="mx-1.5 text-slate-300">–</span>
-          <span className="font-medium text-slate-700">{formatDate(end)}</span>
-        </div>
 
         {/* Spacer */}
         <div className="flex-1 min-w-0" />
