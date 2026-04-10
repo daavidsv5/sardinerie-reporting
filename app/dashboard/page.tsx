@@ -12,8 +12,7 @@ const marginDataSK = _marginDataSK.filter(r => r.date >= SK_LAUNCH_DATE);
 import { retentionDataCZ } from '@/data/retentionDataCZ';
 import { retentionDataSK } from '@/data/retentionDataSK';
 import KpiCard from '@/components/kpi/KpiCard';
-import RevenueOrdersChart from '@/components/charts/RevenueOrdersChart';
-import CostPnoChart from '@/components/charts/CostPnoChart';
+import KpiLineCharts from '@/components/charts/KpiLineCharts';
 import { AovChart, CpaChart } from '@/components/charts/AovCpaChart';
 import DailyTable from '@/components/tables/DailyTable';
 import CountryDistribution from '@/components/tables/CountryDistribution';
@@ -107,6 +106,9 @@ export default function DashboardPage() {
   const prevGrossPerNewCustomer = newCustomerCounts.prev > 0 ? prevGrossProfit / newCustomerCounts.prev : 0;
   const yoyGrossPerNewCustomer  = hasPrevData && prevGrossPerNewCustomer !== 0
     ? ((grossPerNewCustomer - prevGrossPerNewCustomer) / Math.abs(prevGrossPerNewCustomer)) * 100 : null;
+  const dayCount  = Math.round((end.getTime() - start.getTime()) / 86_400_000);
+  const isMonthly = dayCount > 60;
+
   const title = `KPI – ${periodTitles[filters.timePeriod] ?? 'aktuální období'} (YoY)`;
   const subtitle = `${formatDate(start)} – ${formatDate(end)}`;
 
@@ -166,10 +168,11 @@ export default function DashboardPage() {
         <CountryDistribution data={currentData} eurToCzk={eurToCzk} />
       )}
 
-      {/* Charts */}
+      {/* KPI line charts — Tržby, Objednávky, Náklady, PNO */}
+      <KpiLineCharts data={chartData} currency={currency} hasPrevData={hasPrevData} isMonthly={isMonthly} />
+
+      {/* AOV + CPA charts */}
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-        <RevenueOrdersChart data={chartData} currency={currency} hasPrevData={hasPrevData} />
-        <CostPnoChart data={chartData} currency={currency} hasPrevData={hasPrevData} />
         <AovChart data={chartData} currency={currency} hasPrevData={hasPrevData} />
         <CpaChart data={chartData} currency={currency} hasPrevData={hasPrevData} />
       </div>

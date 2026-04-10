@@ -110,18 +110,27 @@ export default function TopBar({ filters, onChange }: TopBarProps) {
             {/* Divider */}
             <div className="h-6 w-px bg-slate-100 hidden md:block flex-shrink-0" />
 
-            {/* Year comparison */}
+            {/* Year selector */}
             <div className="flex items-center gap-1.5 flex-shrink-0">
               <span className="text-xs text-slate-400 font-medium hidden sm:inline">Rok:</span>
-              <select
-                value={dash.selectedPairIdx === -1 ? 0 : dash.selectedPairIdx}
-                onChange={e => dash.setYearPairByIdx(+e.target.value)}
-                className="border border-slate-200 rounded-lg px-2 md:px-3 py-1.5 text-sm text-slate-700 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                {dash.yearOptions.map(([a, b], i) => (
-                  <option key={i} value={i}>{a} vs. {b}</option>
+              <div className="flex rounded-lg border border-slate-200 overflow-hidden bg-white">
+                {dash.yearOptions.map((year, idx) => (
+                  <button
+                    key={year}
+                    onClick={() => dash.setSelectedYear(year)}
+                    className={`px-2.5 md:px-4 py-1.5 text-sm font-medium transition-colors focus:outline-none ${
+                      idx > 0 ? 'border-l border-slate-200' : ''
+                    } ${
+                      dash.selectedYear === year
+                        ? 'bg-blue-600 text-white'
+                        : 'text-slate-600 hover:bg-slate-50'
+                    }`}
+                  >
+                    {year}
+                  </button>
                 ))}
-              </select>
+              </div>
+              <span className="text-xs text-slate-400 hidden sm:inline">vs. {dash.yearB}</span>
             </div>
           </>
         ) : (

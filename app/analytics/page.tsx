@@ -2,6 +2,10 @@
 
 import { useEffect, useState } from 'react';
 import { useFilters } from '@/hooks/useFilters';
+import { useDashboardData } from '@/hooks/useDashboardData';
+import { mockData } from '@/data/mockGenerator';
+import { getDisplayCurrency } from '@/data/types';
+import { formatCurrency } from '@/lib/formatters';
 import {
   LineChart, Line, BarChart, Bar, PieChart, Pie, Cell,
   XAxis, YAxis, Tooltip, ResponsiveContainer, Legend, CartesianGrid,
@@ -29,6 +33,7 @@ interface AggrRow {
   conversions: number;
   bounceRate: number;
   avgDuration: number;
+  revenue: number;
 }
 
 interface SourceRow {
@@ -37,6 +42,7 @@ interface SourceRow {
   sessions: number;
   conversions: number;
   users: number;
+  revenue: number;
 }
 
 interface DeviceRow {
@@ -143,11 +149,15 @@ function yoyPct(cur: number, prev: number): number {
 }
 
 export default function AnalyticsPage() {
-  const { filters, getDateRange } = useFilters();
+  const { filters, getDateRange, eurToCzk } = useFilters();
   const [data, setData]             = useState<GA4Data | null>(null);
   const [loading, setLoading]       = useState(true);
   const [error, setError]           = useState<string | null>(null);
   const [funnelDevice, setFunnelDevice] = useState<FunnelDevice>('all');
+
+  // Shoptet revenue for selected market (CZ = CZK, SK = EUR)
+  const { kpi: shoptetKpi, prevKpi: shoptetPrevKpi } = useDashboardData(filters, mockData, eurToCzk);
+  const currency = getDisplayCurrency(filters.countries);
 
   useEffect(() => {
     setLoading(true);
@@ -221,6 +231,57 @@ export default function AnalyticsPage() {
             <SharedKpiCard title="Prům. délka"       value={fmtDuration(cur.avgDuration)}         yoy={yoyPct(cur.avgDuration, prev.avgDuration)}  icon={<Clock size={16} />}            hasPrevData={!!prev.avgDuration} />
           </div>
 
+          {/* Revenue comparison row */}
+          {(() => {
+            const ga4Rev      = cur.revenue;
+            const ga4RevPrev  = prev.revenue;
+            const shoptetRev  = shoptetKpi.revenue;
+            const shoptetPrev = shoptetPrevKpi.revenue;
+            const deviation   = shoptetRev > 0 ? ((ga4Rev - shoptetRev) / shoptetRev) * 100 : null;
+            const deviationPrev = shoptetPrev > 0 ? ((ga4RevPrev - shoptetPrev) / shoptetPrev) * 100 : null;
+            return (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                {/* GA4 revenue */}
+                <SharedKpiCard
+                  title="Tržby bez DPH (GA4)"
+                  value={formatCurrency(ga4Rev, currency)}
+                  yoy={ga4RevPrev ? yoyPct(ga4Rev, ga4RevPrev) : null}
+                  icon={<TrendingUp size={16} />}
+                  hasPrevData={!!ga4RevPrev}
+                />
+                {/* Odchylka */}
+                <div className="bg-white rounded-xl border-2 border-slate-200 shadow-sm p-4 flex flex-col gap-1">
+                  <p className="text-xs font-medium text-slate-500 uppercase tracking-wide">Odchylka GA4 vs. Shoptet</p>
+                  {deviation !== null ? (
+                    <>
+                      <p className={`text-2xl font-bold ${Math.abs(deviation) <= 5 ? 'text-emerald-600' : Math.abs(deviation) <= 15 ? 'text-amber-600' : 'text-rose-600'}`}>
+                        {deviation >= 0 ? '+' : ''}{deviation.toFixed(2)} %
+                      </p>
+                      <div className="flex items-center gap-2 mt-1 flex-wrap">
+                        <span className="text-xs text-slate-500">
+                          GA4: <span className="font-semibold text-slate-700">{formatCurrency(ga4Rev, currency)}</span>
+                        </span>
+                        <span className="text-slate-300">·</span>
+                        <span className="text-xs text-slate-500">
+                          Shoptet: <span className="font-semibold text-slate-700">{formatCurrency(shoptetRev, currency)}</span>
+                        </span>
+                      </div>
+                      {deviationPrev !== null && (
+                        <p className="text-xs text-slate-400 mt-0.5">
+                          Loni: <span className={`font-semibold ${Math.abs(deviationPrev) <= 5 ? 'text-emerald-600' : Math.abs(deviationPrev) <= 15 ? 'text-amber-600' : 'text-rose-600'}`}>
+                            {deviationPrev >= 0 ? '+' : ''}{deviationPrev.toFixed(2)} %
+                          </span>
+                        </p>
+                      )}
+                    </>
+                  ) : (
+                    <p className="text-2xl font-bold text-slate-400">—</p>
+                  )}
+                </div>
+              </div>
+            );
+          })()}
+
           {/* Sessions + users over time */}
           <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-5">
             <h2 className="text-sm font-semibold text-slate-700 mb-1">Sessions v čase</h2>
@@ -290,33 +351,107 @@ export default function AnalyticsPage() {
             </div>
           </div>
 
-          {/* Sources + Devices */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-5">
-              <h2 className="text-sm font-semibold text-slate-700 mb-4">Zdroje návštěvnosti</h2>
-              <div className="space-y-2.5">
-                {data.sources.slice(0, 10).map((s, i) => {
-                  const total     = data.sources.reduce((acc, x) => acc + x.sessions, 0) || 1;
-                  const pct       = Math.round((s.sessions / total) * 100);
-                  const prevSrc   = data.sourcesPrev.find(p => p.source === s.source && p.medium === s.medium);
-                  return (
-                    <div key={i}>
-                      <div className="flex items-center justify-between text-xs text-slate-600 mb-0.5">
-                        <span className="truncate max-w-[180px]">{s.source} / {s.medium}</span>
-                        <span className="flex items-center gap-1.5 font-medium ml-2">
-                          {s.sessions.toLocaleString('cs-CZ')} ({pct} %)
-                          {prevSrc && yoyBadge(s.sessions, prevSrc.sessions)}
-                        </span>
-                      </div>
-                      <div className="h-1.5 bg-slate-100 rounded-full">
-                        <div className="h-1.5 bg-blue-500 rounded-full" style={{ width: `${pct}%` }} />
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
+          {/* Sources table */}
+          <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+            <div className="px-5 py-4 border-b border-slate-100">
+              <h2 className="text-sm font-semibold text-slate-700">Zdroje návštěvnosti</h2>
             </div>
+            <div className="overflow-x-auto">
+              <table className="w-full text-xs">
+                <thead>
+                  <tr className="bg-blue-900 text-white">
+                    <th className="px-4 py-2.5 text-left font-semibold uppercase tracking-wider text-[11px]">Zdroj / Medium</th>
+                    <th className="px-4 py-2.5 text-right font-semibold uppercase tracking-wider text-[11px]">Sessions</th>
+                    <th className="px-4 py-2.5 text-right font-semibold uppercase tracking-wider text-[11px]">Podíl</th>
+                    <th className="px-4 py-2.5 text-right font-semibold uppercase tracking-wider text-[11px]">CVR</th>
+                    <th className="px-4 py-2.5 text-right font-semibold uppercase tracking-wider text-[11px]">Transakce</th>
+                    <th className="px-4 py-2.5 text-right font-semibold uppercase tracking-wider text-[11px]">Podíl</th>
+                    <th className="px-4 py-2.5 text-right font-semibold uppercase tracking-wider text-[11px]">Tržby</th>
+                    <th className="px-4 py-2.5 text-right font-semibold uppercase tracking-wider text-[11px]">Podíl</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {(() => {
+                    const totalSessions = data.sources.reduce((a, x) => a + x.sessions, 0) || 1;
+                    const totalConv     = data.sources.reduce((a, x) => a + x.conversions, 0) || 1;
+                    const totalRevenue  = data.sources.reduce((a, x) => a + x.revenue, 0) || 1;
+                    return data.sources.slice(0, 15).map((s, i) => {
+                      const prev = data.sourcesPrev.find(p => p.source === s.source && p.medium === s.medium);
+                      const sessPct  = Math.round((s.sessions    / totalSessions) * 100);
+                      const convPct  = Math.round((s.conversions / totalConv)     * 100);
+                      const revPct   = Math.round((s.revenue     / totalRevenue)  * 100);
+                      const srcCvr   = s.sessions > 0 ? (s.conversions / s.sessions * 100) : 0;
+                      const prevCvrV = prev && prev.sessions > 0 ? (prev.conversions / prev.sessions * 100) : 0;
+                      return (
+                        <tr key={i} className={`border-b border-slate-50 hover:bg-slate-50/70 ${i % 2 === 0 ? 'bg-white' : 'bg-slate-50/30'}`}>
+                          <td className="px-4 py-2.5 text-slate-700 font-medium max-w-[200px] truncate">
+                            {s.source} / {s.medium}
+                          </td>
+                          {/* Sessions */}
+                          <td className="px-4 py-2.5 text-right">
+                            <div className="flex flex-col items-end gap-0.5">
+                              <span className="font-semibold text-slate-800">{s.sessions.toLocaleString('cs-CZ')}</span>
+                              {prev && yoyBadge(s.sessions, prev.sessions)}
+                            </div>
+                          </td>
+                          <td className="px-4 py-2.5 text-right">
+                            <div className="flex flex-col items-end gap-1">
+                              <span className="text-slate-500 font-semibold">{sessPct} %</span>
+                              <div className="w-14 h-1 bg-slate-100 rounded-full overflow-hidden">
+                                <div className="h-1 bg-blue-500 rounded-full" style={{ width: `${sessPct}%` }} />
+                              </div>
+                            </div>
+                          </td>
+                          {/* CVR */}
+                          <td className="px-4 py-2.5 text-right">
+                            <div className="flex flex-col items-end gap-0.5">
+                              <span className="font-semibold text-slate-800">{srcCvr.toFixed(2)} %</span>
+                              {prev && yoyBadge(srcCvr, prevCvrV)}
+                            </div>
+                          </td>
+                          {/* Transakce */}
+                          <td className="px-4 py-2.5 text-right">
+                            <div className="flex flex-col items-end gap-0.5">
+                              <span className="font-semibold text-slate-800">{s.conversions.toLocaleString('cs-CZ')}</span>
+                              {prev && yoyBadge(s.conversions, prev.conversions)}
+                            </div>
+                          </td>
+                          <td className="px-4 py-2.5 text-right">
+                            <div className="flex flex-col items-end gap-1">
+                              <span className="text-slate-500 font-semibold">{convPct} %</span>
+                              <div className="w-14 h-1 bg-slate-100 rounded-full overflow-hidden">
+                                <div className="h-1 bg-emerald-500 rounded-full" style={{ width: `${convPct}%` }} />
+                              </div>
+                            </div>
+                          </td>
+                          {/* Tržby */}
+                          <td className="px-4 py-2.5 text-right">
+                            <div className="flex flex-col items-end gap-0.5">
+                              <span className="font-semibold text-slate-800">
+                                {s.revenue.toLocaleString('cs-CZ', { minimumFractionDigits: 0, maximumFractionDigits: 0 })} Kč
+                              </span>
+                              {prev && yoyBadge(s.revenue, prev.revenue)}
+                            </div>
+                          </td>
+                          <td className="px-4 py-2.5 text-right">
+                            <div className="flex flex-col items-end gap-1">
+                              <span className="text-slate-500 font-semibold">{revPct} %</span>
+                              <div className="w-14 h-1 bg-slate-100 rounded-full overflow-hidden">
+                                <div className="h-1 bg-indigo-500 rounded-full" style={{ width: `${revPct}%` }} />
+                              </div>
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    });
+                  })()}
+                </tbody>
+              </table>
+            </div>
+          </div>
 
+          {/* Devices */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-5">
               <h2 className="text-sm font-semibold text-slate-700 mb-4">Zařízení</h2>
               <div className="flex items-center gap-6">

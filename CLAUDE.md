@@ -55,18 +55,18 @@ app/(dashboard|orders|marketing|products|margin|analytics|behavior|crosssell|ret
 
 | Stránka | Popis |
 |---------|-------|
-| `/hlavni-dashboard` | **Hlavní Dashboard** — měsíční přehled 8 KPI metrik jako grouped bar charty (Tržby bez DPH, Hrubý zisk, Počet obj., Mark. investice, PNO %, AOV, Marže %, CPA). Selektor trhu + rok vs. rok v TopBaru (nahrazuje standardní Trh/Období filtry). Výchozí přesměrování z `/`. |
-| `/dashboard` | **Klíčové ukazatele (KPI)** — Tržby s/bez DPH, Počet obj., AOV, Marketing. investice, PNO, CPA, Marže, Marže %, Cena za nového zákazníka, Hrubý zisk na obj. + samostatný řádek Hrubý zisk + Hrubý zisk % |
+| `/hlavni-dashboard` | **Hlavní Dashboard** — měsíční přehled 8 KPI metrik jako grouped bar charty (Tržby bez DPH, Hrubý zisk, Počet obj., Mark. investice, PNO %, AOV, Marže %, CPA). Selektor trhu + **selektor jednotlivých roků** v TopBaru (yearB = selectedYear − 1, automaticky). Výchozí přesměrování z `/`. |
+| `/dashboard` | **Klíčové ukazatele (KPI)** — Tržby s/bez DPH, Počet obj., AOV, Marketing. investice, PNO, CPA, Marže, Marže %, Cena za nového zákazníka, Hrubý zisk na obj. + samostatný řádek Hrubý zisk + Hrubý zisk %. Pod KPI boxy: **4 samostatné spojnicové grafy YoY** (Tržby bez DPH, Počet objednávek, Náklady, PNO %) z `KpiLineCharts`. |
 | `/orders` | Objednávky — tržby vs počet, distribuce hodnot košíku (histogram), rozložení CZ/SK |
 | `/marketing` | Marketingové investice — CPC per channel (FB/Google), trend kliky+CPC (ROAS odstraněn) |
-| `/products` | Prodejnost produktů — ABC analýza (A/B/C segmenty), sortovatelná tabulka, YoY, CSV export |
+| `/products` | Prodejnost produktů — ABC analýza (A/B/C segmenty), sortovatelná tabulka, YoY, CSV export. Nad tabulkou: **graf vývoje tržeb bez DPH + počtu kusů** pro vybrané produkty s vyhledáváním (autocomplete), dual Y-osa (tržby = plná čára, kusy = čárkovaná). |
 | `/margin` | Maržový report — marže %, hrubý zisk, grafy |
-| `/analytics` | GA4 integrace — sessions, CVR, sources+devices (YoY), vstupní stránky; zatím jen CZ; všechny grafy tmavě modrá křivka (`C.primary`) kromě průchodnosti košíkem |
+| `/analytics` | GA4 integrace — sessions, CVR, sources+devices (YoY), vstupní stránky. **Zdroje návštěvnosti jako tabulka** (Sessions, podíl, CVR, Transakce, podíl, Tržby, podíl — vše s YoY). **KPI boxy Tržby bez DPH (GA4) + Odchylka GA4 vs. Shoptet** (barevný signál ≤5 % zelená, ≤15 % oranžová, >15 % červená). Měna dynamická (CZK/EUR dle zvoleného trhu). |
 | `/meta` | Meta Ads — KPI boxy s YoY (útrata, dosah, imprese, kliky, CTR, CPC, nákupy, tržby z reklam, CPA, ROAS), grafy CPC/CPA/Nákupy/ROAS po dnech, tabulka kreativ s filtrem kampaně+sady reklam |
 | `/behavior` | Nákupní chování — týdenní srovnání, hourly grid (all-time agregace) |
 | `/crosssell` | Cross-sell potenciál — top 100 produktových párů |
 | `/retention` | Retenční analýza — RFM segmentace, LTV, AOV, repeat purchase rate, měsíční graf Noví vs. stávající zákazníci (100% stacked bar) |
-| `/shipping` | Doprava a platby — KPI vč. zisku/ztráty dopravy, ceník dopravců (CZ/SK), P&L tabulka per dopravce |
+| `/shipping` | Doprava a platby — KPI vč. zisku/ztráty dopravy, ceník dopravců (CZ/SK), P&L tabulka per dopravce. Layout donutů + tabulek: **pies v řádku 1, tabulky v řádku 2** (4 položky v jednom `grid-cols-2`) — tabulky jsou vždy zarovnané vedle sebe. |
 | `/login` | Přihlášení (NextAuth) |
 | `/admin/users` | Správa uživatelů (admin only) |
 
@@ -89,7 +89,9 @@ Výchozí stránka aplikace (redirect z `/`). Zobrazuje 8 grouped bar chartů s 
 
 **Selektory** — zobrazují se v TopBaru místo standardních Trh/Období filtrů, když je aktivní cesta `/hlavni-dashboard`:
 - Přepínač **Vše / CZ / SK** — trh
-- Dropdown **Rok vs. Rok** — automaticky detekuje dostupné roky z `mockData`
+- Skupina tlačítek **jednotlivých roků** — výběrem roku se `yearB` nastaví automaticky na `selectedYear − 1`; napravo od tlačítek se zobrazuje label „vs. YYYY"
+
+`hooks/useHlavniDashboard.tsx` — stav: `selectedYear`, `setSelectedYear`, `yearOptions: number[]`; `yearA = selectedYear`, `yearB = selectedYear - 1`.
 
 **Stav** — spravován v `hooks/useHlavniDashboard.tsx` (`HlavniDashboardProvider` je v `ConditionalLayout`). Stránka stav pouze čte přes `useHlavniDashboard()`, lokální state nepoužívá.
 
@@ -119,6 +121,7 @@ Výchozí stránka aplikace (redirect z `/`). Zobrazuje 8 grouped bar chartů s 
 | `app/meta/page.tsx` | Meta Ads stránka — KPI s YoY, grafy po dnech, tabulka kreativ s filtrem |
 | `components/kpi/StatCard.tsx` | Sdílená KPI karta (border-2 border-blue-800, icon vpravo); prop `negative` = rose varianta; props `yoy`, `hasPrevData`, `invertYoy` pro YoY badge |
 | `components/kpi/KpiCard.tsx` | KPI karta se sparkline a YoY badge; prop `variant: 'default' \| 'green' \| 'red'` mění barvu rámečku, ikony a hodnoty |
+| `components/charts/KpiLineCharts.tsx` | 4 samostatné spojnicové grafy YoY pro `/dashboard`: Tržby bez DPH, Počet objednávek, Náklady, PNO %. Solid = aktuální, dashed = loni. Prop `isMonthly` přepíná formát osy X (dny/měsíce). |
 | `hooks/useFilters.ts` | `FiltersProvider` + `useFilters()` + `getDateRange()` + live EUR rate |
 | `hooks/useDashboardData.ts` | Filtruje, agreguje, normalizuje měny, počítá KPI + chartData + YoY |
 | `app/hlavni-dashboard/page.tsx` | Hlavní Dashboard — 8 monthly grouped bar chartů, čte stav z `useHlavniDashboard` |
