@@ -55,7 +55,7 @@ app/(dashboard|orders|marketing|products|margin|analytics|behavior|crosssell|ret
 
 | Stránka | Popis |
 |---------|-------|
-| `/hlavni-dashboard` | **Hlavní Dashboard** — měsíční přehled 8 KPI metrik jako grouped bar charty (Tržby bez DPH, Hrubý zisk, Počet obj., Mark. investice, PNO %, AOV, Marže %, CPA). Selektor trhu + **selektor jednotlivých roků** v TopBaru (yearB = selectedYear − 1, automaticky). Výchozí přesměrování z `/`. |
+| `/hlavni-dashboard` | **Hlavní Dashboard** — měsíční přehled 9 KPI metrik jako grouped bar charty (Tržby bez DPH, Hrubý zisk, Počet obj., Mark. investice, PNO %, AOV, Marže %, CPA, **Konverzní poměr z GA4**). Tooltip každého grafu zobrazuje hodnoty obou roků + YoY % (zelená/červená). Selektor trhu + **selektor jednotlivých roků** v TopBaru (yearB = selectedYear − 1, automaticky). Výchozí přesměrování z `/`. |
 | `/dashboard` | **Klíčové ukazatele (KPI)** — Tržby s/bez DPH, Počet obj., AOV, Marketing. investice, PNO, CPA, Marže, Marže %, Cena za nového zákazníka, Hrubý zisk na obj. + samostatný řádek Hrubý zisk + Hrubý zisk %. Pod KPI boxy: **4 samostatné spojnicové grafy YoY** (Tržby bez DPH, Počet objednávek, Náklady, PNO %) z `KpiLineCharts`. |
 | `/orders` | Objednávky — tržby vs počet, distribuce hodnot košíku (histogram), rozložení CZ/SK |
 | `/marketing` | Marketingové investice — CPC per channel (FB/Google), trend kliky+CPC (ROAS odstraněn) |
@@ -95,7 +95,11 @@ Výchozí stránka aplikace (redirect z `/`). Zobrazuje 8 grouped bar chartů s 
 
 **Stav** — spravován v `hooks/useHlavniDashboard.tsx` (`HlavniDashboardProvider` je v `ConditionalLayout`). Stránka stav pouze čte přes `useHlavniDashboard()`, lokální state nepoužívá.
 
-**Grafy (2×4 grid):** Tržby bez DPH (modrá), Hrubý zisk (zelená), Počet objednávek (modrá), Marketingové investice (červená), PNO % (cyan), AOV (indigo), Marže % (zelená), CPA (fialová). Světlejší barva = starší rok, tmavší = novější rok.
+**Grafy (2×4 grid + 1):** Tržby bez DPH (modrá), Hrubý zisk (zelená), Počet objednávek (modrá), Marketingové investice (červená), PNO % (cyan), AOV (indigo), Marže % (zelená), CPA (fialová), **Konverzní poměr** (teal — GA4, CZ+SK). Světlejší barva = starší rok, tmavší = novější rok.
+
+**Tooltip s YoY:** Každý graf zobrazuje v tooltipu hodnoty obou roků + řádek `YoY: ±X,X %` (zelená = růst, červená = pokles). Pokud je hodnota předchozího roku 0, YoY se nezobrazí.
+
+**Konverzní poměr (GA4):** Data fetchuje `useEffect` z `/api/analytics/cvr-monthly?yearA=YYYY` při každé změně roku. Surová data (`rawCvr`) se ukládají do stavu, `cvrData` je `useMemo` přepočítaný dle trhu — pro „Vše" se sessions a conversions CZ+SK sečtou před dělením (ne průměr procent).
 
 **Hrubý zisk** = `marginRev - purchaseCost - cost` (marže minus marketingové náklady). Pokud `marginData*` pro daný rok/měsíc neexistuje, zobrazí 0.
 
@@ -124,7 +128,8 @@ Výchozí stránka aplikace (redirect z `/`). Zobrazuje 8 grouped bar chartů s 
 | `components/charts/KpiLineCharts.tsx` | 4 samostatné spojnicové grafy YoY pro `/dashboard`: Tržby bez DPH, Počet objednávek, Náklady, PNO %. Solid = aktuální, dashed = loni. Prop `isMonthly` přepíná formát osy X (dny/měsíce). |
 | `hooks/useFilters.ts` | `FiltersProvider` + `useFilters()` + `getDateRange()` + live EUR rate |
 | `hooks/useDashboardData.ts` | Filtruje, agreguje, normalizuje měny, počítá KPI + chartData + YoY |
-| `app/hlavni-dashboard/page.tsx` | Hlavní Dashboard — 8 monthly grouped bar chartů, čte stav z `useHlavniDashboard` |
+| `app/hlavni-dashboard/page.tsx` | Hlavní Dashboard — 9 monthly grouped bar chartů (8 Shoptet + CVR z GA4), tooltip s YoY %, čte stav z `useHlavniDashboard` |
+| `app/api/analytics/cvr-monthly/route.ts` | GA4 endpoint — měsíční sessions+conversions pro CZ i SK, yearA + yearA-1; 4 paralelní requesty, vrací raw `{ czA, czB, skA, skB }` |
 | `hooks/useHlavniDashboard.tsx` | Context pro Hlavní Dashboard — `market`, `yearA`, `yearB`, `yearOptions`; provider v `ConditionalLayout` |
 | `scripts/updateData.js` | Čistý Node.js — stáhne CSV z Google Sheets, generuje všechny data/*.ts soubory, pak git push |
 | `app/api/update/route.ts` | POST endpoint — admin only; na Vercelu volá Deploy Hook, lokálně spustí skript |
@@ -286,7 +291,7 @@ Konstanta `SK_LAUNCH_DATE = '2024-06-01'` v `data/types.ts` — používat všud
 
 ### GA4
 
-GA4 je napojeno pouze pro **CZ**. SK bude řešeno samostatně v budoucnu.
+GA4 je napojeno pro **CZ i SK**. `/analytics` stránka zobrazuje pouze CZ; Hlavní Dashboard (`/api/analytics/cvr-monthly`) fetchuje obě property.
 
 **`app/api/analytics/route.ts`** — vrací:
 - `daily`, `dailyPrev` — denní sessions/users/conversions/bounceRate/avgDuration

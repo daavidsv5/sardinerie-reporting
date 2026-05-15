@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo } from 'react';
+import { useMemo, useEffect, useState } from 'react';
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
   Legend, ResponsiveContainer,
@@ -108,6 +108,7 @@ function fmtAxisCount(v: number): string {
 
 interface ChartCardProps {
   title: string;
+  subtitle?: string;
   data: { month: string; a: number; b: number }[];
   colorA: string;   // newer year — darker
   colorB: string;   // older year — lighter
@@ -117,10 +118,15 @@ interface ChartCardProps {
   tooltipFormatter: (v: number) => string;
 }
 
-function ChartCard({ title, data, colorA, colorB, yearA, yearB, axisFormatter, tooltipFormatter }: ChartCardProps) {
+function ChartCard({ title, subtitle, data, colorA, colorB, yearA, yearB, axisFormatter, tooltipFormatter }: ChartCardProps) {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const CustomTooltip = ({ active, payload, label }: any) => {
     if (!active || !payload?.length) return null;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const valB: number = payload.find((p: any) => p.dataKey === 'b')?.value ?? 0;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const valA: number = payload.find((p: any) => p.dataKey === 'a')?.value ?? 0;
+    const yoy = valB !== 0 ? ((valA - valB) / Math.abs(valB)) * 100 : null;
     return (
       <div className="bg-white border border-slate-200 rounded-lg p-2.5 text-xs shadow-sm">
         <p className="font-medium text-slate-600 mb-1">{label}</p>
@@ -129,13 +135,19 @@ function ChartCard({ title, data, colorA, colorB, yearA, yearB, axisFormatter, t
             {entry.name}: <span className="font-semibold">{tooltipFormatter(entry.value)}</span>
           </p>
         ))}
+        {yoy !== null && (
+          <p className={`mt-1 pt-1 border-t border-slate-100 font-semibold ${yoy >= 0 ? 'text-emerald-600' : 'text-rose-600'}`}>
+            YoY: {yoy >= 0 ? '+' : ''}{yoy.toFixed(1).replace('.', ',')} %
+          </p>
+        )}
       </div>
     );
   };
 
   return (
     <div className="bg-white rounded-xl border border-slate-100 shadow-sm p-4">
-      <h3 className="text-sm font-semibold text-slate-700 mb-3">{title}</h3>
+      <h3 className="text-sm font-semibold text-slate-700 mb-0.5">{title}</h3>
+      {subtitle && <p className="text-xs text-slate-400 mb-2">{subtitle}</p>}
       <ResponsiveContainer width="100%" height={220}>
         <BarChart data={data} margin={{ top: 4, right: 8, left: 0, bottom: 0 }} barGap={2} barCategoryGap="25%">
           <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
@@ -156,6 +168,34 @@ function ChartCard({ title, data, colorA, colorB, yearA, yearB, axisFormatter, t
 export default function HlavniDashboardPage() {
   const { eurToCzk } = useFilters();
   const { market, yearA, yearB } = useHlavniDashboard();
+
+  type MonthPoint = { sessions: number; conversions: number };
+  type RawCvr = { czA: MonthPoint[]; czB: MonthPoint[]; skA: MonthPoint[]; skB: MonthPoint[] };
+
+  const [rawCvr, setRawCvr] = useState<RawCvr | null>(null);
+
+  useEffect(() => {
+    setRawCvr(null);
+    fetch(`/api/analytics/cvr-monthly?yearA=${yearA}`)
+      .then(r => r.json())
+      .then(json => { if (json.czA) setRawCvr(json); })
+      .catch(() => {});
+  }, [yearA]);
+
+  const cvrData = useMemo(() => {
+    if (!rawCvr) return null;
+    const { czA, czB, skA, skB } = rawCvr;
+    const combine = (x: MonthPoint[], y: MonthPoint[]): MonthPoint[] =>
+      x.map((d, i) => ({ sessions: d.sessions + y[i].sessions, conversions: d.conversions + y[i].conversions }));
+    const [arrA, arrB] = market === 'cz' ? [czA, czB] :
+                         market === 'sk' ? [skA, skB] :
+                         [combine(czA, skA), combine(czB, skB)];
+    return MONTHS_CS.map((month, i) => ({
+      month,
+      a: arrA[i].sessions > 0 ? (arrA[i].conversions / arrA[i].sessions) * 100 : 0,
+      b: arrB[i].sessions > 0 ? (arrB[i].conversions / arrB[i].sessions) * 100 : 0,
+    }));
+  }, [rawCvr, market]);
 
   const countries: Country[] = useMemo(() => {
     if (market === 'cz') return ['cz'];
@@ -253,6 +293,16 @@ export default function HlavniDashboardPage() {
           yearA={yearA} yearB={yearB}
           axisFormatter={moneyAxis} tooltipFormatter={fmtMoney}
         />
+        {cvrData && (
+          <ChartCard
+            title="Konverzní poměr"
+            subtitle="Zdroj: GA4"
+            data={cvrData}
+            colorA="#0e7490" colorB="#a5f3fc"
+            yearA={yearA} yearB={yearB}
+            axisFormatter={fmtAxisPct} tooltipFormatter={pctFmt}
+          />
+        )}
       </div>
     </div>
   );
