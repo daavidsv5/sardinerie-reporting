@@ -53,6 +53,24 @@ export function getDateRange(filters: FilterState): DateRange {
       end   = new Date(ly, 11, 31);
       break;
     }
+    case 'yesterday': {
+      const yest = new Date(TODAY);
+      yest.setDate(yest.getDate() - 1);
+      start = yest;
+      end   = new Date(yest);
+      break;
+    }
+    case 'last_7_days': {
+      end   = new Date(TODAY);
+      start = new Date(TODAY);
+      start.setDate(start.getDate() - 6);
+      break;
+    }
+    case 'all_time': {
+      start = new Date(2024, 0, 1); // before earliest SK data (2024-06-01)
+      end   = new Date(TODAY);
+      break;
+    }
     case 'custom': {
       start = filters.customStart ? new Date(filters.customStart) : new Date(TODAY.getFullYear(), TODAY.getMonth(), 1);
       end = filters.customEnd ? new Date(filters.customEnd) : new Date(TODAY);
