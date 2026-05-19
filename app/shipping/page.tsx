@@ -201,7 +201,7 @@ export default function ShippingPage() {
 
   // ── Merge CZ + SK ──────────────────────────────────────────────────────────
   const records = useMemo(() => {
-    const out: { date: string; type: 'shipping' | 'payment'; name: string; count: number; revenue_vat: number }[] = [];
+    const out: { date: string; type: 'shipping' | 'payment'; name: string; count: number; free_count: number; revenue_vat: number }[] = [];
     if (filters.countries.includes('cz')) {
       for (const r of shippingPaymentDataCZ) {
         if (r.date < startStr || r.date > endStr) continue;
@@ -222,7 +222,7 @@ export default function ShippingPage() {
 
   // ── Prev year records ──────────────────────────────────────────────────────
   const prevRecords = useMemo(() => {
-    const out: { date: string; type: 'shipping' | 'payment'; name: string; count: number; revenue_vat: number }[] = [];
+    const out: { date: string; type: 'shipping' | 'payment'; name: string; count: number; free_count: number; revenue_vat: number }[] = [];
     if (filters.countries.includes('cz')) {
       for (const r of shippingPaymentDataCZ) {
         if (r.date < prevStartStr || r.date > prevEndStr) continue;
@@ -250,8 +250,6 @@ export default function ShippingPage() {
   // ── Helpers ────────────────────────────────────────────────────────────────
   const isPickup = (name: string) =>
     name.toLowerCase().includes('osobní') || name.toLowerCase().includes('osobni');
-  const isFreeShip = (r: { name: string; revenue_vat: number }) =>
-    r.revenue_vat === 0 || r.name.toLowerCase().includes('zdarma') || r.name.toLowerCase().includes('free');
 
   // ── KPIs ───────────────────────────────────────────────────────────────────
   const totalShippingRev  = shipping.reduce((s, r) => s + r.revenue_vat, 0);
@@ -261,10 +259,10 @@ export default function ShippingPage() {
   const avgShipping       = totalShipCount > 0 ? totalShippingRev / totalShipCount : 0;
   const avgPayment        = totalPayCount  > 0 ? totalPaymentRev  / totalPayCount  : 0;
 
-  // Free shipping % — excludes Osobní odběr from both numerator and denominator
+  // Free shipping % — uses free_count (per-order level), excludes Osobní odběr
   const shippingNoPickup      = shipping.filter(r => !isPickup(r.name));
   const shipNoPickupCount     = shippingNoPickup.reduce((s, r) => s + r.count, 0);
-  const freeShippingCount     = shippingNoPickup.filter(isFreeShip).reduce((s, r) => s + r.count, 0);
+  const freeShippingCount     = shippingNoPickup.reduce((s, r) => s + (r.free_count ?? 0), 0);
   const freeShippingPct       = shipNoPickupCount > 0 ? (freeShippingCount / shipNoPickupCount) * 100 : 0;
 
   // Prev year KPIs
@@ -276,7 +274,7 @@ export default function ShippingPage() {
   const prevAvgPayment       = prevPayCount  > 0 ? prevTotalPaymentRev  / prevPayCount  : 0;
   const prevShippingNoPickup  = prevShipping.filter(r => !isPickup(r.name));
   const prevShipNoPickupCount = prevShippingNoPickup.reduce((s, r) => s + r.count, 0);
-  const prevFreeCount         = prevShippingNoPickup.filter(isFreeShip).reduce((s, r) => s + r.count, 0);
+  const prevFreeCount         = prevShippingNoPickup.reduce((s, r) => s + (r.free_count ?? 0), 0);
   const prevFreeShippingPct   = prevShipNoPickupCount > 0 ? (prevFreeCount / prevShipNoPickupCount) * 100 : 0;
 
   // Sparkline — daily totals for shipping and payment revenue
@@ -299,7 +297,7 @@ export default function ShippingPage() {
       if (isPickup(r.name)) continue;
       const key = periodKey(r.date, period);
       totalByPeriod[key] = (totalByPeriod[key] || 0) + r.count;
-      if (isFreeShip(r)) freeByPeriod[key] = (freeByPeriod[key] || 0) + r.count;
+      freeByPeriod[key]  = (freeByPeriod[key]  || 0) + (r.free_count ?? 0);
     }
     const chartData = Object.keys(totalByPeriod)
       .sort()

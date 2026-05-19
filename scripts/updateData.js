@@ -624,13 +624,14 @@ function aggregateShippingPayment(csv, eurMultiplier = 1) {
     }
 
     const key = `${date}||${type}||${name}`;
-    if (!byKey[key]) byKey[key] = { date, type, name, count: 0, revenue_vat: 0 };
+    if (!byKey[key]) byKey[key] = { date, type, name, count: 0, free_count: 0, revenue_vat: 0 };
 
-    // Count each order once per method
+    // Count each order once per method; track free shipping at per-order level
     const orderMethodKey = `${code}||${name}`;
     if (!seenOrderMethod.has(orderMethodKey)) {
       seenOrderMethod.add(orderMethodKey);
       byKey[key].count++;
+      if (revVat === 0) byKey[key].free_count++;
     }
 
     byKey[key].revenue_vat += revVat;
@@ -652,6 +653,7 @@ export interface ShippingPaymentRecord {
   type: 'shipping' | 'payment';
   name: string;         // normalized method name e.g. "Zásilkovna", "Online platba kartou"
   count: number;        // number of orders using this method on this day
+  free_count: number;   // orders where customer paid 0 (free shipping/payment)
   revenue_vat: number;  // total paid by customers incl. VAT
 }
 
