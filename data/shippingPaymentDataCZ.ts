@@ -6,6 +6,7 @@ export interface ShippingPaymentRecord {
   type: 'shipping' | 'payment';
   name: string;         // normalized method name e.g. "Zásilkovna", "Online platba kartou"
   count: number;        // number of orders using this method on this day
+  free_count: number;   // orders where customer paid 0 (free shipping/payment)
   revenue_vat: number;  // total paid by customers incl. VAT
 }
 
@@ -15,6 +16,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -22,6 +24,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 85
   },
   {
@@ -29,6 +32,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 40
   },
   {
@@ -36,6 +40,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -43,6 +48,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -50,6 +56,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -57,6 +64,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 2,
+    "free_count": 0,
     "revenue_vat": 80
   },
   {
@@ -64,6 +72,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 2,
+    "free_count": 0,
     "revenue_vat": 250
   },
   {
@@ -71,6 +80,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -78,6 +88,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -85,6 +96,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -92,6 +104,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 85
   },
   {
@@ -99,6 +112,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -106,6 +120,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 2,
+    "free_count": 2,
     "revenue_vat": 0
   },
   {
@@ -113,6 +128,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -120,6 +136,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 2,
+    "free_count": 0,
     "revenue_vat": 170
   },
   {
@@ -127,6 +144,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 3,
+    "free_count": 0,
     "revenue_vat": 120
   },
   {
@@ -134,6 +152,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 125
   },
   {
@@ -141,6 +160,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 2,
+    "free_count": 1,
     "revenue_vat": 85
   },
   {
@@ -148,6 +168,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -155,6 +176,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení do výdejního místa",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -162,6 +184,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 40
   },
   {
@@ -169,6 +192,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -176,6 +200,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 2,
+    "free_count": 0,
     "revenue_vat": 170
   },
   {
@@ -183,6 +208,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -190,6 +216,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 85
   },
   {
@@ -197,6 +224,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 40
   },
   {
@@ -204,6 +232,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 2,
+    "free_count": 2,
     "revenue_vat": 0
   },
   {
@@ -211,6 +240,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 3,
+    "free_count": 3,
     "revenue_vat": 0
   },
   {
@@ -218,6 +248,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 40
   },
   {
@@ -225,6 +256,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -232,6 +264,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 2,
+    "free_count": 0,
     "revenue_vat": 170
   },
   {
@@ -239,6 +272,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 2,
+    "free_count": 0,
     "revenue_vat": 80
   },
   {
@@ -246,6 +280,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 2,
+    "free_count": 1,
     "revenue_vat": 125
   },
   {
@@ -253,6 +288,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 3,
+    "free_count": 3,
     "revenue_vat": 0
   },
   {
@@ -260,6 +296,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení do výdejního místa",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -267,6 +304,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 2,
+    "free_count": 0,
     "revenue_vat": 170
   },
   {
@@ -274,6 +312,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -281,6 +320,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -288,6 +328,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 40
   },
   {
@@ -295,6 +336,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 2,
+    "free_count": 2,
     "revenue_vat": 0
   },
   {
@@ -302,6 +344,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 125
   },
   {
@@ -309,6 +352,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 2,
+    "free_count": 0,
     "revenue_vat": 170
   },
   {
@@ -316,6 +360,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 40
   },
   {
@@ -323,6 +368,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 125
   },
   {
@@ -330,6 +376,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -337,6 +384,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 3,
+    "free_count": 0,
     "revenue_vat": 120
   },
   {
@@ -344,6 +392,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 2,
+    "free_count": 1,
     "revenue_vat": 125
   },
   {
@@ -351,6 +400,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 2,
+    "free_count": 0,
     "revenue_vat": 170
   },
   {
@@ -358,6 +408,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 3,
+    "free_count": 3,
     "revenue_vat": 0
   },
   {
@@ -365,6 +416,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -372,6 +424,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 2,
+    "free_count": 0,
     "revenue_vat": 170
   },
   {
@@ -379,6 +432,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -386,6 +440,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 85
   },
   {
@@ -393,6 +448,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 2,
+    "free_count": 0,
     "revenue_vat": 80
   },
   {
@@ -400,6 +456,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -407,6 +464,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 85
   },
   {
@@ -414,6 +472,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -421,6 +480,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 85
   },
   {
@@ -428,6 +488,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -435,6 +496,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 85
   },
   {
@@ -442,6 +504,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 2,
+    "free_count": 0,
     "revenue_vat": 80
   },
   {
@@ -449,6 +512,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 3,
+    "free_count": 3,
     "revenue_vat": 0
   },
   {
@@ -456,6 +520,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 3,
+    "free_count": 1,
     "revenue_vat": 250
   },
   {
@@ -463,6 +528,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 2,
+    "free_count": 1,
     "revenue_vat": 85
   },
   {
@@ -470,6 +536,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 40
   },
   {
@@ -477,6 +544,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 2,
+    "free_count": 2,
     "revenue_vat": 0
   },
   {
@@ -484,6 +552,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 3,
+    "free_count": 2,
     "revenue_vat": 85
   },
   {
@@ -491,6 +560,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 40
   },
   {
@@ -498,6 +568,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 85
   },
   {
@@ -505,6 +576,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -512,6 +584,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 85
   },
   {
@@ -519,6 +592,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 40
   },
   {
@@ -526,6 +600,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -533,6 +608,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -540,6 +616,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -547,6 +624,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -554,6 +632,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 85
   },
   {
@@ -561,6 +640,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -568,6 +648,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -575,6 +656,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 40
   },
   {
@@ -582,6 +664,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -589,6 +672,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení do výdejního místa",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 85
   },
   {
@@ -596,6 +680,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 85
   },
   {
@@ -603,6 +688,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 2,
+    "free_count": 0,
     "revenue_vat": 80
   },
   {
@@ -610,6 +696,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -617,6 +704,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 3,
+    "free_count": 0,
     "revenue_vat": 255
   },
   {
@@ -624,6 +712,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -631,6 +720,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 85
   },
   {
@@ -638,6 +728,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -645,6 +736,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 85
   },
   {
@@ -652,6 +744,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 40
   },
   {
@@ -659,6 +752,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 4,
+    "free_count": 4,
     "revenue_vat": 0
   },
   {
@@ -666,6 +760,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 125
   },
   {
@@ -673,6 +768,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 4,
+    "free_count": 0,
     "revenue_vat": 340
   },
   {
@@ -680,6 +776,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 40
   },
   {
@@ -687,6 +784,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 125
   },
   {
@@ -694,6 +792,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -701,6 +800,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 125
   },
   {
@@ -708,6 +808,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -715,6 +816,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 85
   },
   {
@@ -722,6 +824,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -729,6 +832,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 85
   },
   {
@@ -736,6 +840,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -743,6 +848,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 85
   },
   {
@@ -750,6 +856,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -757,6 +864,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -764,6 +872,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -771,6 +880,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -778,6 +888,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 2,
+    "free_count": 1,
     "revenue_vat": 125
   },
   {
@@ -785,6 +896,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -792,6 +904,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -799,6 +912,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 2,
+    "free_count": 0,
     "revenue_vat": 170
   },
   {
@@ -806,6 +920,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 3,
+    "free_count": 0,
     "revenue_vat": 120
   },
   {
@@ -813,6 +928,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -820,6 +936,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení do výdejního místa",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 85
   },
   {
@@ -827,6 +944,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -834,6 +952,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 2,
+    "free_count": 0,
     "revenue_vat": 170
   },
   {
@@ -841,6 +960,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 3,
+    "free_count": 3,
     "revenue_vat": 0
   },
   {
@@ -848,6 +968,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -855,6 +976,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 2,
+    "free_count": 0,
     "revenue_vat": 170
   },
   {
@@ -862,6 +984,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 3,
+    "free_count": 3,
     "revenue_vat": 0
   },
   {
@@ -869,6 +992,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 3,
+    "free_count": 1,
     "revenue_vat": 170
   },
   {
@@ -876,6 +1000,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 2,
+    "free_count": 0,
     "revenue_vat": 80
   },
   {
@@ -883,6 +1008,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 2,
+    "free_count": 0,
     "revenue_vat": 170
   },
   {
@@ -890,6 +1016,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -897,6 +1024,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 85
   },
   {
@@ -904,6 +1032,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -911,6 +1040,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 125
   },
   {
@@ -918,6 +1048,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 40
   },
   {
@@ -925,6 +1056,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 85
   },
   {
@@ -932,6 +1064,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 40
   },
   {
@@ -939,6 +1072,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 85
   },
   {
@@ -946,6 +1080,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 2,
+    "free_count": 0,
     "revenue_vat": 80
   },
   {
@@ -953,6 +1088,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 2,
+    "free_count": 2,
     "revenue_vat": 0
   },
   {
@@ -960,6 +1096,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 4,
+    "free_count": 0,
     "revenue_vat": 340
   },
   {
@@ -967,6 +1104,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -974,6 +1112,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 40
   },
   {
@@ -981,6 +1120,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 2,
+    "free_count": 0,
     "revenue_vat": 170
   },
   {
@@ -988,6 +1128,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 40
   },
   {
@@ -995,6 +1136,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 3,
+    "free_count": 3,
     "revenue_vat": 0
   },
   {
@@ -1002,6 +1144,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 3,
+    "free_count": 1,
     "revenue_vat": 250
   },
   {
@@ -1009,6 +1152,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 85
   },
   {
@@ -1016,6 +1160,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -1023,6 +1168,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 85
   },
   {
@@ -1030,6 +1176,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 40
   },
   {
@@ -1037,6 +1184,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -1044,6 +1192,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 2,
+    "free_count": 1,
     "revenue_vat": 85
   },
   {
@@ -1051,6 +1200,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -1058,6 +1208,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -1065,6 +1216,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -1072,6 +1224,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -1079,6 +1232,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 40
   },
   {
@@ -1086,6 +1240,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -1093,6 +1248,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 2,
+    "free_count": 1,
     "revenue_vat": 85
   },
   {
@@ -1100,6 +1256,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 2,
+    "free_count": 2,
     "revenue_vat": 0
   },
   {
@@ -1107,6 +1264,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 2,
+    "free_count": 2,
     "revenue_vat": 0
   },
   {
@@ -1114,6 +1272,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 3,
+    "free_count": 3,
     "revenue_vat": 0
   },
   {
@@ -1121,6 +1280,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení do výdejního místa",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 85
   },
   {
@@ -1128,6 +1288,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 2,
+    "free_count": 1,
     "revenue_vat": 125
   },
   {
@@ -1135,6 +1296,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 40
   },
   {
@@ -1142,6 +1304,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 125
   },
   {
@@ -1149,6 +1312,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 40
   },
   {
@@ -1156,6 +1320,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -1163,6 +1328,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 125
   },
   {
@@ -1170,6 +1336,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -1177,6 +1344,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -1184,6 +1352,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 40
   },
   {
@@ -1191,6 +1360,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -1198,6 +1368,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 85
   },
   {
@@ -1205,6 +1376,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 40
   },
   {
@@ -1212,6 +1384,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -1219,6 +1392,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 2,
+    "free_count": 1,
     "revenue_vat": 85
   },
   {
@@ -1226,6 +1400,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -1233,6 +1408,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 125
   },
   {
@@ -1240,6 +1416,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 40
   },
   {
@@ -1247,6 +1424,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -1254,6 +1432,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 2,
+    "free_count": 0,
     "revenue_vat": 170
   },
   {
@@ -1261,6 +1440,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 40
   },
   {
@@ -1268,6 +1448,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -1275,6 +1456,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 40
   },
   {
@@ -1282,6 +1464,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -1289,6 +1472,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 2,
+    "free_count": 1,
     "revenue_vat": 85
   },
   {
@@ -1296,6 +1480,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 2,
+    "free_count": 0,
     "revenue_vat": 80
   },
   {
@@ -1303,6 +1488,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -1310,6 +1496,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 3,
+    "free_count": 0,
     "revenue_vat": 255
   },
   {
@@ -1317,6 +1504,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -1324,6 +1512,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -1331,6 +1520,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 40
   },
   {
@@ -1338,6 +1528,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 85
   },
   {
@@ -1345,6 +1536,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 40
   },
   {
@@ -1352,6 +1544,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 2,
+    "free_count": 2,
     "revenue_vat": 0
   },
   {
@@ -1359,6 +1552,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 3,
+    "free_count": 2,
     "revenue_vat": 125
   },
   {
@@ -1366,6 +1560,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 40
   },
   {
@@ -1373,6 +1568,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 125
   },
   {
@@ -1380,6 +1576,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -1387,6 +1584,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 125
   },
   {
@@ -1394,6 +1592,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -1401,6 +1600,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 40
   },
   {
@@ -1408,6 +1608,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -1415,6 +1616,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 3,
+    "free_count": 1,
     "revenue_vat": 170
   },
   {
@@ -1422,6 +1624,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -1429,6 +1632,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 85
   },
   {
@@ -1436,6 +1640,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 40
   },
   {
@@ -1443,6 +1648,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 85
   },
   {
@@ -1450,6 +1656,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 40
   },
   {
@@ -1457,6 +1664,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 2,
+    "free_count": 2,
     "revenue_vat": 0
   },
   {
@@ -1464,6 +1672,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení do výdejního místa",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 85
   },
   {
@@ -1471,6 +1680,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 2,
+    "free_count": 1,
     "revenue_vat": 125
   },
   {
@@ -1478,6 +1688,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -1485,6 +1696,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 125
   },
   {
@@ -1492,6 +1704,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 40
   },
   {
@@ -1499,6 +1712,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -1506,6 +1720,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 2,
+    "free_count": 1,
     "revenue_vat": 85
   },
   {
@@ -1513,6 +1728,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 3,
+    "free_count": 0,
     "revenue_vat": 120
   },
   {
@@ -1520,6 +1736,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 5,
+    "free_count": 5,
     "revenue_vat": 0
   },
   {
@@ -1527,6 +1744,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 3,
+    "free_count": 3,
     "revenue_vat": 0
   },
   {
@@ -1534,6 +1752,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 5,
+    "free_count": 3,
     "revenue_vat": 170
   },
   {
@@ -1541,6 +1760,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -1548,6 +1768,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -1555,6 +1776,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -1562,6 +1784,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 85
   },
   {
@@ -1569,6 +1792,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 40
   },
   {
@@ -1576,6 +1800,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -1583,6 +1808,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 125
   },
   {
@@ -1590,6 +1816,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 85
   },
   {
@@ -1597,6 +1824,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -1604,6 +1832,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení do výdejního místa",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 85
   },
   {
@@ -1611,6 +1840,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 2,
+    "free_count": 0,
     "revenue_vat": 80
   },
   {
@@ -1618,6 +1848,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -1625,6 +1856,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 2,
+    "free_count": 0,
     "revenue_vat": 250
   },
   {
@@ -1632,6 +1864,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 85
   },
   {
@@ -1639,6 +1872,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -1646,6 +1880,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -1653,6 +1888,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 125
   },
   {
@@ -1660,6 +1896,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 85
   },
   {
@@ -1667,6 +1904,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -1674,6 +1912,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 2,
+    "free_count": 2,
     "revenue_vat": 0
   },
   {
@@ -1681,6 +1920,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení do výdejního místa",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -1688,6 +1928,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 2,
+    "free_count": 0,
     "revenue_vat": 170
   },
   {
@@ -1695,6 +1936,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 40
   },
   {
@@ -1702,6 +1944,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -1709,6 +1952,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 2,
+    "free_count": 0,
     "revenue_vat": 170
   },
   {
@@ -1716,6 +1960,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 2,
+    "free_count": 2,
     "revenue_vat": 0
   },
   {
@@ -1723,6 +1968,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 125
   },
   {
@@ -1730,6 +1976,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 85
   },
   {
@@ -1737,6 +1984,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -1744,6 +1992,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 2,
+    "free_count": 0,
     "revenue_vat": 80
   },
   {
@@ -1751,6 +2000,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 125
   },
   {
@@ -1758,6 +2008,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 2,
+    "free_count": 0,
     "revenue_vat": 170
   },
   {
@@ -1765,6 +2016,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -1772,6 +2024,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 85
   },
   {
@@ -1779,6 +2032,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 2,
+    "free_count": 0,
     "revenue_vat": 80
   },
   {
@@ -1786,6 +2040,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 2,
+    "free_count": 1,
     "revenue_vat": 85
   },
   {
@@ -1793,6 +2048,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -1800,6 +2056,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 85
   },
   {
@@ -1807,6 +2064,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -1814,6 +2072,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 4,
+    "free_count": 0,
     "revenue_vat": 160
   },
   {
@@ -1821,6 +2080,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 2,
+    "free_count": 2,
     "revenue_vat": 0
   },
   {
@@ -1828,6 +2088,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 3,
+    "free_count": 1,
     "revenue_vat": 250
   },
   {
@@ -1835,6 +2096,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 4,
+    "free_count": 0,
     "revenue_vat": 340
   },
   {
@@ -1842,6 +2104,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 2,
+    "free_count": 0,
     "revenue_vat": 80
   },
   {
@@ -1849,6 +2112,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -1856,6 +2120,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení do výdejního místa",
     "count": 2,
+    "free_count": 0,
     "revenue_vat": 170
   },
   {
@@ -1863,6 +2128,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 125
   },
   {
@@ -1870,6 +2136,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 3,
+    "free_count": 0,
     "revenue_vat": 120
   },
   {
@@ -1877,6 +2144,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 2,
+    "free_count": 2,
     "revenue_vat": 0
   },
   {
@@ -1884,6 +2152,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení do výdejního místa",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -1891,6 +2160,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 125
   },
   {
@@ -1898,6 +2168,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 3,
+    "free_count": 1,
     "revenue_vat": 170
   },
   {
@@ -1905,6 +2176,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 4,
+    "free_count": 0,
     "revenue_vat": 160
   },
   {
@@ -1912,6 +2184,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 125
   },
   {
@@ -1919,6 +2192,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 3,
+    "free_count": 1,
     "revenue_vat": 170
   },
   {
@@ -1926,6 +2200,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -1933,6 +2208,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 2,
+    "free_count": 2,
     "revenue_vat": 0
   },
   {
@@ -1940,6 +2216,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 125
   },
   {
@@ -1947,6 +2224,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 2,
+    "free_count": 2,
     "revenue_vat": 0
   },
   {
@@ -1954,6 +2232,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 3,
+    "free_count": 3,
     "revenue_vat": 0
   },
   {
@@ -1961,6 +2240,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 2,
+    "free_count": 1,
     "revenue_vat": 125
   },
   {
@@ -1968,6 +2248,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 85
   },
   {
@@ -1975,6 +2256,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -1982,6 +2264,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 40
   },
   {
@@ -1989,6 +2272,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 2,
+    "free_count": 0,
     "revenue_vat": 170
   },
   {
@@ -1996,6 +2280,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -2003,6 +2288,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 85
   },
   {
@@ -2010,6 +2296,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 2,
+    "free_count": 2,
     "revenue_vat": 0
   },
   {
@@ -2017,6 +2304,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -2024,6 +2312,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 85
   },
   {
@@ -2031,6 +2320,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 40
   },
   {
@@ -2038,6 +2328,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 2,
+    "free_count": 2,
     "revenue_vat": 0
   },
   {
@@ -2045,6 +2336,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 3,
+    "free_count": 1,
     "revenue_vat": 170
   },
   {
@@ -2052,6 +2344,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -2059,6 +2352,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 85
   },
   {
@@ -2066,6 +2360,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -2073,6 +2368,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -2080,6 +2376,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 40
   },
   {
@@ -2087,6 +2384,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 125
   },
   {
@@ -2094,6 +2392,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -2101,6 +2400,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -2108,6 +2408,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -2115,6 +2416,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -2122,6 +2424,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 2,
+    "free_count": 0,
     "revenue_vat": 170
   },
   {
@@ -2129,6 +2432,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 2,
+    "free_count": 2,
     "revenue_vat": 0
   },
   {
@@ -2136,6 +2440,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení do výdejního místa",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -2143,6 +2448,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -2150,6 +2456,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 2,
+    "free_count": 2,
     "revenue_vat": 0
   },
   {
@@ -2157,6 +2464,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -2164,6 +2472,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -2171,6 +2480,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 40
   },
   {
@@ -2178,6 +2488,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 3,
+    "free_count": 3,
     "revenue_vat": 0
   },
   {
@@ -2185,6 +2496,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 125
   },
   {
@@ -2192,6 +2504,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 3,
+    "free_count": 2,
     "revenue_vat": 85
   },
   {
@@ -2199,6 +2512,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -2206,6 +2520,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 125
   },
   {
@@ -2213,6 +2528,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -2220,6 +2536,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 3,
+    "free_count": 3,
     "revenue_vat": 0
   },
   {
@@ -2227,6 +2544,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -2234,6 +2552,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 3,
+    "free_count": 0,
     "revenue_vat": 255
   },
   {
@@ -2241,6 +2560,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -2248,6 +2568,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 2,
+    "free_count": 2,
     "revenue_vat": 0
   },
   {
@@ -2255,6 +2576,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 3,
+    "free_count": 0,
     "revenue_vat": 255
   },
   {
@@ -2262,6 +2584,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 2,
+    "free_count": 0,
     "revenue_vat": 80
   },
   {
@@ -2269,6 +2592,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -2276,6 +2600,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 2,
+    "free_count": 1,
     "revenue_vat": 125
   },
   {
@@ -2283,6 +2608,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 85
   },
   {
@@ -2290,6 +2616,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 2,
+    "free_count": 0,
     "revenue_vat": 80
   },
   {
@@ -2297,6 +2624,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 3,
+    "free_count": 3,
     "revenue_vat": 0
   },
   {
@@ -2304,6 +2632,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 2,
+    "free_count": 1,
     "revenue_vat": 125
   },
   {
@@ -2311,6 +2640,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 3,
+    "free_count": 0,
     "revenue_vat": 255
   },
   {
@@ -2318,6 +2648,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 40
   },
   {
@@ -2325,6 +2656,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 2,
+    "free_count": 2,
     "revenue_vat": 0
   },
   {
@@ -2332,6 +2664,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -2339,6 +2672,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 2,
+    "free_count": 0,
     "revenue_vat": 170
   },
   {
@@ -2346,6 +2680,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 2,
+    "free_count": 0,
     "revenue_vat": 80
   },
   {
@@ -2353,6 +2688,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 2,
+    "free_count": 2,
     "revenue_vat": 0
   },
   {
@@ -2360,6 +2696,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -2367,6 +2704,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 3,
+    "free_count": 1,
     "revenue_vat": 170
   },
   {
@@ -2374,6 +2712,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 40
   },
   {
@@ -2381,6 +2720,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 2,
+    "free_count": 2,
     "revenue_vat": 0
   },
   {
@@ -2388,6 +2728,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 2,
+    "free_count": 2,
     "revenue_vat": 0
   },
   {
@@ -2395,6 +2736,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 85
   },
   {
@@ -2402,6 +2744,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 40
   },
   {
@@ -2409,6 +2752,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -2416,6 +2760,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 2,
+    "free_count": 1,
     "revenue_vat": 85
   },
   {
@@ -2423,6 +2768,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -2430,6 +2776,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 40
   },
   {
@@ -2437,6 +2784,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -2444,6 +2792,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 125
   },
   {
@@ -2451,6 +2800,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 2,
+    "free_count": 1,
     "revenue_vat": 85
   },
   {
@@ -2458,6 +2808,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -2465,6 +2816,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 85
   },
   {
@@ -2472,6 +2824,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -2479,6 +2832,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 40
   },
   {
@@ -2486,6 +2840,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -2493,6 +2848,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení do výdejního místa",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 85
   },
   {
@@ -2500,6 +2856,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 125
   },
   {
@@ -2507,6 +2864,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 85
   },
   {
@@ -2514,6 +2872,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 3,
+    "free_count": 0,
     "revenue_vat": 120
   },
   {
@@ -2521,6 +2880,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -2528,6 +2888,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení do výdejního místa",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 85
   },
   {
@@ -2535,6 +2896,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 3,
+    "free_count": 1,
     "revenue_vat": 250
   },
   {
@@ -2542,6 +2904,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 2,
+    "free_count": 2,
     "revenue_vat": 0
   },
   {
@@ -2549,6 +2912,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 2,
+    "free_count": 0,
     "revenue_vat": 80
   },
   {
@@ -2556,6 +2920,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -2563,6 +2928,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 4,
+    "free_count": 4,
     "revenue_vat": 0
   },
   {
@@ -2570,6 +2936,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 85
   },
   {
@@ -2577,6 +2944,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 2,
+    "free_count": 0,
     "revenue_vat": 80
   },
   {
@@ -2584,6 +2952,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 3,
+    "free_count": 3,
     "revenue_vat": 0
   },
   {
@@ -2591,6 +2960,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -2598,6 +2968,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 4,
+    "free_count": 0,
     "revenue_vat": 340
   },
   {
@@ -2605,6 +2976,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 40
   },
   {
@@ -2612,6 +2984,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 2,
+    "free_count": 2,
     "revenue_vat": 0
   },
   {
@@ -2619,6 +2992,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 2,
+    "free_count": 1,
     "revenue_vat": 125
   },
   {
@@ -2626,6 +3000,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 85
   },
   {
@@ -2633,6 +3008,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -2640,6 +3016,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 85
   },
   {
@@ -2647,6 +3024,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 2,
+    "free_count": 2,
     "revenue_vat": 0
   },
   {
@@ -2654,6 +3032,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 2,
+    "free_count": 1,
     "revenue_vat": 85
   },
   {
@@ -2661,6 +3040,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 40
   },
   {
@@ -2668,6 +3048,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 2,
+    "free_count": 2,
     "revenue_vat": 0
   },
   {
@@ -2675,6 +3056,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 2,
+    "free_count": 2,
     "revenue_vat": 0
   },
   {
@@ -2682,6 +3064,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 85
   },
   {
@@ -2689,6 +3072,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 2,
+    "free_count": 2,
     "revenue_vat": 0
   },
   {
@@ -2696,6 +3080,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 2,
+    "free_count": 0,
     "revenue_vat": 170
   },
   {
@@ -2703,6 +3088,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -2710,6 +3096,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 40
   },
   {
@@ -2717,6 +3104,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -2724,6 +3112,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -2731,6 +3120,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 2,
+    "free_count": 1,
     "revenue_vat": 85
   },
   {
@@ -2738,6 +3128,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 2,
+    "free_count": 2,
     "revenue_vat": 0
   },
   {
@@ -2745,6 +3136,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 4,
+    "free_count": 4,
     "revenue_vat": 0
   },
   {
@@ -2752,6 +3144,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení do výdejního místa",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -2759,6 +3152,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 125
   },
   {
@@ -2766,6 +3160,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 4,
+    "free_count": 2,
     "revenue_vat": 170
   },
   {
@@ -2773,6 +3168,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 2,
+    "free_count": 0,
     "revenue_vat": 80
   },
   {
@@ -2780,6 +3176,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -2787,6 +3184,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 85
   },
   {
@@ -2794,6 +3192,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 2,
+    "free_count": 0,
     "revenue_vat": 80
   },
   {
@@ -2801,6 +3200,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 2,
+    "free_count": 2,
     "revenue_vat": 0
   },
   {
@@ -2808,6 +3208,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 4,
+    "free_count": 2,
     "revenue_vat": 170
   },
   {
@@ -2815,6 +3216,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 2,
+    "free_count": 0,
     "revenue_vat": 80
   },
   {
@@ -2822,6 +3224,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -2829,6 +3232,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 125
   },
   {
@@ -2836,6 +3240,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 2,
+    "free_count": 0,
     "revenue_vat": 170
   },
   {
@@ -2843,6 +3248,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 2,
+    "free_count": 0,
     "revenue_vat": 80
   },
   {
@@ -2850,6 +3256,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 4,
+    "free_count": 4,
     "revenue_vat": 0
   },
   {
@@ -2857,6 +3264,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 2,
+    "free_count": 1,
     "revenue_vat": 125
   },
   {
@@ -2864,6 +3272,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 4,
+    "free_count": 0,
     "revenue_vat": 340
   },
   {
@@ -2871,6 +3280,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -2878,6 +3288,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 4,
+    "free_count": 0,
     "revenue_vat": 160
   },
   {
@@ -2885,6 +3296,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 2,
+    "free_count": 2,
     "revenue_vat": 0
   },
   {
@@ -2892,6 +3304,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 125
   },
   {
@@ -2899,6 +3312,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 6,
+    "free_count": 1,
     "revenue_vat": 425
   },
   {
@@ -2906,6 +3320,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -2913,6 +3328,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 40
   },
   {
@@ -2920,6 +3336,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 3,
+    "free_count": 3,
     "revenue_vat": 0
   },
   {
@@ -2927,6 +3344,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 2,
+    "free_count": 1,
     "revenue_vat": 125
   },
   {
@@ -2934,6 +3352,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 3,
+    "free_count": 0,
     "revenue_vat": 255
   },
   {
@@ -2941,6 +3360,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -2948,6 +3368,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 8,
+    "free_count": 0,
     "revenue_vat": 320
   },
   {
@@ -2955,6 +3376,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 6,
+    "free_count": 6,
     "revenue_vat": 0
   },
   {
@@ -2962,6 +3384,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení do výdejního místa",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -2969,6 +3392,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 4,
+    "free_count": 2,
     "revenue_vat": 250
   },
   {
@@ -2976,6 +3400,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 10,
+    "free_count": 1,
     "revenue_vat": 765
   },
   {
@@ -2983,6 +3408,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -2990,6 +3416,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 3,
+    "free_count": 0,
     "revenue_vat": 120
   },
   {
@@ -2997,6 +3424,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 3,
+    "free_count": 3,
     "revenue_vat": 0
   },
   {
@@ -3004,6 +3432,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 125
   },
   {
@@ -3011,6 +3440,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 6,
+    "free_count": 1,
     "revenue_vat": 425
   },
   {
@@ -3018,6 +3448,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 40
   },
   {
@@ -3025,6 +3456,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 2,
+    "free_count": 2,
     "revenue_vat": 0
   },
   {
@@ -3032,6 +3464,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 3,
+    "free_count": 0,
     "revenue_vat": 255
   },
   {
@@ -3039,6 +3472,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 2,
+    "free_count": 2,
     "revenue_vat": 0
   },
   {
@@ -3046,6 +3480,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 40
   },
   {
@@ -3053,6 +3488,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 5,
+    "free_count": 5,
     "revenue_vat": 0
   },
   {
@@ -3060,6 +3496,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení do výdejního místa",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -3067,6 +3504,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 7,
+    "free_count": 3,
     "revenue_vat": 340
   },
   {
@@ -3074,6 +3512,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 40
   },
   {
@@ -3081,6 +3520,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -3088,6 +3528,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 125
   },
   {
@@ -3095,6 +3536,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 85
   },
   {
@@ -3102,6 +3544,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 2,
+    "free_count": 0,
     "revenue_vat": 80
   },
   {
@@ -3109,6 +3552,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 7,
+    "free_count": 7,
     "revenue_vat": 0
   },
   {
@@ -3116,6 +3560,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 3,
+    "free_count": 2,
     "revenue_vat": 125
   },
   {
@@ -3123,6 +3568,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 6,
+    "free_count": 2,
     "revenue_vat": 340
   },
   {
@@ -3130,6 +3576,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 2,
+    "free_count": 0,
     "revenue_vat": 80
   },
   {
@@ -3137,6 +3584,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 2,
+    "free_count": 1,
     "revenue_vat": 125
   },
   {
@@ -3144,6 +3592,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 3,
+    "free_count": 0,
     "revenue_vat": 120
   },
   {
@@ -3151,6 +3600,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 5,
+    "free_count": 5,
     "revenue_vat": 0
   },
   {
@@ -3158,6 +3608,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení do výdejního místa",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -3165,6 +3616,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 3,
+    "free_count": 1,
     "revenue_vat": 250
   },
   {
@@ -3172,6 +3624,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 4,
+    "free_count": 0,
     "revenue_vat": 340
   },
   {
@@ -3179,6 +3632,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 2,
+    "free_count": 2,
     "revenue_vat": 0
   },
   {
@@ -3186,6 +3640,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 4,
+    "free_count": 0,
     "revenue_vat": 160
   },
   {
@@ -3193,6 +3648,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 4,
+    "free_count": 4,
     "revenue_vat": 0
   },
   {
@@ -3200,6 +3656,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení do výdejního místa",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 85
   },
   {
@@ -3207,6 +3664,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 4,
+    "free_count": 2,
     "revenue_vat": 250
   },
   {
@@ -3214,6 +3672,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 5,
+    "free_count": 0,
     "revenue_vat": 425
   },
   {
@@ -3221,6 +3680,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -3228,6 +3688,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 2,
+    "free_count": 0,
     "revenue_vat": 80
   },
   {
@@ -3235,6 +3696,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 3,
+    "free_count": 3,
     "revenue_vat": 0
   },
   {
@@ -3242,6 +3704,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 2,
+    "free_count": 0,
     "revenue_vat": 250
   },
   {
@@ -3249,6 +3712,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 4,
+    "free_count": 1,
     "revenue_vat": 255
   },
   {
@@ -3256,6 +3720,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 4,
+    "free_count": 4,
     "revenue_vat": 0
   },
   {
@@ -3263,6 +3728,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -3270,6 +3736,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 125
   },
   {
@@ -3277,6 +3744,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 4,
+    "free_count": 2,
     "revenue_vat": 170
   },
   {
@@ -3284,6 +3752,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 2,
+    "free_count": 0,
     "revenue_vat": 80
   },
   {
@@ -3291,6 +3760,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 3,
+    "free_count": 3,
     "revenue_vat": 0
   },
   {
@@ -3298,6 +3768,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 5,
+    "free_count": 0,
     "revenue_vat": 425
   },
   {
@@ -3305,6 +3776,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 6,
+    "free_count": 6,
     "revenue_vat": 0
   },
   {
@@ -3312,6 +3784,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení do výdejního místa",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -3319,6 +3792,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 125
   },
   {
@@ -3326,6 +3800,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 4,
+    "free_count": 2,
     "revenue_vat": 170
   },
   {
@@ -3333,6 +3808,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -3340,6 +3816,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 40
   },
   {
@@ -3347,6 +3824,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 8,
+    "free_count": 8,
     "revenue_vat": 0
   },
   {
@@ -3354,6 +3832,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 10,
+    "free_count": 2,
     "revenue_vat": 680
   },
   {
@@ -3361,6 +3840,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 2,
+    "free_count": 2,
     "revenue_vat": 0
   },
   {
@@ -3368,6 +3848,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 5,
+    "free_count": 5,
     "revenue_vat": 0
   },
   {
@@ -3375,6 +3856,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení do výdejního místa",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 85
   },
   {
@@ -3382,6 +3864,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 3,
+    "free_count": 1,
     "revenue_vat": 250
   },
   {
@@ -3389,6 +3872,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 3,
+    "free_count": 0,
     "revenue_vat": 255
   },
   {
@@ -3396,6 +3880,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 40
   },
   {
@@ -3403,6 +3888,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 4,
+    "free_count": 4,
     "revenue_vat": 0
   },
   {
@@ -3410,6 +3896,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 2,
+    "free_count": 2,
     "revenue_vat": 0
   },
   {
@@ -3417,6 +3904,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 3,
+    "free_count": 0,
     "revenue_vat": 255
   },
   {
@@ -3424,6 +3912,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 2,
+    "free_count": 0,
     "revenue_vat": 80
   },
   {
@@ -3431,6 +3920,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 2,
+    "free_count": 2,
     "revenue_vat": 0
   },
   {
@@ -3438,6 +3928,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 125
   },
   {
@@ -3445,6 +3936,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 3,
+    "free_count": 1,
     "revenue_vat": 170
   },
   {
@@ -3452,6 +3944,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -3459,6 +3952,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 2,
+    "free_count": 0,
     "revenue_vat": 80
   },
   {
@@ -3466,6 +3960,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 6,
+    "free_count": 6,
     "revenue_vat": 0
   },
   {
@@ -3473,6 +3968,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení do výdejního místa",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 85
   },
   {
@@ -3480,6 +3976,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 125
   },
   {
@@ -3487,6 +3984,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 7,
+    "free_count": 1,
     "revenue_vat": 510
   },
   {
@@ -3494,6 +3992,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 2,
+    "free_count": 2,
     "revenue_vat": 0
   },
   {
@@ -3501,6 +4000,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 4,
+    "free_count": 0,
     "revenue_vat": 160
   },
   {
@@ -3508,6 +4008,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 7,
+    "free_count": 7,
     "revenue_vat": 0
   },
   {
@@ -3515,6 +4016,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 3,
+    "free_count": 2,
     "revenue_vat": 125
   },
   {
@@ -3522,6 +4024,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 10,
+    "free_count": 4,
     "revenue_vat": 510
   },
   {
@@ -3529,6 +4032,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -3536,6 +4040,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 3,
+    "free_count": 0,
     "revenue_vat": 120
   },
   {
@@ -3543,6 +4048,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 6,
+    "free_count": 6,
     "revenue_vat": 0
   },
   {
@@ -3550,6 +4056,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení do výdejního místa",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 85
   },
   {
@@ -3557,6 +4064,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 3,
+    "free_count": 2,
     "revenue_vat": 125
   },
   {
@@ -3564,6 +4072,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 6,
+    "free_count": 3,
     "revenue_vat": 255
   },
   {
@@ -3571,6 +4080,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 6,
+    "free_count": 0,
     "revenue_vat": 240
   },
   {
@@ -3578,6 +4088,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 7,
+    "free_count": 7,
     "revenue_vat": 0
   },
   {
@@ -3585,6 +4096,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 6,
+    "free_count": 1,
     "revenue_vat": 625
   },
   {
@@ -3592,6 +4104,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 7,
+    "free_count": 1,
     "revenue_vat": 510
   },
   {
@@ -3599,6 +4112,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 2,
+    "free_count": 0,
     "revenue_vat": 80
   },
   {
@@ -3606,6 +4120,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 5,
+    "free_count": 5,
     "revenue_vat": 0
   },
   {
@@ -3613,6 +4128,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -3620,6 +4136,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 6,
+    "free_count": 3,
     "revenue_vat": 255
   },
   {
@@ -3627,6 +4144,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 2,
+    "free_count": 0,
     "revenue_vat": 80
   },
   {
@@ -3634,6 +4152,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 4,
+    "free_count": 4,
     "revenue_vat": 0
   },
   {
@@ -3641,6 +4160,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 6,
+    "free_count": 1,
     "revenue_vat": 425
   },
   {
@@ -3648,6 +4168,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -3655,6 +4176,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 40
   },
   {
@@ -3662,6 +4184,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 4,
+    "free_count": 4,
     "revenue_vat": 0
   },
   {
@@ -3669,6 +4192,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení do výdejního místa",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 85
   },
   {
@@ -3676,6 +4200,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 2,
+    "free_count": 0,
     "revenue_vat": 250
   },
   {
@@ -3683,6 +4208,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 3,
+    "free_count": 1,
     "revenue_vat": 170
   },
   {
@@ -3690,6 +4216,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 2,
+    "free_count": 2,
     "revenue_vat": 0
   },
   {
@@ -3697,6 +4224,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 4,
+    "free_count": 0,
     "revenue_vat": 160
   },
   {
@@ -3704,6 +4232,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 6,
+    "free_count": 6,
     "revenue_vat": 0
   },
   {
@@ -3711,6 +4240,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení do výdejního místa",
     "count": 2,
+    "free_count": 1,
     "revenue_vat": 85
   },
   {
@@ -3718,6 +4248,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 2,
+    "free_count": 0,
     "revenue_vat": 250
   },
   {
@@ -3725,6 +4256,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 8,
+    "free_count": 1,
     "revenue_vat": 595
   },
   {
@@ -3732,6 +4264,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 4,
+    "free_count": 0,
     "revenue_vat": 160
   },
   {
@@ -3739,6 +4272,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 8,
+    "free_count": 8,
     "revenue_vat": 0
   },
   {
@@ -3746,6 +4280,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 4,
+    "free_count": 2,
     "revenue_vat": 250
   },
   {
@@ -3753,6 +4288,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 8,
+    "free_count": 3,
     "revenue_vat": 425
   },
   {
@@ -3760,6 +4296,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 2,
+    "free_count": 2,
     "revenue_vat": 0
   },
   {
@@ -3767,6 +4304,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 5,
+    "free_count": 0,
     "revenue_vat": 200
   },
   {
@@ -3774,6 +4312,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 5,
+    "free_count": 5,
     "revenue_vat": 0
   },
   {
@@ -3781,6 +4320,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 125
   },
   {
@@ -3788,6 +4328,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 11,
+    "free_count": 1,
     "revenue_vat": 850
   },
   {
@@ -3795,6 +4336,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 3,
+    "free_count": 3,
     "revenue_vat": 0
   },
   {
@@ -3802,6 +4344,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 40
   },
   {
@@ -3809,6 +4352,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 6,
+    "free_count": 6,
     "revenue_vat": 0
   },
   {
@@ -3816,6 +4360,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení do výdejního místa",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 85
   },
   {
@@ -3823,6 +4368,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 2,
+    "free_count": 1,
     "revenue_vat": 125
   },
   {
@@ -3830,6 +4376,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 7,
+    "free_count": 2,
     "revenue_vat": 425
   },
   {
@@ -3837,6 +4384,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 4,
+    "free_count": 0,
     "revenue_vat": 160
   },
   {
@@ -3844,6 +4392,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 9,
+    "free_count": 9,
     "revenue_vat": 0
   },
   {
@@ -3851,6 +4400,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení do výdejního místa",
     "count": 2,
+    "free_count": 0,
     "revenue_vat": 170
   },
   {
@@ -3858,6 +4408,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 2,
+    "free_count": 1,
     "revenue_vat": 125
   },
   {
@@ -3865,6 +4416,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 9,
+    "free_count": 4,
     "revenue_vat": 425
   },
   {
@@ -3872,6 +4424,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -3879,6 +4432,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 4,
+    "free_count": 0,
     "revenue_vat": 160
   },
   {
@@ -3886,6 +4440,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 6,
+    "free_count": 6,
     "revenue_vat": 0
   },
   {
@@ -3893,6 +4448,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení do výdejního místa",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 85
   },
   {
@@ -3900,6 +4456,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 2,
+    "free_count": 1,
     "revenue_vat": 125
   },
   {
@@ -3907,6 +4464,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 8,
+    "free_count": 0,
     "revenue_vat": 680
   },
   {
@@ -3914,6 +4472,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 4,
+    "free_count": 0,
     "revenue_vat": 160
   },
   {
@@ -3921,6 +4480,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 4,
+    "free_count": 4,
     "revenue_vat": 0
   },
   {
@@ -3928,6 +4488,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení do výdejního místa",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 85
   },
   {
@@ -3935,6 +4496,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -3942,6 +4504,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 6,
+    "free_count": 0,
     "revenue_vat": 510
   },
   {
@@ -3949,6 +4512,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 2,
+    "free_count": 2,
     "revenue_vat": 0
   },
   {
@@ -3956,6 +4520,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 3,
+    "free_count": 0,
     "revenue_vat": 120
   },
   {
@@ -3963,6 +4528,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 11,
+    "free_count": 11,
     "revenue_vat": 0
   },
   {
@@ -3970,6 +4536,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení do výdejního místa",
     "count": 3,
+    "free_count": 0,
     "revenue_vat": 255
   },
   {
@@ -3977,6 +4544,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 5,
+    "free_count": 2,
     "revenue_vat": 375
   },
   {
@@ -3984,6 +4552,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 8,
+    "free_count": 0,
     "revenue_vat": 680
   },
   {
@@ -3991,6 +4560,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -3998,6 +4568,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 5,
+    "free_count": 0,
     "revenue_vat": 200
   },
   {
@@ -4005,6 +4576,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 9,
+    "free_count": 9,
     "revenue_vat": 0
   },
   {
@@ -4012,6 +4584,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 3,
+    "free_count": 2,
     "revenue_vat": 125
   },
   {
@@ -4019,6 +4592,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 12,
+    "free_count": 3,
     "revenue_vat": 765
   },
   {
@@ -4026,6 +4600,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 2,
+    "free_count": 2,
     "revenue_vat": 0
   },
   {
@@ -4033,6 +4608,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 4,
+    "free_count": 0,
     "revenue_vat": 160
   },
   {
@@ -4040,6 +4616,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 7,
+    "free_count": 7,
     "revenue_vat": 0
   },
   {
@@ -4047,6 +4624,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 4,
+    "free_count": 1,
     "revenue_vat": 375
   },
   {
@@ -4054,6 +4632,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 9,
+    "free_count": 2,
     "revenue_vat": 595
   },
   {
@@ -4061,6 +4640,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -4068,6 +4648,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 40
   },
   {
@@ -4075,6 +4656,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -4082,6 +4664,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 125
   },
   {
@@ -4089,6 +4672,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 2,
+    "free_count": 2,
     "revenue_vat": 0
   },
   {
@@ -4096,6 +4680,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -4103,6 +4688,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 85
   },
   {
@@ -4110,6 +4696,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -4117,6 +4704,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 85
   },
   {
@@ -4124,6 +4712,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -4131,6 +4720,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 125
   },
   {
@@ -4138,6 +4728,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -4145,6 +4736,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -4152,6 +4744,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 40
   },
   {
@@ -4159,6 +4752,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -4166,6 +4760,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 2,
+    "free_count": 1,
     "revenue_vat": 85
   },
   {
@@ -4173,6 +4768,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -4180,6 +4776,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -4187,6 +4784,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 40
   },
   {
@@ -4194,6 +4792,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 2,
+    "free_count": 2,
     "revenue_vat": 0
   },
   {
@@ -4201,6 +4800,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 125
   },
   {
@@ -4208,6 +4808,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 2,
+    "free_count": 0,
     "revenue_vat": 170
   },
   {
@@ -4215,6 +4816,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -4222,6 +4824,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 85
   },
   {
@@ -4229,6 +4832,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 40
   },
   {
@@ -4236,6 +4840,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 4,
+    "free_count": 4,
     "revenue_vat": 0
   },
   {
@@ -4243,6 +4848,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -4250,6 +4856,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 4,
+    "free_count": 1,
     "revenue_vat": 255
   },
   {
@@ -4257,6 +4864,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -4264,6 +4872,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 40
   },
   {
@@ -4271,6 +4880,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 2,
+    "free_count": 1,
     "revenue_vat": 85
   },
   {
@@ -4278,6 +4888,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 40
   },
   {
@@ -4285,6 +4896,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 4,
+    "free_count": 4,
     "revenue_vat": 0
   },
   {
@@ -4292,6 +4904,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 2,
+    "free_count": 1,
     "revenue_vat": 125
   },
   {
@@ -4299,6 +4912,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 3,
+    "free_count": 1,
     "revenue_vat": 170
   },
   {
@@ -4306,6 +4920,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 40
   },
   {
@@ -4313,6 +4928,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 2,
+    "free_count": 2,
     "revenue_vat": 0
   },
   {
@@ -4320,6 +4936,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 3,
+    "free_count": 1,
     "revenue_vat": 170
   },
   {
@@ -4327,6 +4944,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 2,
+    "free_count": 0,
     "revenue_vat": 80
   },
   {
@@ -4334,6 +4952,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 2,
+    "free_count": 2,
     "revenue_vat": 0
   },
   {
@@ -4341,6 +4960,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení do výdejního místa",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 85
   },
   {
@@ -4348,6 +4968,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 3,
+    "free_count": 0,
     "revenue_vat": 255
   },
   {
@@ -4355,6 +4976,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 40
   },
   {
@@ -4362,6 +4984,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -4369,6 +4992,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 2,
+    "free_count": 0,
     "revenue_vat": 170
   },
   {
@@ -4376,6 +5000,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -4383,6 +5008,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -4390,6 +5016,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -4397,6 +5024,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 85
   },
   {
@@ -4404,6 +5032,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -4411,6 +5040,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 40
   },
   {
@@ -4418,6 +5048,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 3,
+    "free_count": 3,
     "revenue_vat": 0
   },
   {
@@ -4425,6 +5056,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 125
   },
   {
@@ -4432,6 +5064,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 4,
+    "free_count": 1,
     "revenue_vat": 255
   },
   {
@@ -4439,6 +5072,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 40
   },
   {
@@ -4446,6 +5080,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 4,
+    "free_count": 4,
     "revenue_vat": 0
   },
   {
@@ -4453,6 +5088,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 5,
+    "free_count": 2,
     "revenue_vat": 255
   },
   {
@@ -4460,6 +5096,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -4467,6 +5104,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 2,
+    "free_count": 0,
     "revenue_vat": 80
   },
   {
@@ -4474,6 +5112,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 3,
+    "free_count": 3,
     "revenue_vat": 0
   },
   {
@@ -4481,6 +5120,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 3,
+    "free_count": 1,
     "revenue_vat": 250
   },
   {
@@ -4488,6 +5128,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 3,
+    "free_count": 0,
     "revenue_vat": 255
   },
   {
@@ -4495,6 +5136,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -4502,6 +5144,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 85
   },
   {
@@ -4509,6 +5152,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 40
   },
   {
@@ -4516,6 +5160,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -4523,6 +5168,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 125
   },
   {
@@ -4530,6 +5176,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -4537,6 +5184,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -4544,6 +5192,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 85
   },
   {
@@ -4551,6 +5200,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 2,
+    "free_count": 2,
     "revenue_vat": 0
   },
   {
@@ -4558,6 +5208,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 2,
+    "free_count": 0,
     "revenue_vat": 170
   },
   {
@@ -4565,6 +5216,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 40
   },
   {
@@ -4572,6 +5224,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 3,
+    "free_count": 3,
     "revenue_vat": 0
   },
   {
@@ -4579,6 +5232,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 2,
+    "free_count": 0,
     "revenue_vat": 250
   },
   {
@@ -4586,6 +5240,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 2,
+    "free_count": 1,
     "revenue_vat": 85
   },
   {
@@ -4593,6 +5248,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -4600,6 +5256,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -4607,6 +5264,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -4614,6 +5272,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 2,
+    "free_count": 2,
     "revenue_vat": 0
   },
   {
@@ -4621,6 +5280,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení do výdejního místa",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 85
   },
   {
@@ -4628,6 +5288,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 2,
+    "free_count": 1,
     "revenue_vat": 125
   },
   {
@@ -4635,6 +5296,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 4,
+    "free_count": 0,
     "revenue_vat": 160
   },
   {
@@ -4642,6 +5304,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 3,
+    "free_count": 3,
     "revenue_vat": 0
   },
   {
@@ -4649,6 +5312,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení do výdejního místa",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 85
   },
   {
@@ -4656,6 +5320,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 3,
+    "free_count": 0,
     "revenue_vat": 375
   },
   {
@@ -4663,6 +5328,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 3,
+    "free_count": 0,
     "revenue_vat": 255
   },
   {
@@ -4670,6 +5336,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 40
   },
   {
@@ -4677,6 +5344,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -4684,6 +5352,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 2,
+    "free_count": 0,
     "revenue_vat": 170
   },
   {
@@ -4691,6 +5360,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 2,
+    "free_count": 0,
     "revenue_vat": 80
   },
   {
@@ -4698,6 +5368,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 7,
+    "free_count": 7,
     "revenue_vat": 0
   },
   {
@@ -4705,6 +5376,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 2,
+    "free_count": 2,
     "revenue_vat": 0
   },
   {
@@ -4712,6 +5384,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 7,
+    "free_count": 5,
     "revenue_vat": 170
   },
   {
@@ -4719,6 +5392,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 4,
+    "free_count": 0,
     "revenue_vat": 160
   },
   {
@@ -4726,6 +5400,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 4,
+    "free_count": 4,
     "revenue_vat": 0
   },
   {
@@ -4733,6 +5408,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení do výdejního místa",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 85
   },
   {
@@ -4740,6 +5416,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 4,
+    "free_count": 2,
     "revenue_vat": 250
   },
   {
@@ -4747,6 +5424,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 3,
+    "free_count": 0,
     "revenue_vat": 255
   },
   {
@@ -4754,6 +5432,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -4761,6 +5440,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 2,
+    "free_count": 0,
     "revenue_vat": 80
   },
   {
@@ -4768,6 +5448,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 3,
+    "free_count": 3,
     "revenue_vat": 0
   },
   {
@@ -4775,6 +5456,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 125
   },
   {
@@ -4782,6 +5464,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 5,
+    "free_count": 1,
     "revenue_vat": 340
   },
   {
@@ -4789,6 +5472,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 2,
+    "free_count": 2,
     "revenue_vat": 0
   },
   {
@@ -4796,6 +5480,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 2,
+    "free_count": 0,
     "revenue_vat": 80
   },
   {
@@ -4803,6 +5488,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 6,
+    "free_count": 6,
     "revenue_vat": 0
   },
   {
@@ -4810,6 +5496,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení do výdejního místa",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 85
   },
   {
@@ -4817,6 +5504,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 2,
+    "free_count": 1,
     "revenue_vat": 125
   },
   {
@@ -4824,6 +5512,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 7,
+    "free_count": 2,
     "revenue_vat": 425
   },
   {
@@ -4831,6 +5520,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 4,
+    "free_count": 0,
     "revenue_vat": 160
   },
   {
@@ -4838,6 +5528,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 5,
+    "free_count": 5,
     "revenue_vat": 0
   },
   {
@@ -4845,6 +5536,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení do výdejního místa",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 85
   },
   {
@@ -4852,6 +5544,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 3,
+    "free_count": 0,
     "revenue_vat": 375
   },
   {
@@ -4859,6 +5552,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 5,
+    "free_count": 0,
     "revenue_vat": 425
   },
   {
@@ -4866,6 +5560,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 4,
+    "free_count": 0,
     "revenue_vat": 160
   },
   {
@@ -4873,6 +5568,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -4880,6 +5576,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 2,
+    "free_count": 0,
     "revenue_vat": 250
   },
   {
@@ -4887,6 +5584,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 3,
+    "free_count": 1,
     "revenue_vat": 170
   },
   {
@@ -4894,6 +5592,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 2,
+    "free_count": 2,
     "revenue_vat": 0
   },
   {
@@ -4901,6 +5600,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 2,
+    "free_count": 0,
     "revenue_vat": 80
   },
   {
@@ -4908,6 +5608,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 4,
+    "free_count": 4,
     "revenue_vat": 0
   },
   {
@@ -4915,6 +5616,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení do výdejního místa",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 85
   },
   {
@@ -4922,6 +5624,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 7,
+    "free_count": 0,
     "revenue_vat": 595
   },
   {
@@ -4929,6 +5632,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -4936,6 +5640,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 2,
+    "free_count": 0,
     "revenue_vat": 80
   },
   {
@@ -4943,6 +5648,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 2,
+    "free_count": 2,
     "revenue_vat": 0
   },
   {
@@ -4950,6 +5656,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 2,
+    "free_count": 0,
     "revenue_vat": 250
   },
   {
@@ -4957,6 +5664,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 3,
+    "free_count": 0,
     "revenue_vat": 255
   },
   {
@@ -4964,6 +5672,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -4971,6 +5680,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 2,
+    "free_count": 0,
     "revenue_vat": 80
   },
   {
@@ -4978,6 +5688,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 6,
+    "free_count": 6,
     "revenue_vat": 0
   },
   {
@@ -4985,6 +5696,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 3,
+    "free_count": 1,
     "revenue_vat": 250
   },
   {
@@ -4992,6 +5704,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 6,
+    "free_count": 1,
     "revenue_vat": 425
   },
   {
@@ -4999,6 +5712,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 2,
+    "free_count": 2,
     "revenue_vat": 0
   },
   {
@@ -5006,6 +5720,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 40
   },
   {
@@ -5013,6 +5728,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 2,
+    "free_count": 2,
     "revenue_vat": 0
   },
   {
@@ -5020,6 +5736,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 125
   },
   {
@@ -5027,6 +5744,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 4,
+    "free_count": 2,
     "revenue_vat": 170
   },
   {
@@ -5034,6 +5752,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 3,
+    "free_count": 0,
     "revenue_vat": 120
   },
   {
@@ -5041,6 +5760,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 6,
+    "free_count": 6,
     "revenue_vat": 0
   },
   {
@@ -5048,6 +5768,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 2,
+    "free_count": 2,
     "revenue_vat": 0
   },
   {
@@ -5055,6 +5776,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 7,
+    "free_count": 1,
     "revenue_vat": 510
   },
   {
@@ -5062,6 +5784,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -5069,6 +5792,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 40
   },
   {
@@ -5076,6 +5800,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 3,
+    "free_count": 3,
     "revenue_vat": 0
   },
   {
@@ -5083,6 +5808,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení do výdejního místa",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 85
   },
   {
@@ -5090,6 +5816,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 4,
+    "free_count": 1,
     "revenue_vat": 255
   },
   {
@@ -5097,6 +5824,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 2,
+    "free_count": 0,
     "revenue_vat": 80
   },
   {
@@ -5104,6 +5832,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 2,
+    "free_count": 2,
     "revenue_vat": 0
   },
   {
@@ -5111,6 +5840,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 125
   },
   {
@@ -5118,6 +5848,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 3,
+    "free_count": 0,
     "revenue_vat": 255
   },
   {
@@ -5125,6 +5856,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 40
   },
   {
@@ -5132,6 +5864,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 3,
+    "free_count": 3,
     "revenue_vat": 0
   },
   {
@@ -5139,6 +5872,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -5146,6 +5880,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 3,
+    "free_count": 0,
     "revenue_vat": 255
   },
   {
@@ -5153,6 +5888,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 40
   },
   {
@@ -5160,6 +5896,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 4,
+    "free_count": 4,
     "revenue_vat": 0
   },
   {
@@ -5167,6 +5904,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení do výdejního místa",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -5174,6 +5912,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -5181,6 +5920,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 3,
+    "free_count": 1,
     "revenue_vat": 170
   },
   {
@@ -5188,6 +5928,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -5195,6 +5936,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 3,
+    "free_count": 0,
     "revenue_vat": 120
   },
   {
@@ -5202,6 +5944,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 5,
+    "free_count": 5,
     "revenue_vat": 0
   },
   {
@@ -5209,6 +5952,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 3,
+    "free_count": 1,
     "revenue_vat": 250
   },
   {
@@ -5216,6 +5960,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 6,
+    "free_count": 1,
     "revenue_vat": 425
   },
   {
@@ -5223,6 +5968,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 2,
+    "free_count": 0,
     "revenue_vat": 80
   },
   {
@@ -5230,6 +5976,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 4,
+    "free_count": 4,
     "revenue_vat": 0
   },
   {
@@ -5237,6 +5984,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 2,
+    "free_count": 0,
     "revenue_vat": 250
   },
   {
@@ -5244,6 +5992,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 4,
+    "free_count": 2,
     "revenue_vat": 170
   },
   {
@@ -5251,6 +6000,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -5258,6 +6008,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 40
   },
   {
@@ -5265,6 +6016,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 3,
+    "free_count": 3,
     "revenue_vat": 0
   },
   {
@@ -5272,6 +6024,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení do výdejního místa",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 85
   },
   {
@@ -5279,6 +6032,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 2,
+    "free_count": 2,
     "revenue_vat": 0
   },
   {
@@ -5286,6 +6040,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 2,
+    "free_count": 1,
     "revenue_vat": 85
   },
   {
@@ -5293,6 +6048,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -5300,6 +6056,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 40
   },
   {
@@ -5307,6 +6064,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 5,
+    "free_count": 5,
     "revenue_vat": 0
   },
   {
@@ -5314,6 +6072,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 125
   },
   {
@@ -5321,6 +6080,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 6,
+    "free_count": 1,
     "revenue_vat": 425
   },
   {
@@ -5328,6 +6088,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 3,
+    "free_count": 0,
     "revenue_vat": 120
   },
   {
@@ -5335,6 +6096,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 2,
+    "free_count": 2,
     "revenue_vat": 0
   },
   {
@@ -5342,6 +6104,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení do výdejního místa",
     "count": 2,
+    "free_count": 2,
     "revenue_vat": 0
   },
   {
@@ -5349,6 +6112,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 3,
+    "free_count": 1,
     "revenue_vat": 170
   },
   {
@@ -5356,6 +6120,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 40
   },
   {
@@ -5363,6 +6128,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 6,
+    "free_count": 6,
     "revenue_vat": 0
   },
   {
@@ -5370,6 +6136,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 3,
+    "free_count": 1,
     "revenue_vat": 250
   },
   {
@@ -5377,6 +6144,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 4,
+    "free_count": 0,
     "revenue_vat": 340
   },
   {
@@ -5384,6 +6152,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 3,
+    "free_count": 3,
     "revenue_vat": 0
   },
   {
@@ -5391,6 +6160,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 2,
+    "free_count": 0,
     "revenue_vat": 80
   },
   {
@@ -5398,6 +6168,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 6,
+    "free_count": 6,
     "revenue_vat": 0
   },
   {
@@ -5405,6 +6176,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení do výdejního místa",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -5412,6 +6184,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 3,
+    "free_count": 0,
     "revenue_vat": 375
   },
   {
@@ -5419,6 +6192,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 7,
+    "free_count": 2,
     "revenue_vat": 425
   },
   {
@@ -5426,6 +6200,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -5433,6 +6208,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 4,
+    "free_count": 0,
     "revenue_vat": 160
   },
   {
@@ -5440,6 +6216,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 2,
+    "free_count": 2,
     "revenue_vat": 0
   },
   {
@@ -5447,6 +6224,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 3,
+    "free_count": 1,
     "revenue_vat": 250
   },
   {
@@ -5454,6 +6232,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 4,
+    "free_count": 1,
     "revenue_vat": 255
   },
   {
@@ -5461,6 +6240,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -5468,6 +6248,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 40
   },
   {
@@ -5475,6 +6256,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 6,
+    "free_count": 6,
     "revenue_vat": 0
   },
   {
@@ -5482,6 +6264,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení do výdejního místa",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 85
   },
   {
@@ -5489,6 +6272,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 4,
+    "free_count": 1,
     "revenue_vat": 375
   },
   {
@@ -5496,6 +6280,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 3,
+    "free_count": 0,
     "revenue_vat": 255
   },
   {
@@ -5503,6 +6288,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 6,
+    "free_count": 6,
     "revenue_vat": 0
   },
   {
@@ -5510,6 +6296,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 2,
+    "free_count": 1,
     "revenue_vat": 125
   },
   {
@@ -5517,6 +6304,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 4,
+    "free_count": 1,
     "revenue_vat": 255
   },
   {
@@ -5524,6 +6312,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 2,
+    "free_count": 2,
     "revenue_vat": 0
   },
   {
@@ -5531,6 +6320,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 6,
+    "free_count": 0,
     "revenue_vat": 240
   },
   {
@@ -5538,6 +6328,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 3,
+    "free_count": 3,
     "revenue_vat": 0
   },
   {
@@ -5545,6 +6336,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 4,
+    "free_count": 1,
     "revenue_vat": 375
   },
   {
@@ -5552,6 +6344,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 7,
+    "free_count": 1,
     "revenue_vat": 510
   },
   {
@@ -5559,6 +6352,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 40
   },
   {
@@ -5566,6 +6360,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 3,
+    "free_count": 3,
     "revenue_vat": 0
   },
   {
@@ -5573,6 +6368,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení do výdejního místa",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 85
   },
   {
@@ -5580,6 +6376,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 2,
+    "free_count": 1,
     "revenue_vat": 125
   },
   {
@@ -5587,6 +6384,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 85
   },
   {
@@ -5594,6 +6392,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 2,
+    "free_count": 0,
     "revenue_vat": 80
   },
   {
@@ -5601,6 +6400,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 3,
+    "free_count": 3,
     "revenue_vat": 0
   },
   {
@@ -5608,6 +6408,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení do výdejního místa",
     "count": 2,
+    "free_count": 0,
     "revenue_vat": 170
   },
   {
@@ -5615,6 +6416,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 2,
+    "free_count": 1,
     "revenue_vat": 125
   },
   {
@@ -5622,6 +6424,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 85
   },
   {
@@ -5629,6 +6432,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -5636,6 +6440,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 3,
+    "free_count": 0,
     "revenue_vat": 120
   },
   {
@@ -5643,6 +6448,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -5650,6 +6456,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 125
   },
   {
@@ -5657,6 +6464,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 4,
+    "free_count": 2,
     "revenue_vat": 170
   },
   {
@@ -5664,6 +6472,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 3,
+    "free_count": 3,
     "revenue_vat": 0
   },
   {
@@ -5671,6 +6480,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 3,
+    "free_count": 0,
     "revenue_vat": 255
   },
   {
@@ -5678,6 +6488,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 2,
+    "free_count": 2,
     "revenue_vat": 0
   },
   {
@@ -5685,6 +6496,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 2,
+    "free_count": 1,
     "revenue_vat": 125
   },
   {
@@ -5692,6 +6504,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 40
   },
   {
@@ -5699,6 +6512,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 2,
+    "free_count": 2,
     "revenue_vat": 0
   },
   {
@@ -5706,6 +6520,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 125
   },
   {
@@ -5713,6 +6528,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 2,
+    "free_count": 0,
     "revenue_vat": 170
   },
   {
@@ -5720,6 +6536,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 5,
+    "free_count": 0,
     "revenue_vat": 200
   },
   {
@@ -5727,6 +6544,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 4,
+    "free_count": 4,
     "revenue_vat": 0
   },
   {
@@ -5734,6 +6552,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení do výdejního místa",
     "count": 2,
+    "free_count": 2,
     "revenue_vat": 0
   },
   {
@@ -5741,6 +6560,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 2,
+    "free_count": 1,
     "revenue_vat": 125
   },
   {
@@ -5748,6 +6568,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 5,
+    "free_count": 0,
     "revenue_vat": 425
   },
   {
@@ -5755,6 +6576,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 4,
+    "free_count": 4,
     "revenue_vat": 0
   },
   {
@@ -5762,6 +6584,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 8,
+    "free_count": 0,
     "revenue_vat": 320
   },
   {
@@ -5769,6 +6592,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 3,
+    "free_count": 3,
     "revenue_vat": 0
   },
   {
@@ -5776,6 +6600,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 2,
+    "free_count": 1,
     "revenue_vat": 125
   },
   {
@@ -5783,6 +6608,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 13,
+    "free_count": 1,
     "revenue_vat": 1020
   },
   {
@@ -5790,6 +6616,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 2,
+    "free_count": 0,
     "revenue_vat": 80
   },
   {
@@ -5797,6 +6624,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 5,
+    "free_count": 5,
     "revenue_vat": 0
   },
   {
@@ -5804,6 +6632,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 2,
+    "free_count": 1,
     "revenue_vat": 125
   },
   {
@@ -5811,6 +6640,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 5,
+    "free_count": 0,
     "revenue_vat": 425
   },
   {
@@ -5818,6 +6648,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 3,
+    "free_count": 3,
     "revenue_vat": 0
   },
   {
@@ -5825,6 +6656,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 3,
+    "free_count": 0,
     "revenue_vat": 255
   },
   {
@@ -5832,6 +6664,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 2,
+    "free_count": 0,
     "revenue_vat": 80
   },
   {
@@ -5839,6 +6672,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 3,
+    "free_count": 3,
     "revenue_vat": 0
   },
   {
@@ -5846,6 +6680,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 5,
+    "free_count": 0,
     "revenue_vat": 425
   },
   {
@@ -5853,6 +6688,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 40
   },
   {
@@ -5860,6 +6696,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 6,
+    "free_count": 6,
     "revenue_vat": 0
   },
   {
@@ -5867,6 +6704,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -5874,6 +6712,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 6,
+    "free_count": 3,
     "revenue_vat": 255
   },
   {
@@ -5881,6 +6720,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 2,
+    "free_count": 2,
     "revenue_vat": 0
   },
   {
@@ -5888,6 +6728,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 4,
+    "free_count": 0,
     "revenue_vat": 160
   },
   {
@@ -5895,6 +6736,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 3,
+    "free_count": 3,
     "revenue_vat": 0
   },
   {
@@ -5902,6 +6744,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 2,
+    "free_count": 1,
     "revenue_vat": 125
   },
   {
@@ -5909,6 +6752,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 7,
+    "free_count": 2,
     "revenue_vat": 425
   },
   {
@@ -5916,6 +6760,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 4,
+    "free_count": 0,
     "revenue_vat": 160
   },
   {
@@ -5923,6 +6768,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 6,
+    "free_count": 6,
     "revenue_vat": 0
   },
   {
@@ -5930,6 +6776,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 125
   },
   {
@@ -5937,6 +6784,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 9,
+    "free_count": 2,
     "revenue_vat": 595
   },
   {
@@ -5944,6 +6792,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 2,
+    "free_count": 0,
     "revenue_vat": 80
   },
   {
@@ -5951,6 +6800,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 2,
+    "free_count": 0,
     "revenue_vat": 170
   },
   {
@@ -5958,6 +6808,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -5965,6 +6816,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 3,
+    "free_count": 0,
     "revenue_vat": 120
   },
   {
@@ -5972,6 +6824,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 4,
+    "free_count": 4,
     "revenue_vat": 0
   },
   {
@@ -5979,6 +6832,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 4,
+    "free_count": 0,
     "revenue_vat": 500
   },
   {
@@ -5986,6 +6840,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 4,
+    "free_count": 2,
     "revenue_vat": 170
   },
   {
@@ -5993,6 +6848,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 3,
+    "free_count": 0,
     "revenue_vat": 120
   },
   {
@@ -6000,6 +6856,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 8,
+    "free_count": 8,
     "revenue_vat": 0
   },
   {
@@ -6007,6 +6864,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení do výdejního místa",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 85
   },
   {
@@ -6014,6 +6872,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 3,
+    "free_count": 1,
     "revenue_vat": 250
   },
   {
@@ -6021,6 +6880,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 7,
+    "free_count": 1,
     "revenue_vat": 510
   },
   {
@@ -6028,6 +6888,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 2,
+    "free_count": 0,
     "revenue_vat": 80
   },
   {
@@ -6035,6 +6896,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 4,
+    "free_count": 4,
     "revenue_vat": 0
   },
   {
@@ -6042,6 +6904,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 2,
+    "free_count": 1,
     "revenue_vat": 125
   },
   {
@@ -6049,6 +6912,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 4,
+    "free_count": 0,
     "revenue_vat": 340
   },
   {
@@ -6056,6 +6920,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -6063,6 +6928,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 5,
+    "free_count": 0,
     "revenue_vat": 200
   },
   {
@@ -6070,6 +6936,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 4,
+    "free_count": 4,
     "revenue_vat": 0
   },
   {
@@ -6077,6 +6944,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 3,
+    "free_count": 2,
     "revenue_vat": 125
   },
   {
@@ -6084,6 +6952,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 7,
+    "free_count": 0,
     "revenue_vat": 595
   },
   {
@@ -6091,6 +6960,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 3,
+    "free_count": 3,
     "revenue_vat": 0
   },
   {
@@ -6098,6 +6968,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 6,
+    "free_count": 0,
     "revenue_vat": 240
   },
   {
@@ -6105,6 +6976,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 11,
+    "free_count": 11,
     "revenue_vat": 0
   },
   {
@@ -6112,6 +6984,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení do výdejního místa",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -6119,6 +6992,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 5,
+    "free_count": 2,
     "revenue_vat": 375
   },
   {
@@ -6126,6 +7000,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 14,
+    "free_count": 4,
     "revenue_vat": 850
   },
   {
@@ -6133,6 +7008,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -6140,6 +7016,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 4,
+    "free_count": 0,
     "revenue_vat": 160
   },
   {
@@ -6147,6 +7024,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 7,
+    "free_count": 7,
     "revenue_vat": 0
   },
   {
@@ -6154,6 +7032,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení do výdejního místa",
     "count": 3,
+    "free_count": 0,
     "revenue_vat": 255
   },
   {
@@ -6161,6 +7040,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 3,
+    "free_count": 1,
     "revenue_vat": 250
   },
   {
@@ -6168,6 +7048,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 6,
+    "free_count": 2,
     "revenue_vat": 340
   },
   {
@@ -6175,6 +7056,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 2,
+    "free_count": 0,
     "revenue_vat": 80
   },
   {
@@ -6182,6 +7064,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 5,
+    "free_count": 5,
     "revenue_vat": 0
   },
   {
@@ -6189,6 +7072,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení do výdejního místa",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 85
   },
   {
@@ -6196,6 +7080,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 3,
+    "free_count": 2,
     "revenue_vat": 125
   },
   {
@@ -6203,6 +7088,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 3,
+    "free_count": 1,
     "revenue_vat": 170
   },
   {
@@ -6210,6 +7096,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 40
   },
   {
@@ -6217,6 +7104,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 6,
+    "free_count": 6,
     "revenue_vat": 0
   },
   {
@@ -6224,6 +7112,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 2,
+    "free_count": 2,
     "revenue_vat": 0
   },
   {
@@ -6231,6 +7120,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 5,
+    "free_count": 1,
     "revenue_vat": 340
   },
   {
@@ -6238,6 +7128,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 5,
+    "free_count": 0,
     "revenue_vat": 200
   },
   {
@@ -6245,6 +7136,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 5,
+    "free_count": 5,
     "revenue_vat": 0
   },
   {
@@ -6252,6 +7144,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení do výdejního místa",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 85
   },
   {
@@ -6259,6 +7152,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 9,
+    "free_count": 1,
     "revenue_vat": 680
   },
   {
@@ -6266,6 +7160,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -6273,6 +7168,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 8,
+    "free_count": 0,
     "revenue_vat": 320
   },
   {
@@ -6280,6 +7176,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 4,
+    "free_count": 4,
     "revenue_vat": 0
   },
   {
@@ -6287,6 +7184,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení do výdejního místa",
     "count": 3,
+    "free_count": 2,
     "revenue_vat": 85
   },
   {
@@ -6294,6 +7192,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 4,
+    "free_count": 2,
     "revenue_vat": 250
   },
   {
@@ -6301,6 +7200,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 6,
+    "free_count": 0,
     "revenue_vat": 510
   },
   {
@@ -6308,6 +7208,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 2,
+    "free_count": 2,
     "revenue_vat": 0
   },
   {
@@ -6315,6 +7216,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 2,
+    "free_count": 0,
     "revenue_vat": 80
   },
   {
@@ -6322,6 +7224,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 5,
+    "free_count": 5,
     "revenue_vat": 0
   },
   {
@@ -6329,6 +7232,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -6336,6 +7240,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 8,
+    "free_count": 2,
     "revenue_vat": 510
   },
   {
@@ -6343,6 +7248,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -6350,6 +7256,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 2,
+    "free_count": 0,
     "revenue_vat": 80
   },
   {
@@ -6357,6 +7264,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 5,
+    "free_count": 5,
     "revenue_vat": 0
   },
   {
@@ -6364,6 +7272,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 2,
+    "free_count": 2,
     "revenue_vat": 0
   },
   {
@@ -6371,6 +7280,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 6,
+    "free_count": 0,
     "revenue_vat": 510
   },
   {
@@ -6378,6 +7288,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -6385,6 +7296,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 2,
+    "free_count": 0,
     "revenue_vat": 80
   },
   {
@@ -6392,6 +7304,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 4,
+    "free_count": 4,
     "revenue_vat": 0
   },
   {
@@ -6399,6 +7312,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 5,
+    "free_count": 4,
     "revenue_vat": 125
   },
   {
@@ -6406,6 +7320,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 2,
+    "free_count": 0,
     "revenue_vat": 170
   },
   {
@@ -6413,6 +7328,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 2,
+    "free_count": 0,
     "revenue_vat": 80
   },
   {
@@ -6420,6 +7336,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 2,
+    "free_count": 2,
     "revenue_vat": 0
   },
   {
@@ -6427,6 +7344,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -6434,6 +7352,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 3,
+    "free_count": 1,
     "revenue_vat": 170
   },
   {
@@ -6441,6 +7360,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -6448,6 +7368,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 3,
+    "free_count": 0,
     "revenue_vat": 120
   },
   {
@@ -6455,6 +7376,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 5,
+    "free_count": 5,
     "revenue_vat": 0
   },
   {
@@ -6462,6 +7384,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 125
   },
   {
@@ -6469,6 +7392,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 8,
+    "free_count": 1,
     "revenue_vat": 595
   },
   {
@@ -6476,6 +7400,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 40
   },
   {
@@ -6483,6 +7408,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -6490,6 +7416,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -6497,6 +7424,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 85
   },
   {
@@ -6504,6 +7432,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 3,
+    "free_count": 0,
     "revenue_vat": 120
   },
   {
@@ -6511,6 +7440,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -6518,6 +7448,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 125
   },
   {
@@ -6525,6 +7456,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 3,
+    "free_count": 1,
     "revenue_vat": 170
   },
   {
@@ -6532,6 +7464,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 40
   },
   {
@@ -6539,6 +7472,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 4,
+    "free_count": 4,
     "revenue_vat": 0
   },
   {
@@ -6546,6 +7480,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 5,
+    "free_count": 0,
     "revenue_vat": 425
   },
   {
@@ -6553,6 +7488,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -6560,6 +7496,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 4,
+    "free_count": 0,
     "revenue_vat": 160
   },
   {
@@ -6567,6 +7504,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 4,
+    "free_count": 4,
     "revenue_vat": 0
   },
   {
@@ -6574,6 +7512,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 3,
+    "free_count": 0,
     "revenue_vat": 375
   },
   {
@@ -6581,6 +7520,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 6,
+    "free_count": 1,
     "revenue_vat": 425
   },
   {
@@ -6588,6 +7528,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 4,
+    "free_count": 0,
     "revenue_vat": 160
   },
   {
@@ -6595,6 +7536,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 3,
+    "free_count": 3,
     "revenue_vat": 0
   },
   {
@@ -6602,6 +7544,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 125
   },
   {
@@ -6609,6 +7552,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 6,
+    "free_count": 0,
     "revenue_vat": 510
   },
   {
@@ -6616,6 +7560,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 3,
+    "free_count": 3,
     "revenue_vat": 0
   },
   {
@@ -6623,6 +7568,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 40
   },
   {
@@ -6630,6 +7576,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -6637,6 +7584,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 2,
+    "free_count": 1,
     "revenue_vat": 125
   },
   {
@@ -6644,6 +7592,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 3,
+    "free_count": 2,
     "revenue_vat": 85
   },
   {
@@ -6651,6 +7600,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 2,
+    "free_count": 2,
     "revenue_vat": 0
   },
   {
@@ -6658,6 +7608,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 2,
+    "free_count": 1,
     "revenue_vat": 85
   },
   {
@@ -6665,6 +7616,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 40
   },
   {
@@ -6672,6 +7624,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 3,
+    "free_count": 3,
     "revenue_vat": 0
   },
   {
@@ -6679,6 +7632,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 3,
+    "free_count": 1,
     "revenue_vat": 250
   },
   {
@@ -6686,6 +7640,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 85
   },
   {
@@ -6693,6 +7648,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -6700,6 +7656,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 5,
+    "free_count": 0,
     "revenue_vat": 200
   },
   {
@@ -6707,6 +7664,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 8,
+    "free_count": 8,
     "revenue_vat": 0
   },
   {
@@ -6714,6 +7672,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 3,
+    "free_count": 1,
     "revenue_vat": 250
   },
   {
@@ -6721,6 +7680,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 11,
+    "free_count": 1,
     "revenue_vat": 850
   },
   {
@@ -6728,6 +7688,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 2,
+    "free_count": 0,
     "revenue_vat": 80
   },
   {
@@ -6735,6 +7696,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 6,
+    "free_count": 6,
     "revenue_vat": 0
   },
   {
@@ -6742,6 +7704,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 2,
+    "free_count": 0,
     "revenue_vat": 250
   },
   {
@@ -6749,6 +7712,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 6,
+    "free_count": 1,
     "revenue_vat": 425
   },
   {
@@ -6756,6 +7720,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 2,
+    "free_count": 0,
     "revenue_vat": 80
   },
   {
@@ -6763,6 +7728,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -6770,6 +7736,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 125
   },
   {
@@ -6777,6 +7744,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 2,
+    "free_count": 0,
     "revenue_vat": 170
   },
   {
@@ -6784,6 +7752,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 40
   },
   {
@@ -6791,6 +7760,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 4,
+    "free_count": 4,
     "revenue_vat": 0
   },
   {
@@ -6798,6 +7768,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 3,
+    "free_count": 2,
     "revenue_vat": 125
   },
   {
@@ -6805,6 +7776,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 2,
+    "free_count": 0,
     "revenue_vat": 170
   },
   {
@@ -6812,6 +7784,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 2,
+    "free_count": 2,
     "revenue_vat": 0
   },
   {
@@ -6819,6 +7792,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení do výdejního místa",
     "count": 2,
+    "free_count": 0,
     "revenue_vat": 170
   },
   {
@@ -6826,6 +7800,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 2,
+    "free_count": 2,
     "revenue_vat": 0
   },
   {
@@ -6833,6 +7808,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 4,
+    "free_count": 0,
     "revenue_vat": 160
   },
   {
@@ -6840,6 +7816,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 8,
+    "free_count": 8,
     "revenue_vat": 0
   },
   {
@@ -6847,6 +7824,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 3,
+    "free_count": 2,
     "revenue_vat": 125
   },
   {
@@ -6854,6 +7832,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 11,
+    "free_count": 2,
     "revenue_vat": 765
   },
   {
@@ -6861,6 +7840,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 4,
+    "free_count": 0,
     "revenue_vat": 160
   },
   {
@@ -6868,6 +7848,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 6,
+    "free_count": 6,
     "revenue_vat": 0
   },
   {
@@ -6875,6 +7856,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení do výdejního místa",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 85
   },
   {
@@ -6882,6 +7864,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -6889,6 +7872,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 8,
+    "free_count": 3,
     "revenue_vat": 425
   },
   {
@@ -6896,6 +7880,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 2,
+    "free_count": 2,
     "revenue_vat": 0
   },
   {
@@ -6903,6 +7888,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 2,
+    "free_count": 0,
     "revenue_vat": 80
   },
   {
@@ -6910,6 +7896,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 2,
+    "free_count": 2,
     "revenue_vat": 0
   },
   {
@@ -6917,6 +7904,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 2,
+    "free_count": 1,
     "revenue_vat": 125
   },
   {
@@ -6924,6 +7912,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 4,
+    "free_count": 2,
     "revenue_vat": 170
   },
   {
@@ -6931,6 +7920,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -6938,6 +7928,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 4,
+    "free_count": 0,
     "revenue_vat": 160
   },
   {
@@ -6945,6 +7936,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 3,
+    "free_count": 3,
     "revenue_vat": 0
   },
   {
@@ -6952,6 +7944,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 3,
+    "free_count": 1,
     "revenue_vat": 250
   },
   {
@@ -6959,6 +7952,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 5,
+    "free_count": 1,
     "revenue_vat": 340
   },
   {
@@ -6966,6 +7960,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -6973,6 +7968,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 3,
+    "free_count": 0,
     "revenue_vat": 120
   },
   {
@@ -6980,6 +7976,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 2,
+    "free_count": 2,
     "revenue_vat": 0
   },
   {
@@ -6987,6 +7984,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -6994,6 +7992,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 5,
+    "free_count": 0,
     "revenue_vat": 425
   },
   {
@@ -7001,6 +8000,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 4,
+    "free_count": 0,
     "revenue_vat": 160
   },
   {
@@ -7008,6 +8008,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 2,
+    "free_count": 2,
     "revenue_vat": 0
   },
   {
@@ -7015,6 +8016,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 3,
+    "free_count": 2,
     "revenue_vat": 125
   },
   {
@@ -7022,6 +8024,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 3,
+    "free_count": 1,
     "revenue_vat": 170
   },
   {
@@ -7029,6 +8032,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -7036,6 +8040,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 3,
+    "free_count": 0,
     "revenue_vat": 120
   },
   {
@@ -7043,6 +8048,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 5,
+    "free_count": 5,
     "revenue_vat": 0
   },
   {
@@ -7050,6 +8056,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení do výdejního místa",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -7057,6 +8064,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 4,
+    "free_count": 3,
     "revenue_vat": 125
   },
   {
@@ -7064,6 +8072,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 4,
+    "free_count": 2,
     "revenue_vat": 170
   },
   {
@@ -7071,6 +8080,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -7078,6 +8088,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 6,
+    "free_count": 0,
     "revenue_vat": 240
   },
   {
@@ -7085,6 +8096,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 2,
+    "free_count": 2,
     "revenue_vat": 0
   },
   {
@@ -7092,6 +8104,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 3,
+    "free_count": 1,
     "revenue_vat": 250
   },
   {
@@ -7099,6 +8112,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 6,
+    "free_count": 1,
     "revenue_vat": 425
   },
   {
@@ -7106,6 +8120,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 4,
+    "free_count": 0,
     "revenue_vat": 160
   },
   {
@@ -7113,6 +8128,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 5,
+    "free_count": 5,
     "revenue_vat": 0
   },
   {
@@ -7120,6 +8136,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 3,
+    "free_count": 0,
     "revenue_vat": 375
   },
   {
@@ -7127,6 +8144,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 6,
+    "free_count": 1,
     "revenue_vat": 425
   },
   {
@@ -7134,6 +8152,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -7141,6 +8160,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 2,
+    "free_count": 0,
     "revenue_vat": 80
   },
   {
@@ -7148,6 +8168,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 2,
+    "free_count": 2,
     "revenue_vat": 0
   },
   {
@@ -7155,6 +8176,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení do výdejního místa",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -7162,6 +8184,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 2,
+    "free_count": 1,
     "revenue_vat": 125
   },
   {
@@ -7169,6 +8192,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 2,
+    "free_count": 0,
     "revenue_vat": 170
   },
   {
@@ -7176,6 +8200,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 40
   },
   {
@@ -7183,6 +8208,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -7190,6 +8216,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 2,
+    "free_count": 2,
     "revenue_vat": 0
   },
   {
@@ -7197,6 +8224,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 2,
+    "free_count": 2,
     "revenue_vat": 0
   },
   {
@@ -7204,6 +8232,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 2,
+    "free_count": 0,
     "revenue_vat": 80
   },
   {
@@ -7211,6 +8240,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 5,
+    "free_count": 5,
     "revenue_vat": 0
   },
   {
@@ -7218,6 +8248,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 125
   },
   {
@@ -7225,6 +8256,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 8,
+    "free_count": 1,
     "revenue_vat": 595
   },
   {
@@ -7232,6 +8264,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -7239,6 +8272,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 2,
+    "free_count": 0,
     "revenue_vat": 80
   },
   {
@@ -7246,6 +8280,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 7,
+    "free_count": 7,
     "revenue_vat": 0
   },
   {
@@ -7253,6 +8288,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení do výdejního místa",
     "count": 2,
+    "free_count": 0,
     "revenue_vat": 170
   },
   {
@@ -7260,6 +8296,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 3,
+    "free_count": 1,
     "revenue_vat": 250
   },
   {
@@ -7267,6 +8304,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 5,
+    "free_count": 1,
     "revenue_vat": 340
   },
   {
@@ -7274,6 +8312,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -7281,6 +8320,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 3,
+    "free_count": 0,
     "revenue_vat": 120
   },
   {
@@ -7288,6 +8328,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 5,
+    "free_count": 5,
     "revenue_vat": 0
   },
   {
@@ -7295,6 +8336,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení do výdejního místa",
     "count": 3,
+    "free_count": 0,
     "revenue_vat": 255
   },
   {
@@ -7302,6 +8344,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 3,
+    "free_count": 1,
     "revenue_vat": 250
   },
   {
@@ -7309,6 +8352,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 3,
+    "free_count": 0,
     "revenue_vat": 255
   },
   {
@@ -7316,6 +8360,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 2,
+    "free_count": 2,
     "revenue_vat": 0
   },
   {
@@ -7323,6 +8368,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 40
   },
   {
@@ -7330,6 +8376,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 7,
+    "free_count": 7,
     "revenue_vat": 0
   },
   {
@@ -7337,6 +8384,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení do výdejního místa",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 85
   },
   {
@@ -7344,6 +8392,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 2,
+    "free_count": 1,
     "revenue_vat": 125
   },
   {
@@ -7351,6 +8400,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 7,
+    "free_count": 1,
     "revenue_vat": 510
   },
   {
@@ -7358,6 +8408,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 40
   },
   {
@@ -7365,6 +8416,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 5,
+    "free_count": 5,
     "revenue_vat": 0
   },
   {
@@ -7372,6 +8424,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení do výdejního místa",
     "count": 3,
+    "free_count": 1,
     "revenue_vat": 170
   },
   {
@@ -7379,6 +8432,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 125
   },
   {
@@ -7386,6 +8440,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 2,
+    "free_count": 0,
     "revenue_vat": 170
   },
   {
@@ -7393,6 +8448,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 2,
+    "free_count": 2,
     "revenue_vat": 0
   },
   {
@@ -7400,6 +8456,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 4,
+    "free_count": 0,
     "revenue_vat": 160
   },
   {
@@ -7407,6 +8464,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 9,
+    "free_count": 9,
     "revenue_vat": 0
   },
   {
@@ -7414,6 +8472,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení do výdejního místa",
     "count": 2,
+    "free_count": 0,
     "revenue_vat": 170
   },
   {
@@ -7421,6 +8480,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 7,
+    "free_count": 5,
     "revenue_vat": 250
   },
   {
@@ -7428,6 +8488,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 6,
+    "free_count": 1,
     "revenue_vat": 425
   },
   {
@@ -7435,6 +8496,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -7442,6 +8504,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 2,
+    "free_count": 0,
     "revenue_vat": 80
   },
   {
@@ -7449,6 +8512,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 6,
+    "free_count": 6,
     "revenue_vat": 0
   },
   {
@@ -7456,6 +8520,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 125
   },
   {
@@ -7463,6 +8528,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 8,
+    "free_count": 4,
     "revenue_vat": 340
   },
   {
@@ -7470,6 +8536,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 2,
+    "free_count": 2,
     "revenue_vat": 0
   },
   {
@@ -7477,6 +8544,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 7,
+    "free_count": 0,
     "revenue_vat": 280
   },
   {
@@ -7484,6 +8552,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 9,
+    "free_count": 9,
     "revenue_vat": 0
   },
   {
@@ -7491,6 +8560,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 6,
+    "free_count": 3,
     "revenue_vat": 375
   },
   {
@@ -7498,6 +8568,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 12,
+    "free_count": 2,
     "revenue_vat": 850
   },
   {
@@ -7505,6 +8576,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 4,
+    "free_count": 0,
     "revenue_vat": 160
   },
   {
@@ -7512,6 +8584,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 8,
+    "free_count": 8,
     "revenue_vat": 0
   },
   {
@@ -7519,6 +8592,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení do výdejního místa",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 85
   },
   {
@@ -7526,6 +8600,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 2,
+    "free_count": 2,
     "revenue_vat": 0
   },
   {
@@ -7533,6 +8608,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 9,
+    "free_count": 1,
     "revenue_vat": 680
   },
   {
@@ -7540,6 +8616,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 4,
+    "free_count": 4,
     "revenue_vat": 0
   },
   {
@@ -7547,6 +8624,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení do výdejního místa",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 85
   },
   {
@@ -7554,6 +8632,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 125
   },
   {
@@ -7561,6 +8640,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 2,
+    "free_count": 0,
     "revenue_vat": 170
   },
   {
@@ -7568,6 +8648,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -7575,6 +8656,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 40
   },
   {
@@ -7582,6 +8664,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 7,
+    "free_count": 7,
     "revenue_vat": 0
   },
   {
@@ -7589,6 +8672,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 4,
+    "free_count": 1,
     "revenue_vat": 375
   },
   {
@@ -7596,6 +8680,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 5,
+    "free_count": 1,
     "revenue_vat": 340
   },
   {
@@ -7603,6 +8688,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 5,
+    "free_count": 0,
     "revenue_vat": 200
   },
   {
@@ -7610,6 +8696,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 3,
+    "free_count": 3,
     "revenue_vat": 0
   },
   {
@@ -7617,6 +8704,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 4,
+    "free_count": 3,
     "revenue_vat": 125
   },
   {
@@ -7624,6 +8712,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 4,
+    "free_count": 2,
     "revenue_vat": 170
   },
   {
@@ -7631,6 +8720,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 6,
+    "free_count": 0,
     "revenue_vat": 240
   },
   {
@@ -7638,6 +8728,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 7,
+    "free_count": 7,
     "revenue_vat": 0
   },
   {
@@ -7645,6 +8736,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 2,
+    "free_count": 1,
     "revenue_vat": 125
   },
   {
@@ -7652,6 +8744,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 11,
+    "free_count": 4,
     "revenue_vat": 595
   },
   {
@@ -7659,6 +8752,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 2,
+    "free_count": 2,
     "revenue_vat": 0
   },
   {
@@ -7666,6 +8760,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 5,
+    "free_count": 0,
     "revenue_vat": 200
   },
   {
@@ -7673,6 +8768,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 5,
+    "free_count": 5,
     "revenue_vat": 0
   },
   {
@@ -7680,6 +8776,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 4,
+    "free_count": 3,
     "revenue_vat": 125
   },
   {
@@ -7687,6 +8784,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 8,
+    "free_count": 1,
     "revenue_vat": 595
   },
   {
@@ -7694,6 +8792,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 2,
+    "free_count": 2,
     "revenue_vat": 0
   },
   {
@@ -7701,6 +8800,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 6,
+    "free_count": 0,
     "revenue_vat": 240
   },
   {
@@ -7708,6 +8808,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -7715,6 +8816,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 3,
+    "free_count": 1,
     "revenue_vat": 250
   },
   {
@@ -7722,6 +8824,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 6,
+    "free_count": 0,
     "revenue_vat": 510
   },
   {
@@ -7729,6 +8832,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 2,
+    "free_count": 2,
     "revenue_vat": 0
   },
   {
@@ -7736,6 +8840,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 2,
+    "free_count": 0,
     "revenue_vat": 80
   },
   {
@@ -7743,6 +8848,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 2,
+    "free_count": 2,
     "revenue_vat": 0
   },
   {
@@ -7750,6 +8856,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -7757,6 +8864,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 5,
+    "free_count": 0,
     "revenue_vat": 425
   },
   {
@@ -7764,6 +8872,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 4,
+    "free_count": 0,
     "revenue_vat": 160
   },
   {
@@ -7771,6 +8880,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 4,
+    "free_count": 4,
     "revenue_vat": 0
   },
   {
@@ -7778,6 +8888,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení do výdejního místa",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 85
   },
   {
@@ -7785,6 +8896,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 4,
+    "free_count": 3,
     "revenue_vat": 125
   },
   {
@@ -7792,6 +8904,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 3,
+    "free_count": 1,
     "revenue_vat": 170
   },
   {
@@ -7799,6 +8912,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 4,
+    "free_count": 4,
     "revenue_vat": 0
   },
   {
@@ -7806,6 +8920,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 3,
+    "free_count": 0,
     "revenue_vat": 120
   },
   {
@@ -7813,6 +8928,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 12,
+    "free_count": 12,
     "revenue_vat": 0
   },
   {
@@ -7820,6 +8936,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 4,
+    "free_count": 3,
     "revenue_vat": 125
   },
   {
@@ -7827,6 +8944,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 15,
+    "free_count": 6,
     "revenue_vat": 765
   },
   {
@@ -7834,6 +8952,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 8,
+    "free_count": 0,
     "revenue_vat": 320
   },
   {
@@ -7841,6 +8960,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 14,
+    "free_count": 14,
     "revenue_vat": 0
   },
   {
@@ -7848,6 +8968,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 7,
+    "free_count": 4,
     "revenue_vat": 375
   },
   {
@@ -7855,6 +8976,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 15,
+    "free_count": 3,
     "revenue_vat": 1020
   },
   {
@@ -7862,6 +8984,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 6,
+    "free_count": 0,
     "revenue_vat": 240
   },
   {
@@ -7869,6 +8992,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 5,
+    "free_count": 5,
     "revenue_vat": 0
   },
   {
@@ -7876,6 +9000,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 3,
+    "free_count": 0,
     "revenue_vat": 375
   },
   {
@@ -7883,6 +9008,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 8,
+    "free_count": 0,
     "revenue_vat": 680
   },
   {
@@ -7890,6 +9016,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -7897,6 +9024,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 2,
+    "free_count": 0,
     "revenue_vat": 80
   },
   {
@@ -7904,6 +9032,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 11,
+    "free_count": 11,
     "revenue_vat": 0
   },
   {
@@ -7911,6 +9040,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení do výdejního místa",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -7918,6 +9048,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 5,
+    "free_count": 2,
     "revenue_vat": 375
   },
   {
@@ -7925,6 +9056,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 8,
+    "free_count": 1,
     "revenue_vat": 595
   },
   {
@@ -7932,6 +9064,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 3,
+    "free_count": 3,
     "revenue_vat": 0
   },
   {
@@ -7939,6 +9072,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 6,
+    "free_count": 0,
     "revenue_vat": 240
   },
   {
@@ -7946,6 +9080,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 13,
+    "free_count": 13,
     "revenue_vat": 0
   },
   {
@@ -7953,6 +9088,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení do výdejního místa",
     "count": 4,
+    "free_count": 1,
     "revenue_vat": 255
   },
   {
@@ -7960,6 +9096,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 5,
+    "free_count": 3,
     "revenue_vat": 250
   },
   {
@@ -7967,6 +9104,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 13,
+    "free_count": 0,
     "revenue_vat": 1105
   },
   {
@@ -7974,6 +9112,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 3,
+    "free_count": 0,
     "revenue_vat": 120
   },
   {
@@ -7981,6 +9120,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 3,
+    "free_count": 3,
     "revenue_vat": 0
   },
   {
@@ -7988,6 +9128,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení do výdejního místa",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 85
   },
   {
@@ -7995,6 +9136,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 3,
+    "free_count": 0,
     "revenue_vat": 375
   },
   {
@@ -8002,6 +9144,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 2,
+    "free_count": 1,
     "revenue_vat": 85
   },
   {
@@ -8009,6 +9152,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -8016,6 +9160,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 4,
+    "free_count": 0,
     "revenue_vat": 160
   },
   {
@@ -8023,6 +9168,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 5,
+    "free_count": 5,
     "revenue_vat": 0
   },
   {
@@ -8030,6 +9176,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení do výdejního místa",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 85
   },
   {
@@ -8037,6 +9184,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 3,
+    "free_count": 3,
     "revenue_vat": 0
   },
   {
@@ -8044,6 +9192,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 6,
+    "free_count": 3,
     "revenue_vat": 255
   },
   {
@@ -8051,6 +9200,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 2,
+    "free_count": 2,
     "revenue_vat": 0
   },
   {
@@ -8058,6 +9208,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 3,
+    "free_count": 0,
     "revenue_vat": 120
   },
   {
@@ -8065,6 +9216,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 9,
+    "free_count": 9,
     "revenue_vat": 0
   },
   {
@@ -8072,6 +9224,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 2,
+    "free_count": 1,
     "revenue_vat": 125
   },
   {
@@ -8079,6 +9232,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 12,
+    "free_count": 5,
     "revenue_vat": 595
   },
   {
@@ -8086,6 +9240,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 9,
+    "free_count": 0,
     "revenue_vat": 360
   },
   {
@@ -8093,6 +9248,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 6,
+    "free_count": 6,
     "revenue_vat": 0
   },
   {
@@ -8100,6 +9256,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 5,
+    "free_count": 3,
     "revenue_vat": 250
   },
   {
@@ -8107,6 +9264,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 10,
+    "free_count": 2,
     "revenue_vat": 680
   },
   {
@@ -8114,6 +9272,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 2,
+    "free_count": 2,
     "revenue_vat": 0
   },
   {
@@ -8121,6 +9280,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 4,
+    "free_count": 0,
     "revenue_vat": 160
   },
   {
@@ -8128,6 +9288,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 9,
+    "free_count": 9,
     "revenue_vat": 0
   },
   {
@@ -8135,6 +9296,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení do výdejního místa",
     "count": 3,
+    "free_count": 0,
     "revenue_vat": 255
   },
   {
@@ -8142,6 +9304,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 3,
+    "free_count": 1,
     "revenue_vat": 250
   },
   {
@@ -8149,6 +9312,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 9,
+    "free_count": 1,
     "revenue_vat": 680
   },
   {
@@ -8156,6 +9320,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 2,
+    "free_count": 0,
     "revenue_vat": 80
   },
   {
@@ -8163,6 +9328,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 7,
+    "free_count": 7,
     "revenue_vat": 0
   },
   {
@@ -8170,6 +9336,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 2,
+    "free_count": 0,
     "revenue_vat": 250
   },
   {
@@ -8177,6 +9344,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 7,
+    "free_count": 2,
     "revenue_vat": 425
   },
   {
@@ -8184,6 +9352,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 2,
+    "free_count": 0,
     "revenue_vat": 80
   },
   {
@@ -8191,6 +9360,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 8,
+    "free_count": 8,
     "revenue_vat": 0
   },
   {
@@ -8198,6 +9368,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 3,
+    "free_count": 2,
     "revenue_vat": 125
   },
   {
@@ -8205,6 +9376,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 7,
+    "free_count": 2,
     "revenue_vat": 425
   },
   {
@@ -8212,6 +9384,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 2,
+    "free_count": 2,
     "revenue_vat": 0
   },
   {
@@ -8219,6 +9392,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 3,
+    "free_count": 0,
     "revenue_vat": 120
   },
   {
@@ -8226,6 +9400,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 6,
+    "free_count": 6,
     "revenue_vat": 0
   },
   {
@@ -8233,6 +9408,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení do výdejního místa",
     "count": 3,
+    "free_count": 0,
     "revenue_vat": 255
   },
   {
@@ -8240,6 +9416,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 4,
+    "free_count": 2,
     "revenue_vat": 250
   },
   {
@@ -8247,6 +9424,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 4,
+    "free_count": 1,
     "revenue_vat": 255
   },
   {
@@ -8254,6 +9432,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -8261,6 +9440,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 2,
+    "free_count": 0,
     "revenue_vat": 80
   },
   {
@@ -8268,6 +9448,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 11,
+    "free_count": 11,
     "revenue_vat": 0
   },
   {
@@ -8275,6 +9456,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 4,
+    "free_count": 2,
     "revenue_vat": 250
   },
   {
@@ -8282,6 +9464,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 10,
+    "free_count": 2,
     "revenue_vat": 680
   },
   {
@@ -8289,6 +9472,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 2,
+    "free_count": 2,
     "revenue_vat": 0
   },
   {
@@ -8296,6 +9480,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 8,
+    "free_count": 0,
     "revenue_vat": 320
   },
   {
@@ -8303,6 +9488,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 12,
+    "free_count": 12,
     "revenue_vat": 0
   },
   {
@@ -8310,6 +9496,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení do výdejního místa",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 85
   },
   {
@@ -8317,6 +9504,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 6,
+    "free_count": 3,
     "revenue_vat": 375
   },
   {
@@ -8324,6 +9512,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 15,
+    "free_count": 3,
     "revenue_vat": 1020
   },
   {
@@ -8331,6 +9520,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -8338,6 +9528,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 2,
+    "free_count": 0,
     "revenue_vat": 80
   },
   {
@@ -8345,6 +9536,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 5,
+    "free_count": 5,
     "revenue_vat": 0
   },
   {
@@ -8352,6 +9544,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení do výdejního místa",
     "count": 4,
+    "free_count": 1,
     "revenue_vat": 255
   },
   {
@@ -8359,6 +9552,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 1,
+    "free_count": 0,
     "revenue_vat": 125
   },
   {
@@ -8366,6 +9560,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 3,
+    "free_count": 0,
     "revenue_vat": 255
   },
   {
@@ -8373,6 +9568,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Bankovní převod",
     "count": 1,
+    "free_count": 1,
     "revenue_vat": 0
   },
   {
@@ -8380,6 +9576,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 3,
+    "free_count": 0,
     "revenue_vat": 120
   },
   {
@@ -8387,6 +9584,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 5,
+    "free_count": 5,
     "revenue_vat": 0
   },
   {
@@ -8394,6 +9592,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 2,
+    "free_count": 2,
     "revenue_vat": 0
   },
   {
@@ -8401,6 +9600,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 7,
+    "free_count": 0,
     "revenue_vat": 595
   },
   {
@@ -8408,6 +9608,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Dobírkou",
     "count": 9,
+    "free_count": 0,
     "revenue_vat": 360
   },
   {
@@ -8415,6 +9616,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "payment",
     "name": "Online platba kartou",
     "count": 5,
+    "free_count": 5,
     "revenue_vat": 0
   },
   {
@@ -8422,6 +9624,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "DPD doručení na adresu",
     "count": 6,
+    "free_count": 2,
     "revenue_vat": 500
   },
   {
@@ -8429,6 +9632,7 @@ export const shippingPaymentDataCZ: ShippingPaymentRecord[] = [
     "type": "shipping",
     "name": "Zásilkovna",
     "count": 8,
+    "free_count": 0,
     "revenue_vat": 680
   }
 ];
