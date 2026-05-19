@@ -183,7 +183,14 @@ Marže a Hrubý zisk se počítají z `marginDataCZ` / `marginDataSK`:
 - Přerušovaná šedá referenční čára (`ReferenceLine`) na průměrné hodnotě za období
 - Badge "Ø X.X % za období" v pravém horním rohu
 - Umístění: za grafem "Vývoj využitelnosti plateb", před sekcí donutů/tabulek
-- Funkce `isFreeShip()` a `isPickup()` jako helpery v komponentě
+- Funkce `isPickup()` jako helper v komponentě (vyloučení Osobního odběru)
+
+**Výpočet free_count (správná logika):**
+- `free_count` se počítá v `aggregateShippingPayment()` v `scripts/updateData.js` na úrovni každé individuální objednávky (před denní agregací)
+- Pokud objednávka má `revVat === 0` na shipping řádku → `free_count++`
+- **Proč ne `revenue_vat === 0` na agregovaném záznamu:** záznamy jsou sečteny za celý den, takže den s mix placenou/zdarma dopravou má `revenue_vat > 0` a stará logika objednávky zdarma přehlédla
+- `ShippingPaymentRecord` interface obsahuje pole `free_count: number`
+- Shipping page používá `r.free_count ?? 0` nikdy ne `revenue_vat === 0`
 
 **Ceník dopravců** — editovatelná tabulka uložená v `localStorage` (`carrierCosts_v1`):
 - Rozdělena na CZ (Kč) a SK (€) sekce
