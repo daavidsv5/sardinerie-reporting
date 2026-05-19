@@ -249,11 +249,14 @@ Výpočet v `lib/retentionUtils.ts` → `computeRfmSegments()`. Referenční dat
 ### Filtr období (TopBar)
 
 Dostupné možnosti `TimePeriod` v `data/types.ts`:
-- `current_year` — Aktuální rok
+- `yesterday` — Včerejší den
+- `last_7_days` — Posledních 7 dní (dnes − 6 → dnes)
 - `current_month` — Aktuální měsíc
 - `last_month` — Minulý měsíc (1. den – poslední den předchozího měsíce)
 - `last_14_days` — Posledních 14 dní
+- `current_year` — Aktuální rok
 - `last_year` — Minulý rok
+- `all_time` — Celé období (2024-01-01 → dnes; pokryje veškerá SK i CZ data)
 - `custom` — Vlastní období (customStart, customEnd)
 
 Logika datových rozsahů je v `hooks/useFilters.ts` → `getDateRange()`.
