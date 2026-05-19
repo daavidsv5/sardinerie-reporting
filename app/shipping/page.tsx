@@ -33,6 +33,7 @@ import {
   Pie,
   Cell,
   TooltipProps,
+  ReferenceLine,
 } from 'recharts';
 
 type Period = 'day' | 'week' | 'month';
@@ -96,6 +97,20 @@ function StackedTooltip({ active, payload, label, fc }: any) {
           <span className="text-slate-800">{fc(total)}</span>
         </div>
       )}
+    </div>
+  );
+}
+
+// Tooltip for free shipping % chart
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function FreeShipTooltip({ active, payload, label }: any) {
+  if (!active || !payload?.length) return null;
+  return (
+    <div className="bg-white border border-slate-200 rounded-xl shadow-lg p-3 text-xs min-w-[160px]">
+      <p className="font-semibold text-slate-600 mb-1">{label}</p>
+      <p className="font-semibold" style={{ color: C.primary }}>
+        Doprava zdarma %: {Number(payload[0]?.value).toFixed(1)} %
+      </p>
     </div>
   );
 }
@@ -232,6 +247,12 @@ export default function ShippingPage() {
     return ((curr - prev) / prev) * 100;
   }
 
+  // ── Helpers ────────────────────────────────────────────────────────────────
+  const isPickup = (name: string) =>
+    name.toLowerCase().includes('osobní') || name.toLowerCase().includes('osobni');
+  const isFreeShip = (r: { name: string; revenue_vat: number }) =>
+    r.revenue_vat === 0 || r.name.toLowerCase().includes('zdarma') || r.name.toLowerCase().includes('free');
+
   // ── KPIs ───────────────────────────────────────────────────────────────────
   const totalShippingRev  = shipping.reduce((s, r) => s + r.revenue_vat, 0);
   const totalPaymentRev   = payment.reduce((s, r) => s + r.revenue_vat, 0);
@@ -239,11 +260,12 @@ export default function ShippingPage() {
   const totalPayCount     = payment.reduce((s, r) => s + r.count, 0);
   const avgShipping       = totalShipCount > 0 ? totalShippingRev / totalShipCount : 0;
   const avgPayment        = totalPayCount  > 0 ? totalPaymentRev  / totalPayCount  : 0;
-  // Free shipping = shipping records where revenue_vat === 0 (or name includes zdarma/free)
-  const freeShippingCount = shipping
-    .filter(r => r.revenue_vat === 0 || r.name.toLowerCase().includes('zdarma') || r.name.toLowerCase().includes('free'))
-    .reduce((s, r) => s + r.count, 0);
-  const freeShippingPct   = totalShipCount > 0 ? (freeShippingCount / totalShipCount) * 100 : 0;
+
+  // Free shipping % — excludes Osobní odběr from both numerator and denominator
+  const shippingNoPickup      = shipping.filter(r => !isPickup(r.name));
+  const shipNoPickupCount     = shippingNoPickup.reduce((s, r) => s + r.count, 0);
+  const freeShippingCount     = shippingNoPickup.filter(isFreeShip).reduce((s, r) => s + r.count, 0);
+  const freeShippingPct       = shipNoPickupCount > 0 ? (freeShippingCount / shipNoPickupCount) * 100 : 0;
 
   // Prev year KPIs
   const prevTotalShippingRev = prevShipping.reduce((s, r) => s + r.revenue_vat, 0);
@@ -252,10 +274,10 @@ export default function ShippingPage() {
   const prevPayCount         = prevPayment.reduce((s, r) => s + r.count, 0);
   const prevAvgShipping      = prevShipCount > 0 ? prevTotalShippingRev / prevShipCount : 0;
   const prevAvgPayment       = prevPayCount  > 0 ? prevTotalPaymentRev  / prevPayCount  : 0;
-  const prevFreeCount        = prevShipping
-    .filter(r => r.revenue_vat === 0 || r.name.toLowerCase().includes('zdarma') || r.name.toLowerCase().includes('free'))
-    .reduce((s, r) => s + r.count, 0);
-  const prevFreeShippingPct  = prevShipCount > 0 ? (prevFreeCount / prevShipCount) * 100 : 0;
+  const prevShippingNoPickup  = prevShipping.filter(r => !isPickup(r.name));
+  const prevShipNoPickupCount = prevShippingNoPickup.reduce((s, r) => s + r.count, 0);
+  const prevFreeCount         = prevShippingNoPickup.filter(isFreeShip).reduce((s, r) => s + r.count, 0);
+  const prevFreeShippingPct   = prevShipNoPickupCount > 0 ? (prevFreeCount / prevShipNoPickupCount) * 100 : 0;
 
   // Sparkline — daily totals for shipping and payment revenue
   const sparkShipping = useMemo(() => {
@@ -268,6 +290,31 @@ export default function ShippingPage() {
     for (const r of payment) byDate[r.date] = (byDate[r.date] || 0) + r.revenue_vat;
     return Object.entries(byDate).sort(([a], [b]) => a.localeCompare(b)).map(([, v]) => v);
   }, [payment]);
+
+  // ── Free shipping % trend (excludes Osobní odběr) ──────────────────────────
+  const freeShippingTrend = useMemo(() => {
+    const totalByPeriod: Record<string, number> = {};
+    const freeByPeriod:  Record<string, number> = {};
+    for (const r of shipping) {
+      if (isPickup(r.name)) continue;
+      const key = periodKey(r.date, period);
+      totalByPeriod[key] = (totalByPeriod[key] || 0) + r.count;
+      if (isFreeShip(r)) freeByPeriod[key] = (freeByPeriod[key] || 0) + r.count;
+    }
+    const chartData = Object.keys(totalByPeriod)
+      .sort()
+      .map(key => ({
+        label: formatPeriodLabel(key, period),
+        pct: totalByPeriod[key] > 0
+          ? Math.round((freeByPeriod[key] || 0) / totalByPeriod[key] * 1000) / 10
+          : 0,
+      }));
+    const totalFree = Object.values(freeByPeriod).reduce((s, v) => s + v, 0);
+    const totalAll  = Object.values(totalByPeriod).reduce((s, v) => s + v, 0);
+    const avgPct = totalAll > 0 ? Math.round(totalFree / totalAll * 1000) / 10 : 0;
+    return { chartData, avgPct };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [shipping, period]);
 
   // ── Method breakdown ───────────────────────────────────────────────────────
   function methodRows(data: typeof shipping): MethodRow[] {
@@ -450,7 +497,7 @@ export default function ShippingPage() {
             variant={!hasAnyCost ? 'default' : shippingProfitLoss >= 0 ? 'green' : 'red'}
           />
           <KpiCard title="Prům. doprava"        value={fc(avgShipping)}                               yoy={yoyPct(avgShipping, prevAvgShipping)}            icon={<DollarSign size={16} />} sparklineData={[]}            hasPrevData={hasPrevData} />
-          <KpiCard title="Doprava zdarma"       value={formatNumber(freeShippingCount)}               yoy={yoyPct(freeShippingPct, prevFreeShippingPct)}   icon={<Gift size={16} />}       sparklineData={[]}            hasPrevData={hasPrevData} />
+          <KpiCard title="Doprava zdarma %"     value={`${freeShippingPct.toFixed(1)} %`}             yoy={yoyPct(freeShippingPct, prevFreeShippingPct)}   icon={<Gift size={16} />}       sparklineData={[]}            hasPrevData={hasPrevData} />
         </div>
       </div>
 
@@ -585,6 +632,40 @@ export default function ShippingPage() {
         </ResponsiveContainer>
       </div>
 
+
+      {/* Free shipping % over time */}
+      {freeShippingTrend.chartData.length > 0 && (
+        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <h2 className="text-sm font-semibold text-slate-700">Doprava zdarma % v čase</h2>
+              <p className="text-xs text-slate-400 mt-0.5">Podíl objednávek s dopravou zdarma (bez Osobního odběru)</p>
+            </div>
+            <span className="flex-shrink-0 text-xs text-slate-500 bg-slate-50 border border-slate-200 rounded-full px-2.5 py-1 whitespace-nowrap">
+              Ø {freeShippingTrend.avgPct.toFixed(1)} % za období
+            </span>
+          </div>
+          <div className="mt-4">
+            <ResponsiveContainer width="100%" height={280}>
+              <BarChart data={freeShippingTrend.chartData} margin={{ top: 5, right: 16, left: 10, bottom: 5 }} barCategoryGap="30%">
+                <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" vertical={false} />
+                <XAxis dataKey="label" tick={{ fontSize: 11, fill: '#9ca3af' }} interval="preserveStartEnd" axisLine={false} tickLine={false} />
+                <YAxis
+                  tickFormatter={v => `${v} %`}
+                  domain={[0, 100]}
+                  tick={{ fontSize: 11, fill: '#9ca3af' }}
+                  width={48}
+                  axisLine={false}
+                  tickLine={false}
+                />
+                <Tooltip content={<FreeShipTooltip />} cursor={{ fill: '#f8fafc' }} />
+                <ReferenceLine y={freeShippingTrend.avgPct} stroke="#94a3b8" strokeDasharray="5 3" strokeWidth={1.5} />
+                <Bar dataKey="pct" fill={C.primary} barSize={barSize} radius={[3, 3, 0, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+      )}
 
       {/* Donut + table grid — pies in row 1, tables in row 2 so they align */}
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">

@@ -66,7 +66,7 @@ app/(dashboard|orders|marketing|products|margin|analytics|behavior|crosssell|ret
 | `/behavior` | Nákupní chování — týdenní srovnání, hourly grid (all-time agregace) |
 | `/crosssell` | Cross-sell potenciál — top 100 produktových párů |
 | `/retention` | Retenční analýza — RFM segmentace, LTV, AOV, repeat purchase rate, měsíční graf Noví vs. stávající zákazníci (100% stacked bar) |
-| `/shipping` | Doprava a platby — KPI vč. zisku/ztráty dopravy, ceník dopravců (CZ/SK), P&L tabulka per dopravce. Layout donutů + tabulek: **pies v řádku 1, tabulky v řádku 2** (4 položky v jednom `grid-cols-2`) — tabulky jsou vždy zarovnané vedle sebe. |
+| `/shipping` | Doprava a platby — KPI vč. zisku/ztráty dopravy + **Doprava zdarma %** (bez Osobního odběru), ceník dopravců (CZ/SK), P&L tabulka per dopravce, **graf Doprava zdarma % v čase** (sloupcový s průměrnou referenční čarou). Layout donutů + tabulek: **pies v řádku 1, tabulky v řádku 2** (4 položky v jednom `grid-cols-2`) — tabulky jsou vždy zarovnané vedle sebe. |
 | `/login` | Přihlášení (NextAuth) |
 | `/admin/users` | Správa uživatelů (admin only) |
 
@@ -176,6 +176,14 @@ Marže a Hrubý zisk se počítají z `marginDataCZ` / `marginDataSK`:
 - `Doprava zákazník` — příjmy od zákazníků za dopravu
 - `Doprava e-shop` — náklady e-shopu dle ceníku dopravců
 - `Doprava zisk / ztráta` — rozdíl; `variant='green'` nebo `'red'`; zobrazuje `'--'` pokud ceník není vyplněn
+- `Doprava zdarma %` — podíl objednávek s dopravou zdarma (revenue_vat === 0 nebo name obsahuje "zdarma"/"free"), **vylučuje Osobní odběr** z obou stran výpočtu
+
+**Graf Doprava zdarma % v čase:**
+- Sloupcový graf respektující přepínač Den/Týden/Měsíc
+- Přerušovaná šedá referenční čára (`ReferenceLine`) na průměrné hodnotě za období
+- Badge "Ø X.X % za období" v pravém horním rohu
+- Umístění: za grafem "Vývoj využitelnosti plateb", před sekcí donutů/tabulek
+- Funkce `isFreeShip()` a `isPickup()` jako helpery v komponentě
 
 **Ceník dopravců** — editovatelná tabulka uložená v `localStorage` (`carrierCosts_v1`):
 - Rozdělena na CZ (Kč) a SK (€) sekce
@@ -330,6 +338,19 @@ Grafy s rozpadem po měsících zobrazují české zkratky měsíců (`formatMon
 - Logo: `public/logo.png` (Sardinerie Fish Boutique, modré logo na bílém pozadí)
 - Logo je zobrazeno v sidebaru a na login stránce
 - Sidebar: logo v bílém kontejneru + text "Manažerský / reporting" pod ním
+
+### Sidebar — navigační struktura (`components/layout/Sidebar.tsx`)
+
+Položky jsou organizovány do skupin `navGroups` se sekčními hlavičkami:
+
+| Sekce | Položky (label → href) |
+|-------|------------------------|
+| Strategický přehled | Hlavní Dashboard → `/hlavni-dashboard`, Hlavní KPI → `/dashboard`, Marketingový Mix & PNO → `/marketing` |
+| Prodej a profitabilita | Výkon prodeje → `/orders`, Analýza marží → `/margin`, Doprava a platba → `/shipping` |
+| Produktová analytika | Produktový žebříček → `/products`, Cross-sell potenciál → `/crosssell`, Stav skladu → `/stock` |
+| Zákazníci a retence | Nákupní chování → `/behavior`, Retenční analýza → `/retention` |
+| Akvizice a kanály | Webová návštěvnost (GA4) → `/analytics`, Meta Ads → `/meta`, Google Ads → `/google-ads` |
+| Admin (admin only) | Správa uživatelů → `/admin/users` |
 
 ### `/meta` — Meta Ads
 
