@@ -28,8 +28,10 @@ export interface DailyMarketingRow {
   cost: number;
   cost_facebook: number;
   cost_google: number;
+  cost_seznam: number;
   clicks_facebook: number;
   clicks_google: number;
+  clicks_seznam: number;
   orders: number;
   revenue: number;
 }
@@ -47,7 +49,7 @@ export function getDailyMarketingData(
 
   const ensure = (date: string) => {
     if (!byDate[date]) {
-      byDate[date] = { date, cost: 0, cost_facebook: 0, cost_google: 0, clicks_facebook: 0, clicks_google: 0, orders: 0, revenue: 0 };
+      byDate[date] = { date, cost: 0, cost_facebook: 0, cost_google: 0, cost_seznam: 0, clicks_facebook: 0, clicks_google: 0, clicks_seznam: 0, orders: 0, revenue: 0 };
     }
   };
 
@@ -57,8 +59,10 @@ export function getDailyMarketingData(
       byDate[r.date].cost          += r.cost;
       byDate[r.date].cost_facebook += r.cost_facebook;
       byDate[r.date].cost_google   += r.cost_google;
+      byDate[r.date].cost_seznam   += r.cost_seznam;
       byDate[r.date].clicks_facebook += r.clicks_facebook;
       byDate[r.date].clicks_google   += r.clicks_google;
+      byDate[r.date].clicks_seznam   += r.clicks_seznam;
       byDate[r.date].orders          += r.orders;
       byDate[r.date].revenue         += r.revenue;
     }
@@ -70,8 +74,10 @@ export function getDailyMarketingData(
       byDate[r.date].cost          += r.cost          * skMult;
       byDate[r.date].cost_facebook += r.cost_facebook * skMult;
       byDate[r.date].cost_google   += r.cost_google   * skMult;
+      byDate[r.date].cost_seznam   += r.cost_seznam   * skMult;
       byDate[r.date].clicks_facebook += r.clicks_facebook;
       byDate[r.date].clicks_google   += r.clicks_google;
+      byDate[r.date].clicks_seznam   += r.clicks_seznam;
       byDate[r.date].orders          += r.orders;
       byDate[r.date].revenue         += r.revenue      * skMult;
     }
@@ -93,12 +99,12 @@ export interface MarketingSource {
 }
 
 function buildSourceBreakdown(
-  fbCost: number, gCost: number,
-  fbClicks: number, gClicks: number,
+  fbCost: number, gCost: number, szCost: number,
+  fbClicks: number, gClicks: number, szClicks: number,
   totalRevenue: number, totalOrders: number,
   currency: 'CZK' | 'EUR'
 ): MarketingSource[] {
-  const totalCost = fbCost + gCost;
+  const totalCost = fbCost + gCost + szCost;
   const mkShare   = (c: number) => totalCost > 0 ? c / totalCost : 0;
   const safeDiv   = (a: number, b: number) => b > 0 ? a / b : 0;
 
@@ -119,6 +125,14 @@ function buildSourceBreakdown(
       pno: safeDiv(gCost, totalRevenue * mkShare(gCost)) * 100,
       cpa: safeDiv(gCost, totalOrders  * mkShare(gCost)),
     },
+    {
+      source: 'Sklik (Seznam)', currency,
+      cost: szCost, clicks: szClicks,
+      orders:  Math.round(totalOrders  * mkShare(szCost)),
+      revenue: Math.round(totalRevenue * mkShare(szCost)),
+      pno: safeDiv(szCost, totalRevenue * mkShare(szCost)) * 100,
+      cpa: safeDiv(szCost, totalOrders  * mkShare(szCost)),
+    },
   ];
 }
 
@@ -133,15 +147,17 @@ export function getMarketingSourceData(
   const skMultiplier = onlySK ? 1 : eurToCzk;
   const displayCurrency: 'CZK' | 'EUR' = onlySK ? 'EUR' : 'CZK';
 
-  let fbCost = 0, gCost = 0, fbClicks = 0, gClicks = 0;
+  let fbCost = 0, gCost = 0, szCost = 0, fbClicks = 0, gClicks = 0, szClicks = 0;
   let totalRevenue = 0, totalOrders = 0;
 
   if (countries.includes('cz')) {
     const r = realDataCZ.filter(d => d.date >= dateStart && d.date <= dateEnd);
     fbCost       += r.reduce((s, d) => s + d.cost_facebook, 0);
     gCost        += r.reduce((s, d) => s + d.cost_google, 0);
+    szCost       += r.reduce((s, d) => s + d.cost_seznam, 0);
     fbClicks     += r.reduce((s, d) => s + d.clicks_facebook, 0);
     gClicks      += r.reduce((s, d) => s + d.clicks_google, 0);
+    szClicks     += r.reduce((s, d) => s + d.clicks_seznam, 0);
     totalRevenue += r.reduce((s, d) => s + d.revenue, 0);
     totalOrders  += r.reduce((s, d) => s + d.orders, 0);
   }
@@ -150,11 +166,13 @@ export function getMarketingSourceData(
     const r = realDataSK.filter(d => d.date >= dateStart && d.date <= dateEnd);
     fbCost       += r.reduce((s, d) => s + d.cost_facebook, 0)  * skMultiplier;
     gCost        += r.reduce((s, d) => s + d.cost_google, 0)    * skMultiplier;
+    szCost       += r.reduce((s, d) => s + d.cost_seznam, 0)    * skMultiplier;
     fbClicks     += r.reduce((s, d) => s + d.clicks_facebook, 0);
     gClicks      += r.reduce((s, d) => s + d.clicks_google, 0);
+    szClicks     += r.reduce((s, d) => s + d.clicks_seznam, 0);
     totalRevenue += r.reduce((s, d) => s + d.revenue, 0)        * skMultiplier;
     totalOrders  += r.reduce((s, d) => s + d.orders, 0);
   }
 
-  return buildSourceBreakdown(fbCost, gCost, fbClicks, gClicks, totalRevenue, totalOrders, displayCurrency);
+  return buildSourceBreakdown(fbCost, gCost, szCost, fbClicks, gClicks, szClicks, totalRevenue, totalOrders, displayCurrency);
 }

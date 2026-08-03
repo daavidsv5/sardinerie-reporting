@@ -280,8 +280,10 @@ function mergeDailyRecords(ordersByDay, costByDay, costByDaySource, country) {
       cost:              Math.round(cost           * 100) / 100,
       cost_facebook:     Math.round((sources.facebook?.cost   || 0) * 100) / 100,
       cost_google:       Math.round((sources.google?.cost     || 0) * 100) / 100,
+      cost_seznam:       Math.round((sources.seznam?.cost     || 0) * 100) / 100,
       clicks_facebook:   Math.round(sources.facebook?.clicks  || 0),
       clicks_google:     Math.round(sources.google?.clicks    || 0),
+      clicks_seznam:     Math.round(sources.seznam?.clicks    || 0),
     });
   }
   return records;
@@ -322,8 +324,10 @@ export interface ${interfaceName} {
   cost: number;
   cost_facebook: number;
   cost_google: number;
+  cost_seznam: number;
   clicks_facebook: number;
   clicks_google: number;
+  clicks_seznam: number;
 }
 
 export const ${varName}: ${interfaceName}[] = ${JSON.stringify(records, null, 2)};

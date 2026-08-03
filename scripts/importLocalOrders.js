@@ -118,8 +118,10 @@ function loadExistingCosts(filePath) {
         cost:             r.cost             || 0,
         cost_facebook:    r.cost_facebook    || 0,
         cost_google:      r.cost_google      || 0,
+        cost_seznam:      r.cost_seznam      || 0,
         clicks_facebook:  r.clicks_facebook  || 0,
         clicks_google:    r.clicks_google    || 0,
+        clicks_seznam:    r.clicks_seznam    || 0,
       };
     }
     log(`Loaded ${arr.length} cost records from ${path.basename(filePath)}`);
@@ -223,8 +225,10 @@ export interface ${interfaceName} {
   cost: number;
   cost_facebook: number;
   cost_google: number;
+  cost_seznam: number;
   clicks_facebook: number;
   clicks_google: number;
+  clicks_seznam: number;
 }
 
 export const ${varName}: ${interfaceName}[] = ${JSON.stringify(records, null, 2)};
@@ -285,8 +289,10 @@ async function main() {
         cost:              Math.round((c.cost            || 0) * 100) / 100,
         cost_facebook:     Math.round((c.cost_facebook   || 0) * 100) / 100,
         cost_google:       Math.round((c.cost_google     || 0) * 100) / 100,
+        cost_seznam:       Math.round((c.cost_seznam     || 0) * 100) / 100,
         clicks_facebook:   c.clicks_facebook || 0,
         clicks_google:     c.clicks_google   || 0,
+        clicks_seznam:     c.clicks_seznam   || 0,
       };
     });
 
@@ -333,8 +339,10 @@ async function main() {
         cost:              Math.round((c.cost            || 0) * 100) / 100,
         cost_facebook:     Math.round((c.cost_facebook   || 0) * 100) / 100,
         cost_google:       Math.round((c.cost_google     || 0) * 100) / 100,
+        cost_seznam:       Math.round((c.cost_seznam     || 0) * 100) / 100,
         clicks_facebook:   c.clicks_facebook || 0,
         clicks_google:     c.clicks_google   || 0,
+        clicks_seznam:     c.clicks_seznam   || 0,
       };
     });
 

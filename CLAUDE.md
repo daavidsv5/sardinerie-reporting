@@ -221,11 +221,13 @@ Klasifikace se vždy počítá ze všech dat (sort dle revenue desc), nezávisle
 
 ### Marketing — CPC (`/marketing`)
 
-Data z `getDailyMarketingData()` — každý den má `clicks_facebook`, `clicks_google`, `cost_facebook`, `cost_google`, `revenue`.
+Data z `getDailyMarketingData()` — každý den má `clicks_facebook`, `clicks_google`, `clicks_seznam`, `cost_facebook`, `cost_google`, `cost_seznam`, `revenue`.
 - **CPC** = cost_channel / clicks_channel (per den), zobrazeno na 2 desetinná místa
 - **ROAS byl odstraněn** ze všech přehledů
 - Grafy: ComposedChart (stacked bars kliky + lines CPC)
-- Výkon per channel obsahuje YoY srovnání (FB, Google — náklady, kliky, CPC)
+- Výkon per channel obsahuje YoY srovnání (FB, Google, Sklik — náklady, kliky, CPC)
+- **Sklik (Seznam)** — 3. marketingový kanál vedle Facebook a Google. Zdroj: `source === 'seznam'` (medium `cpc`) v cost sheetu (`SHEETS.cost_cz` v `scripts/updateData.js`). V CZ datech od 23. 4. 2026 (dřív kampaň neběžela → 0 Kč). SK zatím Sklik nemá.
+- Celkový `cost` na `DailyRecord`/`RealDailyRecord` už odjakživa sčítá **všechny** zdroje (facebook + google + seznam) bez filtru — PNO, CPA a hlavní dashboard tedy automaticky zahrnují Sklik náklady, i bez per-kanálového rozpadu.
 
 ### RFM segmentace zákazníků (`/retention`)
 

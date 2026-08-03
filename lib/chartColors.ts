@@ -46,6 +46,10 @@ export const C = {
   google:           '#059669',  // emerald-600
   /** Google CPC line (tmavší) */
   googleDark:       '#065f46',  // emerald-800
+  /** Sklik / Seznam Ads (kliky, náklady) */
+  sklik:            '#f97316',  // orange-500
+  /** Sklik CPC line (tmavší) */
+  sklikDark:        '#c2410c',  // orange-700
 
   // ── Analytics ─────────────────────────────────────────────────────────────
   /** CVR %, Bounce rate */
