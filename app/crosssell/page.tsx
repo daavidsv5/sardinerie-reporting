@@ -3,7 +3,13 @@
 import { useState, useMemo } from 'react';
 import { ShoppingBag, Package, TrendingUp, Search } from 'lucide-react';
 import { crossSellDataCZ } from '@/data/crossSellDataCZ';
-import { crossSellDataSK } from '@/data/crossSellDataSK';
+import { crossSellDataSK as _crossSellDataSK } from '@/data/crossSellDataSK';
+import { computeCrossSellPairs } from '@/lib/crossSellUtils';
+import { useFilters, getDateRange } from '@/hooks/useFilters';
+import { localIsoDate, formatDate } from '@/lib/formatters';
+import { SK_LAUNCH_DATE } from '@/data/types';
+
+const crossSellDataSK = _crossSellDataSK.filter(o => o.date >= SK_LAUNCH_DATE);
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
   ResponsiveContainer, Cell,
@@ -21,7 +27,17 @@ export default function CrossSellPage() {
   const [page, setPage] = useState(0);
   const PAGE_SIZE = 25;
 
-  const data = tab === 'cz' ? crossSellDataCZ : crossSellDataSK;
+  const { filters } = useFilters();
+  const { start, end } = getDateRange(filters);
+  const startIso = localIsoDate(start);
+  const endIso = localIsoDate(end);
+
+  const orders = tab === 'cz' ? crossSellDataCZ : crossSellDataSK;
+  const periodOrders = useMemo(
+    () => orders.filter(o => o.date >= startIso && o.date <= endIso),
+    [orders, startIso, endIso]
+  );
+  const data = useMemo(() => computeCrossSellPairs(periodOrders), [periodOrders]);
 
   const multiPct = data.totalOrders > 0
     ? Math.round((data.multiItemOrders / data.totalOrders) * 100)
@@ -58,7 +74,10 @@ export default function CrossSellPage() {
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div>
           <h1 className="text-xl font-bold text-slate-800">Cross-sell potenciál</h1>
-          <p className="text-sm text-slate-500 mt-0.5">Produkty nejčastěji kupované společně v jedné objednávce</p>
+          <p className="text-sm text-slate-500 mt-0.5">
+            Produkty nejčastěji kupované společně v jedné objednávce
+            {' '}•{' '}{formatDate(start)} – {formatDate(end)}
+          </p>
         </div>
         <div className="flex rounded-xl border border-slate-200 overflow-hidden bg-white">
           {(['cz', 'sk'] as Tab[]).map((t) => (

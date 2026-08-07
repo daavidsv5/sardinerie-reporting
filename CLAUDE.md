@@ -64,8 +64,8 @@ app/(dashboard|orders|marketing|products|margin|analytics|behavior|crosssell|ret
 | `/analytics` | GA4 integrace — sessions, CVR, sources+devices (YoY), vstupní stránky. **Zdroje návštěvnosti jako tabulka** (Sessions, podíl, CVR, Transakce, podíl, Tržby, podíl — vše s YoY). **KPI boxy Tržby bez DPH (GA4) + Odchylka GA4 vs. Shoptet** (barevný signál ≤5 % zelená, ≤15 % oranžová, >15 % červená). Měna dynamická (CZK/EUR dle zvoleného trhu). |
 | `/meta` | Meta Ads — KPI boxy s YoY (útrata, dosah, imprese, kliky, CTR, CPC, nákupy, tržby z reklam, CPA, ROAS), grafy CPC/CPA/Nákupy/ROAS po dnech, tabulka kreativ s filtrem kampaně+sady reklam |
 | `/behavior` | Nákupní chování — týdenní srovnání, hourly grid (all-time agregace) |
-| `/crosssell` | Cross-sell potenciál — top 100 produktových párů |
-| `/retention` | Retenční analýza — RFM segmentace, LTV, AOV, repeat purchase rate, měsíční graf Noví vs. stávající zákazníci (100% stacked bar) |
+| `/crosssell` | Cross-sell potenciál — top 100 produktových párů, přepočítáno vždy za vybrané období z TopBaru (selektor trhu skrytý, selektor období aktivní) |
+| `/retention` | Retenční analýza — RFM segmentace (+ měsíční vývoj segmentů), LTV, AOV, repeat purchase rate, měsíční grafy Noví vs. stávající zákazníci (počty + tržby bez DPH, absolutní hodnoty s YoY tooltipem) |
 | `/shipping` | Doprava a platby — KPI vč. zisku/ztráty dopravy + **Doprava zdarma %** (bez Osobního odběru), ceník dopravců (CZ/SK), P&L tabulka per dopravce, **graf Doprava zdarma % v čase** (sloupcový s průměrnou referenční čarou). Layout donutů + tabulek: **pies v řádku 1, tabulky v řádku 2** (4 položky v jednom `grid-cols-2`) — tabulky jsou vždy zarovnané vedle sebe. |
 | `/login` | Přihlášení (NextAuth) |
 | `/admin/users` | Správa uživatelů (admin only) |
@@ -115,11 +115,12 @@ Výchozí stránka aplikace (redirect z `/`). Zobrazuje 8 grouped bar chartů s 
 | `data/productDataCZ.ts` / `productDataSK.ts` | Prodej produktů (počet kusů, tržby) — auto-gen |
 | `data/marginDataCZ.ts` / `marginDataSK.ts` | Marže (nákupní cena vs tržby bez DPH) — auto-gen |
 | `data/hourlyDataCZ.ts` / `hourlyDataSK.ts` | Nákupní chování 7×24 grid — auto-gen, all-time |
-| `data/crossSellDataCZ.ts` / `crossSellDataSK.ts` | Top 100 produktových párů — auto-gen |
+| `data/crossSellDataCZ.ts` / `crossSellDataSK.ts` | Per-objednávka produktový košík `{ date, products[] }` — auto-gen. Páry se počítají za běhu (`lib/crossSellUtils.ts`) pro vybrané období, ne předagregovaně |
 | `data/retentionDataCZ.ts` / `retentionDataSK.ts` | Per-customer retence `{ dates, revenues, revsVat }[]` — auto-gen |
 | `data/orderValueDataCZ.ts` / `orderValueDataSK.ts` | Per-order košík bez DPH `{ date, value }[]` — auto-gen |
 | `data/shippingPaymentDataCZ.ts` / `shippingPaymentDataSK.ts` | Doprava+platby po dnech — auto-gen |
-| `lib/retentionUtils.ts` | Všechny výpočty pro `/retention` (KPI, YoY, RFM segmentace, distribuce, měsíční Noví vs. stávající) |
+| `lib/retentionUtils.ts` | Všechny výpočty pro `/retention` (KPI, YoY, RFM segmentace + měsíční vývoj segmentů, distribuce, měsíční Noví vs. stávající — počty i tržby) |
+| `lib/crossSellUtils.ts` | `computeCrossSellPairs(orders, topN)` — spočítá top N párů produktů z per-order dat za vybrané období (`/crosssell`) |
 | `lib/formatters.ts` | `formatCurrency`, `formatPercent`, `formatNumber`, `formatDate`, `formatShortDate`, `formatMonthYear`, `localIsoDate` |
 | `app/api/meta/route.ts` | Meta Marketing API — KPI + denní breakdown + kreativy; filtruje kampaně obsahující "myfish" |
 | `app/meta/page.tsx` | Meta Ads stránka — KPI s YoY, grafy po dnech, tabulka kreativ s filtrem |
@@ -163,12 +164,19 @@ Marže a Hrubý zisk se počítají z `marginDataCZ` / `marginDataSK`:
 
 ### `/retention` — Retenční analýza
 
-- **Měsíční graf Noví vs. stávající zákazníci** — 100% stacked bar, hned pod KPI boxy
+- **Měsíční graf Noví vs. stávající zákazníci (počty)** — stacked bar s absolutními hodnotami, hned pod KPI boxy
   - Data z `computeMonthlyNewVsReturning()` v `lib/retentionUtils.ts`
   - Zelená = noví (první nákup v daném měsíci), Modrá = stávající (vrátili se)
-  - Osa X: název měsíce + rok (`formatMonthYear`), Osa Y: % podíl
-  - Tooltip zobrazuje skutečné počty zákazníků
-- RFM segmentace, LTV, AOV, repeat purchase rate — beze změny
+  - Osa X: název měsíce + rok (`formatMonthYear`), Osa Y: absolutní počet zákazníků
+  - Vlastní tooltip (`NewVsReturningTooltip` v `app/retention/page.tsx`) — hodnota + podíl v měsíci, srovnání se stejným měsícem loňského roku (YoY % + předchozí hodnota), řádek Celkem s YoY %
+- **Měsíční graf Noví vs. stávající zákazníci — tržby bez DPH** — stejná stacked bar struktura a tooltip, hned pod grafem počtů
+  - Data z `computeMonthlyRevenueNewVsReturning()` v `lib/retentionUtils.ts` (sčítá `revsVat` místo počtu zákazníků)
+- **Rozložení RFM segmentů v čase (měsíčně)** — 100% stacked area graf pod sekcí „Distribuce zákazníků" v RFM bloku
+  - Data z `computeMonthlyRfmDistribution()` v `lib/retentionUtils.ts` — pro každý měsíc kumulativně přepočítá segmentaci (recency/frequency k datu konce daného měsíce, jen z objednávek do té doby)
+  - Klasifikační logika sdílená s `computeRfmSegments()` přes `classifyRfmSegment()` (interní helper)
+  - Barvy segmentů: `RFM_META[segment].hex`, pořadí `RFM_ORDER` — obojí exportováno z `lib/retentionUtils.ts`
+  - Vlastní tooltip (`RfmDistributionTooltip`) — počet + podíl segmentu v daném měsíci, řádek Celkem
+- RFM segment karty, distribuční bar, akce, LTV, AOV, repeat purchase rate — beze změny
 
 ### `/shipping` — Doprava a platby
 
@@ -306,6 +314,7 @@ Konstanta `SK_LAUNCH_DATE = '2024-06-01'` v `data/types.ts` — používat všud
 - `app/orders/page.tsx` — `orderValueDataSK`
 - `app/shipping/page.tsx` — `shippingPaymentDataSK`
 - `app/retention/page.tsx` — zákazníci s prvním nákupem před `SK_LAUNCH_DATE` vyloučeni
+- `app/crosssell/page.tsx` — objednávky před `SK_LAUNCH_DATE` vyloučeny
 
 **Při přidávání nových SK datasetů** vždy filtrovat: `data.filter(r => r.date >= SK_LAUNCH_DATE)`.
 
@@ -342,7 +351,7 @@ Grafy s rozpadem po měsících zobrazují české zkratky měsíců (`formatMon
 
 - **`/margin`** — useMemo vrací `isMonthly: dayCount > 60`; komponenta volí `dateTickFormatter = isMonthly ? formatMonthYear : formatShortDate` pro osu X i tooltip (`MarzeTooltip` přijímá prop `isMonthly`)
 - **`/shipping`** — `formatPeriodLabel(key, 'month')` vrací `Bře 2024` pomocí lokální konstanty `MONTHS_CS`
-- **`/retention`** — měsíční graf Noví vs. stávající zákazníci vždy používá `formatMonthYear`
+- **`/retention`** — všechny měsíční grafy (Noví vs. stávající — počty i tržby, rozložení RFM segmentů) vždy používají `formatMonthYear`
 
 ### Branding a název aplikace
 

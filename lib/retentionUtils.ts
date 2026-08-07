@@ -292,6 +292,37 @@ export function computeMonthlyNewVsReturning(data: CustomerRetentionRecord[]): M
     .map(month => ({ date: month + '-01', ...byMonth[month] }));
 }
 
+export interface MonthlyRevenueNewVsReturningPoint {
+  date: string;       // 'YYYY-MM-01'
+  noví: number;
+  stávající: number;
+}
+
+/** Měsíční tržby bez DPH nových vs. stávajících zákazníků pro stacked bar chart */
+export function computeMonthlyRevenueNewVsReturning(data: CustomerRetentionRecord[]): MonthlyRevenueNewVsReturningPoint[] {
+  const byMonth: Record<string, { noví: number; stávající: number }> = {};
+
+  for (const c of data) {
+    const firstDate = c.dates[0];
+    if (!firstDate) continue;
+    const firstMonth = firstDate.substring(0, 7);
+
+    for (let i = 0; i < c.dates.length; i++) {
+      const month = c.dates[i].substring(0, 7);
+      if (!byMonth[month]) byMonth[month] = { noví: 0, stávající: 0 };
+      if (month === firstMonth) {
+        byMonth[month].noví += c.revsVat[i];
+      } else {
+        byMonth[month].stávající += c.revsVat[i];
+      }
+    }
+  }
+
+  return Object.keys(byMonth)
+    .sort()
+    .map(month => ({ date: month + '-01', ...byMonth[month] }));
+}
+
 /** Distribuce zákazníků a obratu podle počtu nákupů (1, 2, 3, 4+) */
 export function computePurchaseDistribution(data: CustomerRetentionRecord[]): PurchaseDistPoint[] {
   const counts = [0, 0, 0, 0];
@@ -338,46 +369,56 @@ export interface RfmSegmentData {
   avgMonetary: number;
 }
 
-const RFM_META: Record<RfmSegment, { label: string; description: string; action: string; color: string; textColor: string; borderColor: string; barColor: string }> = {
+export const RFM_META: Record<RfmSegment, { label: string; description: string; action: string; color: string; textColor: string; borderColor: string; barColor: string; hex: string }> = {
   champions: {
     label: 'Šampioni',
     description: '≥ 3 nákupy · poslední ≤ 90 dní',
     action: 'Odměňte věrnostním programem. Požádejte o recenzi. Exkluzivní přístup k novinkám.',
-    color: 'bg-emerald-50', textColor: 'text-emerald-700', borderColor: 'border-emerald-400', barColor: 'bg-emerald-500',
+    color: 'bg-emerald-50', textColor: 'text-emerald-700', borderColor: 'border-emerald-400', barColor: 'bg-emerald-500', hex: '#10b981',
   },
   loyal: {
     label: 'Věrní zákazníci',
     description: '≥ 2 nákupy · poslední ≤ 180 dní',
     action: 'Up-sell do vyšší kategorie. Referral program. Exkluzivní slevy.',
-    color: 'bg-blue-50', textColor: 'text-blue-700', borderColor: 'border-blue-400', barColor: 'bg-blue-500',
+    color: 'bg-blue-50', textColor: 'text-blue-700', borderColor: 'border-blue-400', barColor: 'bg-blue-500', hex: '#3b82f6',
   },
   at_risk: {
     label: 'Ohrožení',
     description: '≥ 2 nákupy · poslední 180–365 dní',
     action: 'Reaktivační e-mail se slevovým kódem. Připomeňte oblíbené produkty.',
-    color: 'bg-amber-50', textColor: 'text-amber-700', borderColor: 'border-amber-400', barColor: 'bg-amber-400',
+    color: 'bg-amber-50', textColor: 'text-amber-700', borderColor: 'border-amber-400', barColor: 'bg-amber-400', hex: '#fbbf24',
   },
   new: {
     label: 'Noví zákazníci',
     description: '1 nákup · poslední ≤ 90 dní',
     action: 'Onboarding e-mail. Cross-sell příbuzných produktů. Nabídněte druhý nákup se slevou.',
-    color: 'bg-sky-50', textColor: 'text-sky-700', borderColor: 'border-sky-400', barColor: 'bg-sky-400',
+    color: 'bg-sky-50', textColor: 'text-sky-700', borderColor: 'border-sky-400', barColor: 'bg-sky-400', hex: '#38bdf8',
   },
   one_time: {
     label: 'Jednorázové',
     description: '1 nákup · poslední 90–365 dní',
     action: 'Win-back kampaň s urgencí. Připomeňte novou kolekci nebo sezónní nabídku.',
-    color: 'bg-slate-50', textColor: 'text-slate-500', borderColor: 'border-slate-300', barColor: 'bg-slate-300',
+    color: 'bg-slate-50', textColor: 'text-slate-500', borderColor: 'border-slate-300', barColor: 'bg-slate-300', hex: '#cbd5e1',
   },
   lost: {
     label: 'Ztracení zákazníci',
     description: 'Poslední nákup > 365 dní',
     action: 'Kampaň "Chybíš nám" s velkou slevou nebo průzkum důvodu odchodu.',
-    color: 'bg-rose-50', textColor: 'text-rose-700', borderColor: 'border-rose-400', barColor: 'bg-rose-400',
+    color: 'bg-rose-50', textColor: 'text-rose-700', borderColor: 'border-rose-400', barColor: 'bg-rose-400', hex: '#fb7185',
   },
 };
 
-const RFM_ORDER: RfmSegment[] = ['champions', 'loyal', 'at_risk', 'new', 'one_time', 'lost'];
+export const RFM_ORDER: RfmSegment[] = ['champions', 'loyal', 'at_risk', 'new', 'one_time', 'lost'];
+
+/** Klasifikace RFM segmentu dle recency (dní) a frequency (počet nákupů) — sdíleno mezi aktuálním a měsíčním výpočtem */
+function classifyRfmSegment(recency: number, frequency: number): RfmSegment {
+  if      (recency > 365)                    return 'lost';
+  else if (frequency >= 3 && recency <= 90)  return 'champions';
+  else if (frequency >= 2 && recency <= 180) return 'loyal';
+  else if (frequency >= 2)                   return 'at_risk';
+  else if (recency <= 90)                    return 'new';
+  else                                        return 'one_time';
+}
 
 export function computeRfmSegments(
   data: CustomerRetentionRecord[],
@@ -415,13 +456,7 @@ export function computeRfmSegments(
 
     totalRevenue += monetary;
 
-    let seg: RfmSegment;
-    if      (recency > 365)                         seg = 'lost';
-    else if (frequency >= 3 && recency <= 90)       seg = 'champions';
-    else if (frequency >= 2 && recency <= 180)      seg = 'loyal';
-    else if (frequency >= 2)                        seg = 'at_risk';
-    else if (recency <= 90)                         seg = 'new';
-    else                                            seg = 'one_time';
+    const seg = classifyRfmSegment(recency, frequency);
 
     agg[seg].count++;
     agg[seg].revenue += monetary;
@@ -443,6 +478,63 @@ export function computeRfmSegments(
       avgFrequency: a.count > 0 ? Math.round((a.fSum / a.count) * 10) / 10 : 0,
       avgMonetary:  a.count > 0 ? Math.round(a.mSum / a.count) : 0,
     };
+  });
+}
+
+export interface MonthlyRfmPoint {
+  date: string;   // 'YYYY-MM-01'
+  champions: number;
+  loyal: number;
+  at_risk: number;
+  new: number;
+  one_time: number;
+  lost: number;
+}
+
+/** Měsíční vývoj RFM segmentů — pro každý měsíc přepočítá segmentaci kumulativně z objednávek do konce daného měsíce */
+export function computeMonthlyRfmDistribution(data: CustomerRetentionRecord[]): MonthlyRfmPoint[] {
+  let minMonth = '', maxMonth = '';
+  for (const c of data) {
+    for (const d of c.dates) {
+      const m = d.substring(0, 7);
+      if (!minMonth || m < minMonth) minMonth = m;
+      if (!maxMonth || m > maxMonth) maxMonth = m;
+    }
+  }
+  if (!minMonth) return [];
+
+  const months: string[] = [];
+  let [y, mo] = minMonth.split('-').map(Number);
+  const [endY, endMo] = maxMonth.split('-').map(Number);
+  while (y < endY || (y === endY && mo <= endMo)) {
+    months.push(`${y}-${String(mo).padStart(2, '0')}`);
+    mo++;
+    if (mo > 12) { mo = 1; y++; }
+  }
+
+  return months.map(month => {
+    const monthEndTs = new Date(`${month}-01T12:00:00`);
+    monthEndTs.setMonth(monthEndTs.getMonth() + 1);
+    monthEndTs.setDate(0);
+    const refTs = monthEndTs.getTime();
+
+    const counts: MonthlyRfmPoint = { date: month + '-01', champions: 0, loyal: 0, at_risk: 0, new: 0, one_time: 0, lost: 0 };
+
+    for (const c of data) {
+      let lastIdx = -1, frequency = 0;
+      for (let i = 0; i < c.dates.length; i++) {
+        if (c.dates[i].substring(0, 7) > month) break;
+        lastIdx = i;
+        frequency++;
+      }
+      if (lastIdx === -1) continue; // customer hasn't purchased yet as of this month
+
+      const recency = Math.round((refTs - new Date(c.dates[lastIdx] + 'T12:00:00').getTime()) / 86400000);
+      const seg = classifyRfmSegment(recency, frequency);
+      counts[seg]++;
+    }
+
+    return counts;
   });
 }
 
