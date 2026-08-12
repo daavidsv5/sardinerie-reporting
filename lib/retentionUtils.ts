@@ -538,6 +538,56 @@ export function computeMonthlyRfmDistribution(data: CustomerRetentionRecord[]): 
   });
 }
 
+/** Měsíční vývoj RFM segmentů dle tržeb — pro každý měsíc kumulativně přepočítá segmentaci
+ *  (stejně jako computeMonthlyRfmDistribution) a místo počtu zákazníků sečte jejich
+ *  kumulativní tržby bez DPH do konce daného měsíce */
+export function computeMonthlyRfmRevenueDistribution(data: CustomerRetentionRecord[]): MonthlyRfmPoint[] {
+  let minMonth = '', maxMonth = '';
+  for (const c of data) {
+    for (const d of c.dates) {
+      const m = d.substring(0, 7);
+      if (!minMonth || m < minMonth) minMonth = m;
+      if (!maxMonth || m > maxMonth) maxMonth = m;
+    }
+  }
+  if (!minMonth) return [];
+
+  const months: string[] = [];
+  let [y, mo] = minMonth.split('-').map(Number);
+  const [endY, endMo] = maxMonth.split('-').map(Number);
+  while (y < endY || (y === endY && mo <= endMo)) {
+    months.push(`${y}-${String(mo).padStart(2, '0')}`);
+    mo++;
+    if (mo > 12) { mo = 1; y++; }
+  }
+
+  return months.map(month => {
+    const monthEndTs = new Date(`${month}-01T12:00:00`);
+    monthEndTs.setMonth(monthEndTs.getMonth() + 1);
+    monthEndTs.setDate(0);
+    const refTs = monthEndTs.getTime();
+
+    const sums: MonthlyRfmPoint = { date: month + '-01', champions: 0, loyal: 0, at_risk: 0, new: 0, one_time: 0, lost: 0 };
+
+    for (const c of data) {
+      let lastIdx = -1, frequency = 0, cumRevenue = 0;
+      for (let i = 0; i < c.dates.length; i++) {
+        if (c.dates[i].substring(0, 7) > month) break;
+        lastIdx = i;
+        frequency++;
+        cumRevenue += c.revenues[i];
+      }
+      if (lastIdx === -1) continue; // customer hasn't purchased yet as of this month
+
+      const recency = Math.round((refTs - new Date(c.dates[lastIdx] + 'T12:00:00').getTime()) / 86400000);
+      const seg = classifyRfmSegment(recency, frequency);
+      sums[seg] += cumRevenue;
+    }
+
+    return sums;
+  });
+}
+
 /** Histogram prodlevy mezi nákupy */
 export function computeDaysBetweenHistogram(data: CustomerRetentionRecord[]): DaysBin[] {
   const bins = [

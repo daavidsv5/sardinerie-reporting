@@ -20,6 +20,7 @@ import {
   computeDaysBetweenHistogram,
   computeRfmSegments,
   computeMonthlyRfmDistribution,
+  computeMonthlyRfmRevenueDistribution,
   RFM_META,
   RFM_ORDER,
 } from '@/lib/retentionUtils';
@@ -139,14 +140,15 @@ function NewVsReturningTooltip({
   );
 }
 
-/** Tooltip pro měsíční vývoj RFM segmentů — počty + podíl v daném měsíci */
+/** Tooltip pro měsíční vývoj RFM segmentů — hodnota (počty nebo tržby) + podíl v daném měsíci */
 function RfmDistributionTooltip({
-  active, label, fullData, segmentDefs,
+  active, label, fullData, segmentDefs, formatValue = formatNumber,
 }: {
   active?: boolean;
   label?: any;
   fullData: { date: string; [key: string]: any }[];
   segmentDefs: { key: string; label: string; color: string }[];
+  formatValue?: (v: number) => string;
 }) {
   if (!active || !label) return null;
   const cur = fullData.find(d => d.date === label);
@@ -167,14 +169,14 @@ function RfmDistributionTooltip({
               {seg.label}
             </span>
             <span className="font-semibold text-slate-700">
-              {formatNumber(value)} <span className="text-slate-400 font-normal">({pct.toFixed(1)} %)</span>
+              {formatValue(value)} <span className="text-slate-400 font-normal">({pct.toFixed(1)} %)</span>
             </span>
           </div>
         );
       })}
       <div className="flex items-center justify-between gap-4 mt-2 pt-2 border-t border-slate-100 font-semibold text-slate-700">
         <span>Celkem</span>
-        <span>{formatNumber(total)}</span>
+        <span>{formatValue(total)}</span>
       </div>
     </div>
   );
@@ -190,6 +192,7 @@ export default function RetentionPage() {
 
   const rfmSegments       = useMemo(() => computeRfmSegments(data), [data]);
   const monthlyRfm        = useMemo(() => computeMonthlyRfmDistribution(data), [data]);
+  const monthlyRfmRevenue = useMemo(() => computeMonthlyRfmRevenueDistribution(data), [data]);
   const rfmSegmentDefs    = useMemo(() => RFM_ORDER.map(seg => ({ key: seg, label: RFM_META[seg].label, color: RFM_META[seg].hex })), []);
   const kpis              = useMemo(() => computeRetentionKpis(data), [data]);
   const yearCustomer      = useMemo(() => computeYearCustomerMetrics(data), [data]);
@@ -350,6 +353,23 @@ export default function RetentionPage() {
               <XAxis dataKey="date" tickFormatter={formatMonthYear} tick={{ fontSize: 11, fill: '#94a3b8' }} axisLine={false} tickLine={false} interval="preserveStartEnd" />
               <YAxis tickFormatter={v => `${Math.round((v as number) * 100)} %`} tick={{ fontSize: 11, fill: '#94a3b8' }} axisLine={false} tickLine={false} width={44} />
               <Tooltip content={<RfmDistributionTooltip fullData={monthlyRfm} segmentDefs={rfmSegmentDefs} />} />
+              <Legend wrapperStyle={{ fontSize: 11, color: '#64748b' }} iconType="square" iconSize={9} />
+              {rfmSegmentDefs.map(seg => (
+                <Area key={seg.key} type="monotone" dataKey={seg.key} name={seg.label} stackId="a" stroke={seg.color} fill={seg.color} fillOpacity={0.85} />
+              ))}
+            </AreaChart>
+          </ResponsiveContainer>
+        </div>
+
+        {/* Rozložení tržeb dle segmentů v čase (měsíčně) */}
+        <div>
+          <p className="text-[10px] text-slate-400 mb-1.5 uppercase tracking-wider">Rozložení tržeb dle segmentů v čase (měsíčně)</p>
+          <ResponsiveContainer width="100%" height={260}>
+            <AreaChart data={monthlyRfmRevenue} margin={{ top: 4, right: 16, left: 4, bottom: 4 }} stackOffset="expand">
+              <CartesianGrid strokeDasharray="0" stroke="#f1f5f9" vertical={false} />
+              <XAxis dataKey="date" tickFormatter={formatMonthYear} tick={{ fontSize: 11, fill: '#94a3b8' }} axisLine={false} tickLine={false} interval="preserveStartEnd" />
+              <YAxis tickFormatter={v => `${Math.round((v as number) * 100)} %`} tick={{ fontSize: 11, fill: '#94a3b8' }} axisLine={false} tickLine={false} width={44} />
+              <Tooltip content={<RfmDistributionTooltip fullData={monthlyRfmRevenue} segmentDefs={rfmSegmentDefs} formatValue={fc} />} />
               <Legend wrapperStyle={{ fontSize: 11, color: '#64748b' }} iconType="square" iconSize={9} />
               {rfmSegmentDefs.map(seg => (
                 <Area key={seg.key} type="monotone" dataKey={seg.key} name={seg.label} stackId="a" stroke={seg.color} fill={seg.color} fillOpacity={0.85} />

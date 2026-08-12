@@ -54,10 +54,11 @@ function yoyPct(curr: number, prev: number): number | null {
 
 function YoyBadge({ pct, invert = false }: { pct: number | null; invert?: boolean }) {
   if (pct === null || pct === 0) return null;
+  const up = pct > 0;
   const positive = invert ? pct < 0 : pct > 0;
   return (
     <span className={`inline-flex items-center gap-0.5 text-xs font-bold px-1.5 py-0.5 rounded-md ${positive ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-500'}`}>
-      {positive ? <TrendingUp size={11} /> : <TrendingDown size={11} />}
+      {up ? <TrendingUp size={11} /> : <TrendingDown size={11} />}
       {pct > 0 ? '+' : ''}{pct.toFixed(1)}%
     </span>
   );

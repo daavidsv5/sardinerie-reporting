@@ -21,6 +21,7 @@ export default function StatCard({ title, value, icon, sub, highlight, negative,
   const iconCls   = negative ? 'bg-rose-50 text-rose-500' : highlight ? 'bg-emerald-50 text-emerald-600' : 'bg-blue-50 text-blue-600';
 
   const showYoy = hasPrevData && yoy !== null && yoy !== undefined && yoy !== 0;
+  const yoyUp = showYoy && (yoy as number) > 0;
   const yoyPositive = showYoy && (invertYoy ? (yoy as number) < 0 : (yoy as number) > 0);
 
   return (
@@ -32,7 +33,7 @@ export default function StatCard({ title, value, icon, sub, highlight, negative,
           <span className={`inline-flex items-center gap-0.5 text-xs font-bold px-1.5 py-0.5 rounded-md mt-1.5 ${
             yoyPositive ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-500'
           }`}>
-            {yoyPositive ? <TrendingUp size={11} /> : <TrendingDown size={11} />}
+            {yoyUp ? <TrendingUp size={11} /> : <TrendingDown size={11} />}
             {(yoy as number) > 0 ? '+' : ''}{(yoy as number).toFixed(1)}%
           </span>
         )}

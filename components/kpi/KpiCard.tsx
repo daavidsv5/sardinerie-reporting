@@ -23,6 +23,7 @@ export default function KpiCard({
   hasPrevData = true,
   variant = 'default',
 }: KpiCardProps) {
+  const isUp       = (yoy ?? 0) > 0;
   const isPositive = invertColors ? (yoy ?? 0) < 0 : (yoy ?? 0) > 0;
   const isNeutral  = yoy === 0 || yoy === null;
 
@@ -51,7 +52,7 @@ export default function KpiCard({
                 : 'bg-rose-50 text-rose-500'
             }`}
           >
-            {isPositive ? <TrendingUp size={18} /> : <TrendingDown size={18} />}
+            {isUp ? <TrendingUp size={18} /> : <TrendingDown size={18} />}
             {yoy > 0 ? '+' : ''}{yoy.toFixed(1)}%
           </span>
         )}

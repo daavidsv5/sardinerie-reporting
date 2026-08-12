@@ -150,10 +150,10 @@ export default function DashboardPage() {
     { title: 'Marže %',                 value: formatPercent(marginPct),       yoy: yoyMarginPct,   icon: <Percent size={16} /> },
     { title: 'Cena za nového zákazníka', value: newCustomerCounts.cur > 0 ? fc(costPerNewCustomer) : '–', yoy: yoyCostPerNewCustomer, icon: <Users size={16} />, invertColors: true },
     { title: 'Hrubý zisk na objednávku', value: kpi.orders > 0 ? fc(grossPerOrder) : '–', yoy: yoyGrossPerOrder, icon: <Banknote size={16} /> },
-    { title: 'LTV (bez DPH)',           value: ltvSources.length > 0 ? fc(ltvPerCustomer) : '–', yoy: null, icon: <Repeat size={16} /> },
-    { title: 'Ziskové LTV',             value: ltvSources.length > 0 ? fc(ltvProfit) : '–', yoy: null, icon: <TrendingUp size={16} /> },
-    { title: 'Poměr LTV a CAC (dle marže)', value: costPerNewCustomer > 0 ? `${ltvCacRatio.toFixed(1)}x` : '–', yoy: null, icon: <Scale size={16} /> },
-  ].map(c => ({ ...c, hasPrevData }));
+    { title: 'LTV (bez DPH)',           value: ltvSources.length > 0 ? fc(ltvPerCustomer) : '–', yoy: null, icon: <Repeat size={16} />, hasPrevData: false },
+    { title: 'Ziskové LTV',             value: ltvSources.length > 0 ? fc(ltvProfit) : '–', yoy: null, icon: <TrendingUp size={16} />, hasPrevData: false },
+    { title: 'Poměr LTV a CAC (dle marže)', value: costPerNewCustomer > 0 ? `${ltvCacRatio.toFixed(1)}x` : '–', yoy: null, icon: <Scale size={16} />, hasPrevData: false },
+  ].map(c => ({ hasPrevData, ...c }));
 
   const grossKpiCards = [
     { title: 'Hrubý zisk',   value: fc(grossProfit),         yoy: yoyGrossProfit, icon: <TrendingUp size={16} />, variant: 'green' as const, hasPrevData },

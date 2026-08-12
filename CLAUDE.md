@@ -182,6 +182,9 @@ Marže a Hrubý zisk se počítají z `marginDataCZ` / `marginDataSK`:
   - Klasifikační logika sdílená s `computeRfmSegments()` přes `classifyRfmSegment()` (interní helper)
   - Barvy segmentů: `RFM_META[segment].hex`, pořadí `RFM_ORDER` — obojí exportováno z `lib/retentionUtils.ts`
   - Vlastní tooltip (`RfmDistributionTooltip`) — počet + podíl segmentu v daném měsíci, řádek Celkem
+- **Rozložení tržeb dle segmentů v čase (měsíčně)** — stejný 100% stacked area graf, hned pod grafem počtů zákazníků
+  - Data z `computeMonthlyRfmRevenueDistribution()` v `lib/retentionUtils.ts` — stejná měsíční kumulativní klasifikace jako u počtů, ale místo počtu zákazníků sčítá jejich **kumulativní tržby bez DPH** do konce daného měsíce (`revenues`, ne `revsVat`)
+  - Sdílí `RfmDistributionTooltip` s počtovým grafem — přes prop `formatValue={fc}` zobrazuje měnu místo počtu
 - RFM segment karty, distribuční bar, akce, LTV, AOV, repeat purchase rate — beze změny
 
 ### `/shipping` — Doprava a platby
