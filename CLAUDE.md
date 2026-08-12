@@ -150,7 +150,11 @@ Funkce v `lib/formatters.ts` — vrací datum jako `"YYYY-MM-DD"` v **lokálním
 
 ### `/dashboard` — Klíčové ukazatele (KPI)
 
-KPI boxy (11 + 2 ve vlastním řádku): Tržby s/bez DPH, Počet obj., AOV, Marketing. investice, PNO, CPA, Marže, Marže %, Cena za nového zákazníka, Hrubý zisk na objednávku + **samostatný řádek: Hrubý zisk, Hrubý zisk %** (variant='green').
+KPI boxy (13 + 2 ve vlastním řádku): Tržby s/bez DPH, Počet obj., AOV, Marketing. investice, PNO, CPA, Marže, Marže %, Cena za nového zákazníka, Hrubý zisk na objednávku, **LTV (bez DPH)**, **Poměr LTV a CAC (dle marže)** + **samostatný řádek: Hrubý zisk, Hrubý zisk %** (variant='green').
+
+**LTV (bez DPH)** — `revenues` (bez DPH) / počet zákazníků, z `retentionDataCZ`/`retentionDataSK` (SK filtrováno přes `SK_LAUNCH_DATE`). Počítá se **all-time**, nezávisle na period filtru z TopBaru (stejná logika jako `/retention` — LTV je lifetime metrika). Bez YoY badge (`yoy: null`).
+
+**Poměr LTV a CAC (dle marže)** = `(LTV × Marže %) / CAC`, kde CAC = `costPerNewCustomer` (stejná hodnota jako box "Cena za nového zákazníka") a Marže % = aktuální period marže z `marginPct`. Zobrazeno jako `X.Xx`. Bez YoY badge.
 
 **Grafy (4 celkem, 2×2 mřížka):** Tržby+Objednávky, Náklady+PNO, AOV (YoY), Cena za objednávku/CPA (YoY) — komponenty `AovChart` a `CpaChart` z `components/charts/AovCpaChart.tsx`.
 
@@ -232,8 +236,10 @@ Klasifikace se vždy počítá ze všech dat (sort dle revenue desc), nezávisle
 Data z `getDailyMarketingData()` — každý den má `clicks_facebook`, `clicks_google`, `clicks_seznam`, `cost_facebook`, `cost_google`, `cost_seznam`, `revenue`.
 - **CPC** = cost_channel / clicks_channel (per den), zobrazeno na 2 desetinná místa
 - **ROAS byl odstraněn** ze všech přehledů
-- Grafy: ComposedChart (stacked bars kliky + lines CPC)
 - Výkon per channel obsahuje YoY srovnání (FB, Google, Sklik — náklady, kliky, CPC)
+- **Graf „CPC v čase"** (`LineChart`, `app/marketing/page.tsx`) — pouze CPC linky (bez sloupců kliků), meziroční srovnání: plná čára = aktuální období, přerušovaná = předchozí rok (`cpc_fb_prev`/`cpc_g_prev`/`cpc_sz_prev`, zarovnáno na aktuální data posunem +1 rok stejně jako v `useDashboardData.ts`). Zobrazeno jen když `hasPrevData`.
+  - **Filtrace dle kanálu** — vlastní legenda nad grafem (`ChannelLegend`), klik na "pill" schová/zobrazí danou CPC linku (aktuální + předchozí rok) přes lokální state `hiddenChannels`; nejde o nativní Recharts `Legend`.
+  - Kanály: Facebook Ads, Google Ads, Sklik (Seznam) — víc kanálů (Heureka, Zboží.cz, Microsoft Ads) zatím nemáme v datech, případně doplnit až budou zdroje k dispozici.
 - **Sklik (Seznam)** — 3. marketingový kanál vedle Facebook a Google. Zdroj: `source === 'seznam'` (medium `cpc`) v cost sheetu (`SHEETS.cost_cz` v `scripts/updateData.js`). V CZ datech od 23. 4. 2026 (dřív kampaň neběžela → 0 Kč). SK zatím Sklik nemá.
 - Celkový `cost` na `DailyRecord`/`RealDailyRecord` už odjakživa sčítá **všechny** zdroje (facebook + google + seznam) bez filtru — PNO, CPA a hlavní dashboard tedy automaticky zahrnují Sklik náklady, i bez per-kanálového rozpadu.
 
@@ -370,8 +376,10 @@ Položky jsou organizovány do skupin `navGroups` se sekčními hlavičkami:
 | Prodej a profitabilita | Výkon prodeje → `/orders`, Analýza marží → `/margin`, Doprava a platba → `/shipping` |
 | Produktová analytika | Produktový žebříček → `/products`, Cross-sell potenciál → `/crosssell`, Stav skladu → `/stock` |
 | Zákazníci a retence | Nákupní chování → `/behavior`, Retenční analýza → `/retention` |
-| Akvizice a kanály | Webová návštěvnost (GA4) → `/analytics`, Meta Ads → `/meta`, Google Ads → `/google-ads` |
+| Akvizice a kanály | Webová návštěvnost (GA4) → `/analytics`, Meta Ads → `/meta` |
 | Admin (admin only) | Správa uživatelů → `/admin/users` |
+
+**Google Ads (rozpracováno):** `app/google-ads/` a `app/api/google-ads/` existují, ale odkaz v sidebaru je dočasně odebraný (sekce zatím není dokončená). Stránka je přístupná přímo přes URL, jen bez navigace. Až bude hotová, přidat zpět položku `{ icon: BarChart, label: 'Google Ads', href: '/google-ads' }` do skupiny „Akvizice a kanály" v `components/layout/Sidebar.tsx`.
 
 ### `/meta` — Meta Ads
 

@@ -10,14 +10,16 @@ import { SK_LAUNCH_DATE } from '@/data/types';
 
 const marginDataSK = _marginDataSK.filter(r => r.date >= SK_LAUNCH_DATE);
 import { retentionDataCZ } from '@/data/retentionDataCZ';
-import { retentionDataSK } from '@/data/retentionDataSK';
+import { retentionDataSK as _retentionDataSK } from '@/data/retentionDataSK';
+
+const retentionDataSK = _retentionDataSK.filter(c => c.dates[0] >= SK_LAUNCH_DATE);
 import KpiCard from '@/components/kpi/KpiCard';
 import KpiLineCharts from '@/components/charts/KpiLineCharts';
 import { AovChart, CpaChart } from '@/components/charts/AovCpaChart';
 import DailyTable from '@/components/tables/DailyTable';
 import CountryDistribution from '@/components/tables/CountryDistribution';
 import { formatCurrency, formatPercent, formatNumber, formatDate, localIsoDate } from '@/lib/formatters';
-import { Wallet, Banknote, ShoppingCart, BarChart2, TrendingUp, Percent, Tag, Users } from 'lucide-react';
+import { Wallet, Banknote, ShoppingCart, BarChart2, TrendingUp, Percent, Tag, Users, Repeat, Scale } from 'lucide-react';
 
 const periodTitles: Record<string, string> = {
   current_year: 'tento rok',
@@ -106,6 +108,17 @@ export default function DashboardPage() {
   const prevGrossPerNewCustomer = newCustomerCounts.prev > 0 ? prevGrossProfit / newCustomerCounts.prev : 0;
   const yoyGrossPerNewCustomer  = hasPrevData && prevGrossPerNewCustomer !== 0
     ? ((grossPerNewCustomer - prevGrossPerNewCustomer) / Math.abs(prevGrossPerNewCustomer)) * 100 : null;
+
+  // LTV (bez DPH) — lifetime, per-customer, all-time (stejně jako /retention, nezávisí na period filtru)
+  const ltvSources: { revenues: number[] }[] = [
+    ...(filters.countries.includes('cz') ? retentionDataCZ : []),
+    ...(filters.countries.includes('sk') ? retentionDataSK.map(c => ({ revenues: c.revenues.map(v => v * skMult) })) : []),
+  ];
+  const ltvTotalRevenue = ltvSources.reduce((sum, c) => sum + c.revenues.reduce((s, v) => s + v, 0), 0);
+  const ltvPerCustomer  = ltvSources.length > 0 ? ltvTotalRevenue / ltvSources.length : 0;
+
+  // Gross Margin Adjusted LTV:CAC = (LTV × Marže %) / CAC
+  const ltvCacRatio = costPerNewCustomer > 0 ? (ltvPerCustomer * (marginPct / 100)) / costPerNewCustomer : 0;
   const dayCount  = Math.round((end.getTime() - start.getTime()) / 86_400_000);
   const isMonthly = dayCount > 60;
 
@@ -134,6 +147,8 @@ export default function DashboardPage() {
     { title: 'Marže %',                 value: formatPercent(marginPct),       yoy: yoyMarginPct,   icon: <Percent size={16} /> },
     { title: 'Cena za nového zákazníka', value: newCustomerCounts.cur > 0 ? fc(costPerNewCustomer) : '–', yoy: yoyCostPerNewCustomer, icon: <Users size={16} />, invertColors: true },
     { title: 'Hrubý zisk na objednávku', value: kpi.orders > 0 ? fc(grossPerOrder) : '–', yoy: yoyGrossPerOrder, icon: <Banknote size={16} /> },
+    { title: 'LTV (bez DPH)',           value: ltvSources.length > 0 ? fc(ltvPerCustomer) : '–', yoy: null, icon: <Repeat size={16} /> },
+    { title: 'Poměr LTV a CAC (dle marže)', value: costPerNewCustomer > 0 ? `${ltvCacRatio.toFixed(1)}x` : '–', yoy: null, icon: <Scale size={16} /> },
   ].map(c => ({ ...c, hasPrevData }));
 
   const grossKpiCards = [

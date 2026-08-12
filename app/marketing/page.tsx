@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import { useFilters, getDateRange } from '@/hooks/useFilters';
 import { useDashboardData } from '@/hooks/useDashboardData';
 import { mockData, getMarketingSourceData, getDailyMarketingData } from '@/data/mockGenerator';
@@ -8,10 +9,43 @@ import CostPnoChart from '@/components/charts/CostPnoChart';
 import { formatCurrency, formatPercent, formatNumber, formatDate, formatShortDate, localIsoDate } from '@/lib/formatters';
 import { TrendingUp as TrendingUpIcon, TrendingUp, TrendingDown, Percent, Tag, Banknote, Share2, Search } from 'lucide-react';
 import {
-  ComposedChart, Bar, Line, XAxis, YAxis, CartesianGrid, Tooltip,
-  Legend, ResponsiveContainer,
+  LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
 } from 'recharts';
 import { C } from '@/lib/chartColors';
+
+const CPC_CHANNELS = [
+  { key: 'fb', label: 'Facebook Ads',    color: C.facebookDark },
+  { key: 'g',  label: 'Google Ads',      color: C.googleDark },
+  { key: 'sz', label: 'Sklik (Seznam)',  color: C.sklikDark },
+] as const;
+
+function ChannelLegend({ hidden, onToggle }: { hidden: Set<string>; onToggle: (key: string) => void }) {
+  return (
+    <div className="flex flex-wrap gap-2">
+      {CPC_CHANNELS.map((ch) => {
+        const isHidden = hidden.has(ch.key);
+        return (
+          <button
+            key={ch.key}
+            type="button"
+            onClick={() => onToggle(ch.key)}
+            className={`flex items-center gap-1.5 px-3 py-1 rounded-full border text-xs font-medium transition-colors ${
+              isHidden
+                ? 'border-gray-200 text-gray-400 bg-gray-50'
+                : 'border-gray-200 text-gray-700 bg-white hover:bg-gray-50'
+            }`}
+          >
+            <span
+              className="w-2 h-2 rounded-full flex-shrink-0"
+              style={{ background: isHidden ? '#d1d5db' : ch.color }}
+            />
+            {ch.label}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
 
 function yoyPct(curr: number, prev: number): number | null {
   if (prev === 0) return null;
@@ -41,6 +75,14 @@ export default function MarketingPage() {
   const { filters, eurToCzk } = useFilters();
   const { kpi, yoy, chartData, currentData, currency, hasPrevData } = useDashboardData(filters, mockData, eurToCzk);
   const fc = (v: number) => formatCurrency(v, currency);
+  const [hiddenChannels, setHiddenChannels] = useState<Set<string>>(new Set());
+  const toggleChannel = (key: string) => {
+    setHiddenChannels(prev => {
+      const next = new Set(prev);
+      if (next.has(key)) next.delete(key); else next.add(key);
+      return next;
+    });
+  };
 
   const { start, end } = getDateRange(filters);
   const subtitle = `${formatDate(start)} – ${formatDate(end)}`;
@@ -77,16 +119,35 @@ export default function MarketingPage() {
     pno_sz: r.revenue > 0 ? (r.cost_seznam   / r.revenue) * 100 : 0,
   }));
 
+  // Previous-year daily marketing data, shifted +1 year so dates align with the current period (YoY overlay)
+  const prevStartDaily = new Date(sDaily); prevStartDaily.setFullYear(prevStartDaily.getFullYear() - 1);
+  const prevEndDaily   = new Date(eDaily); prevEndDaily.setFullYear(prevEndDaily.getFullYear() - 1);
+  const allDailyMarketingPrev = hasPrevData ? getDailyMarketingData(
+    localIsoDate(prevStartDaily),
+    localIsoDate(prevEndDaily),
+    filters.countries,
+    eurToCzk
+  ) : [];
+  const prevMarketingByShiftedDate: Record<string, typeof allDailyMarketingPrev[number]> = {};
+  for (const r of allDailyMarketingPrev) {
+    const d = new Date(r.date);
+    d.setFullYear(d.getFullYear() + 1);
+    prevMarketingByShiftedDate[localIsoDate(d)] = r;
+  }
+
   // Ascending for trend charts
-  const marketingChartData = [...allDailyMarketing].reverse().map(r => ({
-    date: r.date,
-    clicks_fb: r.clicks_facebook,
-    clicks_g:  r.clicks_google,
-    clicks_sz: r.clicks_seznam,
-    cpc_fb: r.clicks_facebook > 0 ? Math.round(r.cost_facebook / r.clicks_facebook * 100) / 100 : null,
-    cpc_g:  r.clicks_google   > 0 ? Math.round(r.cost_google   / r.clicks_google   * 100) / 100 : null,
-    cpc_sz: r.clicks_seznam   > 0 ? Math.round(r.cost_seznam   / r.clicks_seznam   * 100) / 100 : null,
-  }));
+  const marketingChartData = [...allDailyMarketing].reverse().map(r => {
+    const prev = prevMarketingByShiftedDate[r.date];
+    return {
+      date: r.date,
+      cpc_fb: r.clicks_facebook > 0 ? Math.round(r.cost_facebook / r.clicks_facebook * 100) / 100 : null,
+      cpc_g:  r.clicks_google   > 0 ? Math.round(r.cost_google   / r.clicks_google   * 100) / 100 : null,
+      cpc_sz: r.clicks_seznam   > 0 ? Math.round(r.cost_seznam   / r.clicks_seznam   * 100) / 100 : null,
+      cpc_fb_prev: prev && prev.clicks_facebook > 0 ? Math.round(prev.cost_facebook / prev.clicks_facebook * 100) / 100 : null,
+      cpc_g_prev:  prev && prev.clicks_google   > 0 ? Math.round(prev.cost_google   / prev.clicks_google   * 100) / 100 : null,
+      cpc_sz_prev: prev && prev.clicks_seznam   > 0 ? Math.round(prev.cost_seznam   / prev.clicks_seznam   * 100) / 100 : null,
+    };
+  });
 
   // Source breakdown — use real data with date range + country context
   const sourceData = getMarketingSourceData(
@@ -228,11 +289,23 @@ export default function MarketingPage() {
           </div>
         </div>
 
-        {/* CPC + clicks trend */}
+        {/* CPC trend — YoY, filtrovatelné dle kanálu */}
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
-          <h3 className="text-sm font-semibold text-gray-800 mb-4">CPC a kliky v čase</h3>
-          <ResponsiveContainer width="100%" height={260}>
-            <ComposedChart data={marketingChartData} margin={{ top: 5, right: 20, left: 10, bottom: 5 }}>
+          <div className="flex flex-wrap items-start justify-between gap-3 mb-4">
+            <div>
+              <h3 className="text-sm font-semibold text-gray-800">
+                {hasPrevData ? 'CPC v čase – meziroční srovnání' : 'CPC v čase'}
+              </h3>
+              {hasPrevData && (
+                <p className="text-xs text-gray-400 mt-0.5">
+                  Plná čára = aktuální období · přerušovaná = předchozí rok
+                </p>
+              )}
+            </div>
+            <ChannelLegend hidden={hiddenChannels} onToggle={toggleChannel} />
+          </div>
+          <ResponsiveContainer width="100%" height={280}>
+            <LineChart data={marketingChartData} margin={{ top: 5, right: 20, left: 10, bottom: 5 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
               <XAxis
                 dataKey="date"
@@ -240,29 +313,35 @@ export default function MarketingPage() {
                 tick={{ fontSize: 11, fill: '#9ca3af' }}
                 interval="preserveStartEnd"
               />
-              <YAxis yAxisId="left" tick={{ fontSize: 11, fill: '#9ca3af' }} width={45} />
               <YAxis
-                yAxisId="right"
-                orientation="right"
                 tickFormatter={v => `${v} ${sym}`}
                 tick={{ fontSize: 11, fill: '#9ca3af' }}
-                width={65}
+                width={55}
               />
               <Tooltip
+                labelFormatter={(label) => formatShortDate(String(label))}
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                formatter={(value: any, name: any) => {
-                  if (name === 'FB kliky' || name === 'Google kliky' || name === 'Sklik kliky') return [formatNumber(Number(value)), String(name)];
-                  return [`${Number(value).toFixed(2)} ${sym}`, String(name)];
-                }}
+                formatter={(value: any, name: any) => [`${Number(value).toFixed(2)} ${sym}`, String(name)]}
               />
-              <Legend wrapperStyle={{ fontSize: 12 }} />
-              <Bar yAxisId="left" dataKey="clicks_fb" name="FB kliky"     fill={C.facebook}    opacity={0.7} stackId="c" />
-              <Bar yAxisId="left" dataKey="clicks_g"  name="Google kliky" fill={C.google}      opacity={0.7} stackId="c" />
-              <Bar yAxisId="left" dataKey="clicks_sz" name="Sklik kliky"  fill={C.sklik}       opacity={0.7} stackId="c" />
-              <Line yAxisId="right" type="monotone" dataKey="cpc_fb" name="CPC Facebook" stroke={C.facebookDark} strokeWidth={2} dot={false} connectNulls />
-              <Line yAxisId="right" type="monotone" dataKey="cpc_g"  name="CPC Google"   stroke={C.googleDark}   strokeWidth={2} dot={false} connectNulls />
-              <Line yAxisId="right" type="monotone" dataKey="cpc_sz" name="CPC Sklik"    stroke={C.sklikDark}    strokeWidth={2} dot={false} connectNulls />
-            </ComposedChart>
+              {!hiddenChannels.has('fb') && (
+                <Line type="monotone" dataKey="cpc_fb" name="CPC Facebook Ads" stroke={C.facebookDark} strokeWidth={2} dot={false} connectNulls />
+              )}
+              {!hiddenChannels.has('g') && (
+                <Line type="monotone" dataKey="cpc_g" name="CPC Google Ads" stroke={C.googleDark} strokeWidth={2} dot={false} connectNulls />
+              )}
+              {!hiddenChannels.has('sz') && (
+                <Line type="monotone" dataKey="cpc_sz" name="CPC Sklik (Seznam)" stroke={C.sklikDark} strokeWidth={2} dot={false} connectNulls />
+              )}
+              {hasPrevData && !hiddenChannels.has('fb') && (
+                <Line type="monotone" dataKey="cpc_fb_prev" name="CPC Facebook Ads (předch. rok)" stroke={C.facebookDark} strokeWidth={1.5} strokeDasharray="5 4" dot={false} connectNulls />
+              )}
+              {hasPrevData && !hiddenChannels.has('g') && (
+                <Line type="monotone" dataKey="cpc_g_prev" name="CPC Google Ads (předch. rok)" stroke={C.googleDark} strokeWidth={1.5} strokeDasharray="5 4" dot={false} connectNulls />
+              )}
+              {hasPrevData && !hiddenChannels.has('sz') && (
+                <Line type="monotone" dataKey="cpc_sz_prev" name="CPC Sklik (Seznam) (předch. rok)" stroke={C.sklikDark} strokeWidth={1.5} strokeDasharray="5 4" dot={false} connectNulls />
+              )}
+            </LineChart>
           </ResponsiveContainer>
         </div>
 
