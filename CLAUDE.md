@@ -150,11 +150,13 @@ Funkce v `lib/formatters.ts` — vrací datum jako `"YYYY-MM-DD"` v **lokálním
 
 ### `/dashboard` — Klíčové ukazatele (KPI)
 
-KPI boxy (13 + 2 ve vlastním řádku): Tržby s/bez DPH, Počet obj., AOV, Marketing. investice, PNO, CPA, Marže, Marže %, Cena za nového zákazníka, Hrubý zisk na objednávku, **LTV (bez DPH)**, **Poměr LTV a CAC (dle marže)** + **samostatný řádek: Hrubý zisk, Hrubý zisk %** (variant='green').
+KPI boxy (14 + 2 ve vlastním řádku): Tržby s/bez DPH, Počet obj., AOV, Marketing. investice, PNO, CPA, Marže, Marže %, Cena za nového zákazníka, Hrubý zisk na objednávku, **LTV (bez DPH)**, **Ziskové LTV**, **Poměr LTV a CAC (dle marže)** + **samostatný řádek: Hrubý zisk, Hrubý zisk %** (variant='green').
 
-**LTV (bez DPH)** — `revenues` (bez DPH) / počet zákazníků, z `retentionDataCZ`/`retentionDataSK` (SK filtrováno přes `SK_LAUNCH_DATE`). Počítá se **all-time**, nezávisle na period filtru z TopBaru (stejná logika jako `/retention` — LTV je lifetime metrika). Bez YoY badge (`yoy: null`).
+**LTV (bez DPH)** — obratové LTV: `revenues` (bez DPH) / počet zákazníků, z `retentionDataCZ`/`retentionDataSK` (SK filtrováno přes `SK_LAUNCH_DATE`). Počítá se **all-time**, nezávisle na period filtru z TopBaru (stejná logika jako `/retention` — LTV je lifetime metrika). Bez YoY badge (`yoy: null`).
 
-**Poměr LTV a CAC (dle marže)** = `(LTV × Marže %) / CAC`, kde CAC = `costPerNewCustomer` (stejná hodnota jako box "Cena za nového zákazníka") a Marže % = aktuální period marže z `marginPct`. Zobrazeno jako `X.Xx`. Bez YoY badge.
+**Ziskové LTV** = `LTV (bez DPH) × Marže %` — hrubý zisk ze zákazníka za celou dobu vztahu, ne jen obrat. Marže % = aktuální period marže z `marginPct` (`ltvProfit` proměnná). Bez YoY badge.
+
+**Poměr LTV a CAC (dle marže)** = `Ziskové LTV / CAC`, kde CAC = `costPerNewCustomer` (stejná hodnota jako box "Cena za nového zákazníka"). Zobrazeno jako `X.Xx`. Bez YoY badge.
 
 **Grafy (4 celkem, 2×2 mřížka):** Tržby+Objednávky, Náklady+PNO, AOV (YoY), Cena za objednávku/CPA (YoY) — komponenty `AovChart` a `CpaChart` z `components/charts/AovCpaChart.tsx`.
 

@@ -117,8 +117,11 @@ export default function DashboardPage() {
   const ltvTotalRevenue = ltvSources.reduce((sum, c) => sum + c.revenues.reduce((s, v) => s + v, 0), 0);
   const ltvPerCustomer  = ltvSources.length > 0 ? ltvTotalRevenue / ltvSources.length : 0;
 
-  // Gross Margin Adjusted LTV:CAC = (LTV × Marže %) / CAC
-  const ltvCacRatio = costPerNewCustomer > 0 ? (ltvPerCustomer * (marginPct / 100)) / costPerNewCustomer : 0;
+  // Ziskové LTV = obratové LTV × Marže % (hrubý zisk ze zákazníka za celou dobu)
+  const ltvProfit = ltvPerCustomer * (marginPct / 100);
+
+  // Gross Margin Adjusted LTV:CAC = Ziskové LTV / CAC
+  const ltvCacRatio = costPerNewCustomer > 0 ? ltvProfit / costPerNewCustomer : 0;
   const dayCount  = Math.round((end.getTime() - start.getTime()) / 86_400_000);
   const isMonthly = dayCount > 60;
 
@@ -148,6 +151,7 @@ export default function DashboardPage() {
     { title: 'Cena za nového zákazníka', value: newCustomerCounts.cur > 0 ? fc(costPerNewCustomer) : '–', yoy: yoyCostPerNewCustomer, icon: <Users size={16} />, invertColors: true },
     { title: 'Hrubý zisk na objednávku', value: kpi.orders > 0 ? fc(grossPerOrder) : '–', yoy: yoyGrossPerOrder, icon: <Banknote size={16} /> },
     { title: 'LTV (bez DPH)',           value: ltvSources.length > 0 ? fc(ltvPerCustomer) : '–', yoy: null, icon: <Repeat size={16} /> },
+    { title: 'Ziskové LTV',             value: ltvSources.length > 0 ? fc(ltvProfit) : '–', yoy: null, icon: <TrendingUp size={16} /> },
     { title: 'Poměr LTV a CAC (dle marže)', value: costPerNewCustomer > 0 ? `${ltvCacRatio.toFixed(1)}x` : '–', yoy: null, icon: <Scale size={16} /> },
   ].map(c => ({ ...c, hasPrevData }));
 
