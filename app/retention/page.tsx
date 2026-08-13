@@ -5,15 +5,20 @@ import { Users, DollarSign, ShoppingCart, RefreshCw, Calendar, TrendingUp } from
 import { retentionDataCZ } from '@/data/retentionDataCZ';
 import { retentionDataSK as _retentionDataSK } from '@/data/retentionDataSK';
 import { SK_LAUNCH_DATE } from '@/data/types';
+import { marginDataCZ } from '@/data/marginDataCZ';
+import { marginDataSK as _marginDataSK } from '@/data/marginDataSK';
+import { mockData } from '@/data/mockGenerator';
 
 // Exclude customers whose first purchase was before SK launch (test orders)
 const retentionDataSK = _retentionDataSK.filter(c => c.dates[0] >= SK_LAUNCH_DATE);
+const marginDataSK = _marginDataSK.filter(r => r.date >= SK_LAUNCH_DATE);
 import {
   computeRetentionKpis,
   computeYearCustomerMetrics,
   computeYearRetentionMetrics,
   computeYearRevenueMetrics,
   computeMonthlyChartData,
+  computeMonthlyLtvBezDph,
   computeMonthlyNewVsReturning,
   computeMonthlyRevenueNewVsReturning,
   computePurchaseDistribution,
@@ -201,6 +206,40 @@ export default function RetentionPage() {
   const yearRetention= useMemo(() => computeYearRetentionMetrics(data), [data]);
   const yearRevenue  = useMemo(() => computeYearRevenueMetrics(data), [data]);
   const monthly      = useMemo(() => computeMonthlyChartData(data), [data]);
+  const monthlyLtv   = useMemo(() => computeMonthlyLtvBezDph(data), [data]);
+
+  // Ziskové LTV + Poměr LTV:CAC v čase — spojuje kumulativní LTV (retenční data) s měsíční marží a měsíčním CAC
+  const ltvCacTrend = useMemo(() => {
+    const marginSource = tab === 'cz' ? marginDataCZ : marginDataSK;
+    const marginByMonth: Record<string, { revenue: number; purchaseCost: number }> = {};
+    for (const r of marginSource) {
+      const m = r.date.substring(0, 7);
+      if (!marginByMonth[m]) marginByMonth[m] = { revenue: 0, purchaseCost: 0 };
+      marginByMonth[m].revenue += r.revenue;
+      marginByMonth[m].purchaseCost += r.purchaseCost;
+    }
+
+    const costByMonth: Record<string, number> = {};
+    for (const r of mockData) {
+      if (r.country !== tab) continue;
+      const m = r.date.substring(0, 7);
+      costByMonth[m] = (costByMonth[m] ?? 0) + r.cost;
+    }
+
+    return monthlyLtv.map(pt => {
+      const month = pt.date.substring(0, 7);
+      const mg = marginByMonth[month];
+      const marginPct = mg && mg.revenue > 0 ? ((mg.revenue - mg.purchaseCost) / mg.revenue) * 100 : 0;
+      const ltvProfit = pt.ltvBezDph * (marginPct / 100);
+      const cost = costByMonth[month] ?? 0;
+      const cac = pt.newCustomers > 0 ? cost / pt.newCustomers : 0;
+      return {
+        date: pt.date,
+        ltvProfit,
+        ltvCacRatio: cac > 0 ? ltvProfit / cac : null,
+      };
+    });
+  }, [monthlyLtv, tab]);
   const purchaseDist = useMemo(() => computePurchaseDistribution(data), [data]);
   const daysBins     = useMemo(() => computeDaysBetweenHistogram(data), [data]);
 
@@ -209,8 +248,6 @@ export default function RetentionPage() {
   const totalReturning   = yearCustomer.reduce((s, r) => s + r.returningCustomers, 0);
   const totalRevAll      = yearRevenue.reduce((s, r) => s + r.totalRevenue, 0);
 
-  // Yearly revenue for area chart
-  const yearRevenueChart = yearRevenue.map(r => ({ year: r.year.toString(), obrat: Math.round(r.totalRevenue) }));
 
   return (
     <div className="space-y-6">
@@ -409,14 +446,14 @@ export default function RetentionPage() {
           </ResponsiveContainer>
         </ChartCard>
 
-        <ChartCard title="Vývoj průměrné objednávky v čase">
+        <ChartCard title="Ziskové LTV v čase">
           <ResponsiveContainer width="100%" height={260}>
-            <LineChart data={monthly} margin={{ top: 4, right: 16, left: 4, bottom: 4 }}>
+            <LineChart data={ltvCacTrend} margin={{ top: 4, right: 16, left: 4, bottom: 4 }}>
               <CartesianGrid strokeDasharray="0" stroke="#f1f5f9" vertical={false} />
               <XAxis dataKey="date" tickFormatter={formatShortDate} tick={{ fontSize: 11, fill: '#94a3b8' }} axisLine={false} tickLine={false} interval="preserveStartEnd" />
               <YAxis tickFormatter={v => fmtYAxis(v, currency)} tick={{ fontSize: 11, fill: '#94a3b8' }} axisLine={false} tickLine={false} width={56} />
-              <Tooltip formatter={(v: any) => [fc(v as number), 'Ø objednávka']} labelFormatter={(l: any) => formatShortDate(l as string)} />
-              <Line type="monotone" dataKey="aov" name="Ø objednávka" stroke={C.aov} strokeWidth={2} dot={false} />
+              <Tooltip formatter={(v: any) => [fc(v as number), 'Ziskové LTV']} labelFormatter={(l: any) => formatShortDate(l as string)} />
+              <Line type="monotone" dataKey="ltvProfit" name="Ziskové LTV" stroke={C.grossProfit} strokeWidth={2} dot={false} connectNulls />
             </LineChart>
           </ResponsiveContainer>
         </ChartCard>
@@ -424,21 +461,15 @@ export default function RetentionPage() {
 
       {/* Charts — řada 2: Obrat po letech + Zákazníci podle počtu nákupů */}
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-        <ChartCard title="Vývoj obratu po letech">
+        <ChartCard title="Poměr LTV a CAC v čase">
           <ResponsiveContainer width="100%" height={260}>
-            <AreaChart data={yearRevenueChart} margin={{ top: 4, right: 16, left: 4, bottom: 4 }}>
-              <defs>
-                <linearGradient id="gradObrat" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor={C.primary} stopOpacity={0.3} />
-                  <stop offset="95%" stopColor={C.primary} stopOpacity={0} />
-                </linearGradient>
-              </defs>
+            <LineChart data={ltvCacTrend} margin={{ top: 4, right: 16, left: 4, bottom: 4 }}>
               <CartesianGrid strokeDasharray="0" stroke="#f1f5f9" vertical={false} />
-              <XAxis dataKey="year" tick={{ fontSize: 11, fill: '#94a3b8' }} axisLine={false} tickLine={false} />
-              <YAxis tickFormatter={v => fmtYAxis(v, currency)} tick={{ fontSize: 11, fill: '#94a3b8' }} axisLine={false} tickLine={false} width={60} />
-              <Tooltip formatter={(v: any) => [fc(v as number), 'Obrat']} />
-              <Area type="monotone" dataKey="obrat" name="Obrat" stroke={C.primary} fill="url(#gradObrat)" strokeWidth={2} dot={{ r: 5, fill: C.primary }} />
-            </AreaChart>
+              <XAxis dataKey="date" tickFormatter={formatShortDate} tick={{ fontSize: 11, fill: '#94a3b8' }} axisLine={false} tickLine={false} interval="preserveStartEnd" />
+              <YAxis tickFormatter={v => `${v.toFixed(1)}x`} tick={{ fontSize: 11, fill: '#94a3b8' }} axisLine={false} tickLine={false} width={44} />
+              <Tooltip formatter={(v: any) => [v === null ? '–' : `${(v as number).toFixed(1)}x`, 'LTV : CAC']} labelFormatter={(l: any) => formatShortDate(l as string)} />
+              <Line type="monotone" dataKey="ltvCacRatio" name="LTV : CAC" stroke={C.secondary} strokeWidth={2} dot={false} connectNulls />
+            </LineChart>
           </ResponsiveContainer>
         </ChartCard>
 

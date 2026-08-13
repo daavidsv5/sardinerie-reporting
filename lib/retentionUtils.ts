@@ -259,6 +259,42 @@ export function computeMonthlyChartData(data: CustomerRetentionRecord[]): Monthl
   });
 }
 
+export interface MonthlyLtvPoint {
+  date: string;         // 'YYYY-MM-01'
+  ltvBezDph: number;    // kumulativní LTV bez DPH k danému měsíci (celkový obrat bez DPH / celkový počet zákazníků do tohoto měsíce)
+  newCustomers: number; // počet zákazníků s prvním nákupem v tomto konkrétním měsíci (ne kumulativně)
+}
+
+/** Měsíční kumulativní LTV bez DPH + počet nových zákazníků daného měsíce.
+ *  Obdoba computeMonthlyChartData, ale z `revenues` (bez DPH) místo `revsVat`,
+ *  aby odpovídalo definici boxu "LTV (bez DPH)" na /dashboard. */
+export function computeMonthlyLtvBezDph(data: CustomerRetentionRecord[]): MonthlyLtvPoint[] {
+  const byMonth: Record<string, { revenue: number }> = {};
+  const customerFirstMonth: string[] = data.map(c => c.dates[0]?.substring(0, 7) ?? '');
+
+  for (const c of data) {
+    for (let i = 0; i < c.dates.length; i++) {
+      const m = c.dates[i].substring(0, 7);
+      if (!byMonth[m]) byMonth[m] = { revenue: 0 };
+      byMonth[m].revenue += c.revenues[i];
+    }
+  }
+
+  const months = Object.keys(byMonth).sort();
+  let cumRevenue = 0;
+
+  return months.map(month => {
+    cumRevenue += byMonth[month].revenue;
+    const cumCustomers = customerFirstMonth.filter(fm => fm <= month).length;
+    const newCustomers = customerFirstMonth.filter(fm => fm === month).length;
+    return {
+      date: month + '-01',
+      ltvBezDph: cumCustomers > 0 ? cumRevenue / cumCustomers : 0,
+      newCustomers,
+    };
+  });
+}
+
 export interface MonthlyNewVsReturningPoint {
   date: string;       // 'YYYY-MM-01'
   noví: number;

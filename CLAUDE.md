@@ -185,6 +185,12 @@ Marže a Hrubý zisk se počítají z `marginDataCZ` / `marginDataSK`:
 - **Rozložení tržeb dle segmentů v čase (měsíčně)** — stejný 100% stacked area graf, hned pod grafem počtů zákazníků
   - Data z `computeMonthlyRfmRevenueDistribution()` v `lib/retentionUtils.ts` — stejná měsíční kumulativní klasifikace jako u počtů, ale místo počtu zákazníků sčítá jejich **kumulativní tržby bez DPH** do konce daného měsíce (`revenues`, ne `revsVat`)
   - Sdílí `RfmDistributionTooltip` s počtovým grafem — přes prop `formatValue={fc}` zobrazuje měnu místo počtu
+- **Ziskové LTV v čase** a **Poměr LTV a CAC v čase** (měsíčně) — nahradily grafy „Vývoj průměrné objednávky v čase" a „Vývoj obratu po letech" (ty zůstávají dostupné jako data v `monthly`/`yearRevenue`, jen bez vlastního grafu)
+  - `computeMonthlyLtvBezDph()` v `lib/retentionUtils.ts` — obdoba `computeMonthlyChartData`, ale kumulativní LTV z `revenues` (bez DPH) místo `revsVat`, aby odpovídalo definici boxu „LTV (bez DPH)" na `/dashboard`; vrací i `newCustomers` (nekumulativně, pro CAC toho měsíce)
+  - `ltvCacTrend` (`useMemo` přímo v `app/retention/page.tsx`) spojuje `monthlyLtv` s měsíční marží (`marginDataCZ`/`marginDataSK`, SK filtrováno přes `SK_LAUNCH_DATE`) a měsíčními marketingovými náklady (`mockData` filtrováno dle `tab`)
+  - **Ziskové LTV** (měsíc) = kumulativní LTV bez DPH k danému měsíci × marže % **toho měsíce** (ne kumulativní marže)
+  - **CAC** (měsíc) = marketingové náklady toho měsíce / noví zákazníci toho měsíce — **není kumulativní**, proto u měsíců s málo daty (např. začátek CZ e-shopu) může hodně kolísat nebo chybět (`ltvCacRatio: null` když `cac === 0`, graf používá `connectNulls`)
+  - Poměr LTV:CAC = Ziskové LTV / CAC toho měsíce
 - RFM segment karty, distribuční bar, akce, LTV, AOV, repeat purchase rate — beze změny
 
 ### `/shipping` — Doprava a platby
