@@ -21,6 +21,8 @@ import {
   computeMonthlyLtvBezDph,
   computeMonthlyNewVsReturning,
   computeMonthlyRevenueNewVsReturning,
+  computeCurrentMonthYoyCutoff,
+  type CurrentMonthYoyCutoff,
   computePurchaseDistribution,
   computeDaysBetweenHistogram,
   computeRfmSegments,
@@ -75,14 +77,18 @@ function prevYearDate(date: string): string {
   return `${year - 1}${date.slice(4)}`;
 }
 
-/** Bohatý tooltip pro stacked bar "Noví vs. stávající" — zobrazuje podíl v měsíci + YoY srovnání se stejným měsícem loňského roku */
+/** Bohatý tooltip pro grouped bar "Noví vs. stávající" — zobrazuje podíl v měsíci + YoY srovnání se stejným měsícem loňského roku */
 function NewVsReturningTooltip({
-  active, label, fullData, formatValue,
+  active, label, fullData, formatValue, cutoff, cutoffField,
 }: {
   active?: boolean;
   label?: any;
   fullData: { date: string; noví: number; stávající: number }[];
   formatValue: (v: number) => string;
+  /** Meziroční srovnání aktuálního (nedokončeného) měsíce jen do stejného dne loňského roku */
+  cutoff?: CurrentMonthYoyCutoff | null;
+  /** Které pole z cutoff použít jako prev hodnoty ('Noví'/'Stávající' počty, nebo 'NovíRevenue'/'StávajícíRevenue' tržby) */
+  cutoffField: 'counts' | 'revenue';
 }) {
   if (!active || !label) return null;
   const date = label as string;
@@ -90,14 +96,25 @@ function NewVsReturningTooltip({
   if (!cur) return null;
 
   const total = cur.noví + cur.stávající;
+  const isCurrentMonth = !!cutoff && date.startsWith(cutoff.monthKey);
   const prevDate = prevYearDate(date);
-  const prev = fullData.find(d => d.date === prevDate);
-  const prevTotal = prev ? prev.noví + prev.stávající : 0;
-  const totalYoy = prev && prevTotal > 0 ? ((total - prevTotal) / prevTotal) * 100 : null;
+  const prevFull = fullData.find(d => d.date === prevDate);
+  const prevNovi = isCurrentMonth
+    ? (cutoffField === 'counts' ? cutoff!.prevNoví : cutoff!.prevNovíRevenue)
+    : (prevFull?.noví ?? undefined);
+  const prevStavajici = isCurrentMonth
+    ? (cutoffField === 'counts' ? cutoff!.prevStávající : cutoff!.prevStávajícíRevenue)
+    : (prevFull?.stávající ?? undefined);
+  const prevLabel = isCurrentMonth
+    ? `vs. loňský rok (do ${cutoff!.cutoffDay}. dne)`
+    : `vs. loňský rok (${formatMonthYear(prevDate)})`;
+  const hasComparison = isCurrentMonth ? true : !!prevFull;
+  const prevTotal = (prevNovi ?? 0) + (prevStavajici ?? 0);
+  const totalYoy = hasComparison && prevTotal > 0 ? ((total - prevTotal) / prevTotal) * 100 : null;
 
-  const rows: { key: 'noví' | 'stávající'; name: string; color: string }[] = [
-    { key: 'noví', name: 'Noví zákazníci', color: C.newCustomers },
-    { key: 'stávající', name: 'Stávající zákazníci', color: C.primary },
+  const rows: { key: 'noví' | 'stávající'; name: string; color: string; prevVal: number | undefined }[] = [
+    { key: 'noví', name: 'Noví zákazníci', color: C.newCustomers, prevVal: prevNovi },
+    { key: 'stávající', name: 'Stávající zákazníci', color: C.primary, prevVal: prevStavajici },
   ];
 
   return (
@@ -106,7 +123,7 @@ function NewVsReturningTooltip({
       {rows.map(r => {
         const value = cur[r.key];
         const pct = total > 0 ? (value / total) * 100 : 0;
-        const prevVal = prev ? prev[r.key] : undefined;
+        const prevVal = r.prevVal;
         const yoy = prevVal ? ((value - prevVal) / prevVal) * 100 : null;
         return (
           <div key={r.key} className="mb-2 last:mb-0">
@@ -119,9 +136,9 @@ function NewVsReturningTooltip({
                 {formatValue(value)} <span className="text-slate-400 font-normal">({pct.toFixed(1)} %)</span>
               </span>
             </div>
-            {prev && (
+            {hasComparison && (
               <div className="flex items-center justify-between gap-4 text-[11px] text-slate-400 pl-3.5 mt-0.5">
-                <span>vs. loňský rok ({formatMonthYear(prevDate)})</span>
+                <span>{prevLabel}</span>
                 <span className={yoy !== null ? (yoy >= 0 ? 'text-emerald-600' : 'text-rose-600') : ''}>
                   {yoy !== null ? `${yoy >= 0 ? '+' : ''}${yoy.toFixed(1)} %` : '—'} {prevVal !== undefined ? `(${formatValue(prevVal)})` : ''}
                 </span>
@@ -203,6 +220,7 @@ export default function RetentionPage() {
   const yearCustomer      = useMemo(() => computeYearCustomerMetrics(data), [data]);
   const monthlyNewVsRet   = useMemo(() => computeMonthlyNewVsReturning(data), [data]);
   const monthlyRevNewVsRet= useMemo(() => computeMonthlyRevenueNewVsReturning(data), [data]);
+  const yoyCutoff         = useMemo(() => computeCurrentMonthYoyCutoff(data), [data]);
   const yearRetention= useMemo(() => computeYearRetentionMetrics(data), [data]);
   const yearRevenue  = useMemo(() => computeYearRevenueMetrics(data), [data]);
   const monthly      = useMemo(() => computeMonthlyChartData(data), [data]);
@@ -293,17 +311,17 @@ export default function RetentionPage() {
         <StatCard title="LTV / zákazník"      value={fc(kpis.ltvPerCustomer)}                       icon={<TrendingUp size={18} />} />
       </div>
 
-      {/* Noví vs. stávající zákazníci — měsíční stacked bar, absolutní počty + tržby */}
+      {/* Noví vs. stávající zákazníci — měsíční grouped bar, absolutní počty + tržby */}
       <ChartCard title="Noví vs. stávající zákazníci — vývoj po měsících">
         <ResponsiveContainer width="100%" height={260}>
           <BarChart data={monthlyNewVsRet} margin={{ top: 4, right: 16, left: 4, bottom: 4 }}>
             <CartesianGrid strokeDasharray="0" stroke="#f1f5f9" vertical={false} />
             <XAxis dataKey="date" tickFormatter={formatMonthYear} tick={{ fontSize: 11, fill: '#94a3b8' }} axisLine={false} tickLine={false} interval="preserveStartEnd" />
             <YAxis tickFormatter={v => formatNumber(v as number)} tick={{ fontSize: 11, fill: '#94a3b8' }} axisLine={false} tickLine={false} width={48} />
-            <Tooltip content={<NewVsReturningTooltip fullData={monthlyNewVsRet} formatValue={formatNumber} />} />
+            <Tooltip content={<NewVsReturningTooltip fullData={monthlyNewVsRet} formatValue={formatNumber} cutoff={yoyCutoff} cutoffField="counts" />} />
             <Legend wrapperStyle={{ fontSize: 11, color: '#64748b' }} iconType="square" iconSize={9} />
-            <Bar dataKey="noví"      name="Noví zákazníci"      stackId="a" fill={C.newCustomers} />
-            <Bar dataKey="stávající" name="Stávající zákazníci" stackId="a" fill={C.primary} radius={[3, 3, 0, 0]} />
+            <Bar dataKey="noví"      name="Noví zákazníci"      fill={C.newCustomers} radius={[3, 3, 0, 0]} />
+            <Bar dataKey="stávající" name="Stávající zákazníci" fill={C.primary} radius={[3, 3, 0, 0]} />
           </BarChart>
         </ResponsiveContainer>
       </ChartCard>
@@ -314,10 +332,10 @@ export default function RetentionPage() {
             <CartesianGrid strokeDasharray="0" stroke="#f1f5f9" vertical={false} />
             <XAxis dataKey="date" tickFormatter={formatMonthYear} tick={{ fontSize: 11, fill: '#94a3b8' }} axisLine={false} tickLine={false} interval="preserveStartEnd" />
             <YAxis tickFormatter={v => fmtYAxis(v as number, currency)} tick={{ fontSize: 11, fill: '#94a3b8' }} axisLine={false} tickLine={false} width={56} />
-            <Tooltip content={<NewVsReturningTooltip fullData={monthlyRevNewVsRet} formatValue={fc} />} />
+            <Tooltip content={<NewVsReturningTooltip fullData={monthlyRevNewVsRet} formatValue={fc} cutoff={yoyCutoff} cutoffField="revenue" />} />
             <Legend wrapperStyle={{ fontSize: 11, color: '#64748b' }} iconType="square" iconSize={9} />
-            <Bar dataKey="noví"      name="Noví zákazníci"      stackId="a" fill={C.newCustomers} />
-            <Bar dataKey="stávající" name="Stávající zákazníci" stackId="a" fill={C.primary} radius={[3, 3, 0, 0]} />
+            <Bar dataKey="noví"      name="Noví zákazníci"      fill={C.newCustomers} radius={[3, 3, 0, 0]} />
+            <Bar dataKey="stávající" name="Stávající zákazníci" fill={C.primary} radius={[3, 3, 0, 0]} />
           </BarChart>
         </ResponsiveContainer>
       </ChartCard>
