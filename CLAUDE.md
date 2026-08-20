@@ -160,6 +160,8 @@ KPI boxy (14 + 2 ve vlastním řádku): Tržby s/bez DPH, Počet obj., AOV, Mark
 
 **Grafy (4 celkem, 2×2 mřížka):** Tržby+Objednávky, Náklady+PNO, AOV (YoY), Cena za objednávku/CPA (YoY) — komponenty `AovChart` a `CpaChart` z `components/charts/AovCpaChart.tsx`.
 
+**Grafy prodloužené do konce měsíce/roku (`chartDataExtended`, 2026-08):** U otevřených period (`current_month`/`current_year`) `hooks/useDashboardData.ts` vrací kromě `chartData` (jen dny s reálnými daty) i `chartDataExtended` — sjednocení dní aktuálního období s loňskými daty rozšířenými až do konce měsíce/roku, takže loňská (přerušovaná) křivka pokračuje až na konec osy X, zatímco letošní křivka viditelně končí posledním dostupným dnem (pole = `null` pro dny bez letošních dat). `KpiLineCharts.tsx` a `AovCpaChart.tsx` přijímají `ExtendedChartDataPoint[]`; jejich tooltipy filtrují `p.value != null`, aby u budoucích dnů nezobrazily zavádějící „0". Sparklines v KPI kartách nadále používají nerozšířený `chartData`. Stejný princip jako u Celtic-supply reportingu.
+
 **Odstraněno:** Storna, Podíl storen (odstraněno na žádost uživatele).
 
 Marže a Hrubý zisk se počítají z `marginDataCZ` / `marginDataSK`:
@@ -170,12 +172,13 @@ Marže a Hrubý zisk se počítají z `marginDataCZ` / `marginDataSK`:
 
 ### `/retention` — Retenční analýza
 
-- **Měsíční graf Noví vs. stávající zákazníci (počty)** — stacked bar s absolutními hodnotami, hned pod KPI boxy
+- **Měsíční graf Noví vs. stávající zákazníci (počty)** — grouped bar (dva sloupce vedle sebe per měsíc, ne stacked; sjednoceno se strukturou Celtic-supply reportingu 2026-08), hned pod KPI boxy
   - Data z `computeMonthlyNewVsReturning()` v `lib/retentionUtils.ts`
   - Zelená = noví (první nákup v daném měsíci), Modrá = stávající (vrátili se)
   - Osa X: název měsíce + rok (`formatMonthYear`), Osa Y: absolutní počet zákazníků
   - Vlastní tooltip (`NewVsReturningTooltip` v `app/retention/page.tsx`) — hodnota + podíl v měsíci, srovnání se stejným měsícem loňského roku (YoY % + předchozí hodnota), řádek Celkem s YoY %
-- **Měsíční graf Noví vs. stávající zákazníci — tržby bez DPH** — stejná stacked bar struktura a tooltip, hned pod grafem počtů
+  - **Meziroční srovnání aktuálního (nedokončeného) měsíce k předcházejícímu dni, ne k celému loňskému měsíci** — `computeCurrentMonthYoyCutoff()` v `lib/retentionUtils.ts` spočítá loňská data jen do stejného dne v měsíci jako letos (`cutoffDay` = den včerejška). `NewVsReturningTooltip` přijímá props `cutoff`/`cutoffField` a při najetí na aktuální měsíc zobrazí popisek „vs. loňský rok (do X. dne)" místo celého loňského měsíce.
+- **Měsíční graf Noví vs. stávající zákazníci — tržby bez DPH** — stejná grouped bar struktura a tooltip (vč. cutoff srovnání), hned pod grafem počtů
   - Data z `computeMonthlyRevenueNewVsReturning()` v `lib/retentionUtils.ts` (sčítá `revsVat` místo počtu zákazníků)
 - **Rozložení RFM segmentů v čase (měsíčně)** — 100% stacked area graf pod sekcí „Distribuce zákazníků" v RFM bloku
   - Data z `computeMonthlyRfmDistribution()` v `lib/retentionUtils.ts` — pro každý měsíc kumulativně přepočítá segmentaci (recency/frequency k datu konce daného měsíce, jen z objednávek do té doby)
