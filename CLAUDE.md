@@ -218,6 +218,8 @@ Marže a Hrubý zisk se počítají z `marginDataCZ` / `marginDataSK`:
 - `ShippingPaymentRecord` interface obsahuje pole `free_count: number`
 - Shipping page používá `r.free_count ?? 0` nikdy ne `revenue_vat === 0`
 
+**Sjednocení vizuálního stylu karet (2026-08)** — všechny karty v sekci (Zisk/Ztráta dopravce, graf Doprava zdarma % v čase, tabulky Dopravce/Platební metoda, Ceník dopravců) sjednoceny na `rounded-xl border-gray-100` s hlavičkou jako samostatný `div` (`px-5 py-4 border-b border-slate-100` + `h2` + `p` podnadpis); dřív mix `rounded-2xl border-slate-100` vs. `rounded-xl border-gray-100` a chybějící nadpisy u tabulek Dopravce/Platební metoda. Stejné sjednocení provedeno napříč všemi 6 reportingovými projekty (Celtic-supply, Bioprodukt, Prirozeny-beh, Zbozi z bali, Úleva pro nohy).
+
 **Ceník dopravců** — editovatelná tabulka uložená v `localStorage` (`carrierCosts_v1`):
 - Rozdělena na CZ (Kč) a SK (€) sekce
 - Zobrazuje pouze panely odpovídající aktivním selektorům CZ/SK
