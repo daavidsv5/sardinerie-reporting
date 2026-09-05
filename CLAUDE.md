@@ -209,7 +209,7 @@ Marže a Hrubý zisk se počítají z `marginDataCZ` / `marginDataSK`:
 - Přerušovaná šedá referenční čára (`ReferenceLine`) na průměrné hodnotě za období
 - Badge "Ø X.X % za období" v pravém horním rohu
 - Umístění: za grafem "Vývoj využitelnosti plateb", před sekcí donutů/tabulek
-- Funkce `isPickup()` jako helper v komponentě (vyloučení Osobního odběru)
+- Funkce `isNonDelivery()` jako modulový helper (vyloučení osobního odběru a dalších nedoručovacích metod) — viz sekce z 2026-09-04
 
 **Výpočet free_count (správná logika):**
 - `free_count` se počítá v `aggregateShippingPayment()` v `scripts/updateData.js` na úrovni každé individuální objednávky (před denní agregací)
@@ -421,3 +421,52 @@ META_AD_ACCOUNT_ID_SK=act_...  # SK reklamní účet
 ### Pre-existing TS chyby
 
 `app/shipping/page.tsx` má ~8 TS chyb (Recharts PieLabel + Tooltip typy). Jsou **pre-existující**, nezpůsobené nedávnými změnami — neřešit, pokud se nerefaktoruje shipping stránka.
+
+## `/hlavni-dashboard` — Filtr zařízení u GA4 grafů (2026-09-04)
+
+Karty **Návštěvnost webu** (sessions) a **Konverzní poměr** mají v hlavičce selektor `DeviceSelect`
+(Všechna zařízení / Desktop / Mobil / Tablet). Obě karty sdílí jeden `device` state, takže se
+přepínají společně — nemůže nastat, že návštěvnost ukazuje desktop a CVR mobil.
+
+Filtrace se **nedělá na klientovi** — hodnota jde do API jako `&device=` a v GA4 route se překlopí
+na `dimensionFilter` nad dimenzí `deviceCategory` (`matchType: 'EXACT'`). Při `device=all` se filtr
+neposílá vůbec, takže výchozí čísla zůstávají shodná s obdobím před zavedením filtru. Nepřibyl žádný
+dotaz do GA4 navíc — jen se zúží ten stávající.
+
+Komponenty grafů (`ChartCard`, resp. `YearCompareBarChart`) dostaly volitelný prop `headerRight?: ReactNode`,
+kterým se selektor vkládá do hlavičky. Ostatní karty prop nepoužívají a jsou beze změny.
+
+## `/shipping` — Oprava výpočtu „Doprava zdarma" (2026-09-04)
+
+Audit napříč všemi 6 projekty odhalil tři nezávislé chyby; opraveny všude naráz.
+
+**1. Ø badge u grafu nesouhlasil s KPI boxem.** Bioprodukt, Celtic a Prirozeny-beh počítaly
+`Ø % za období` jako **nevážený průměr procent jednotlivých period** — slabý měsíc měl stejnou váhu
+jako silný. Celtic tím ukazoval 54,7 % vedle KPI boxu s 46,2 % (+8,5 p.b.), Prirozeny-beh +8,0 p.b.
+`freeShipTrend` nyní vrací `{ rows, avgPct }`, kde `avgPct` je vážený podíl (`totalFree / totalCount`)
+ze stejných dat, ze kterých se kreslí sloupce. Badge i `ReferenceLine` berou `avgPct`.
+
+**2. Osobní odběr se nevylučoval spolehlivě.** Existovala dvě různá pravidla a obě měla díru:
+- `['odběr','odber']` minulo „Osobně na pobočce Barefoot concept store Třebíč" (287 obj., Prirozeny-beh)
+  a naopak chybně vylučovalo placená výdejní místa („DPD doručenie do odberného miesta").
+- `['osobní','osobni']` minulo slovenské „Osobný odber" (140 obj., Sardinerie).
+
+Sjednoceno na jeden modulový helper **`isNonDelivery(name)`** se seznamem
+`NON_DELIVERY = ['osobn', 'zpětná', 'zpetná', 'emailem', 'údržbu']`. Kmen `osobn` pokrývá
+osobní / osobný / osobně. Hledat „odběr" nelze — chytá placená výdejní místa dopravců.
+Vyloučené řádky vypadávají **celé** (z čitatele i jmenovatele), protože nejde o doručení zákazníkovi.
+
+**Seznam musí zůstat shodný s generátorem** (`scripts/updateData.js`, u Celticu
+`scripts/fetchShoptetData*.js`), který podle stejného pravidla plní `free_count`. Dřív se rozcházely:
+generátor vylučoval z čitatele i `zpětná`/`emailem`/`údržbu`, ale UI je nechávalo ve jmenovateli,
+takže podíl systematicky klesal. Generátory opraveny na stejný seznam.
+
+**3. Chybějící `free_count` se počítal jako nula.** Řádky bez toho pole (starší export) padaly přes
+`?? 0` do jmenovatele jako „zákazník dopravu platil". Řeší se vyřazením takových řádků z výpočtu
+(`r.free_count !== undefined`) místo tichého nulování.
+
+**Dopad oprav na hodnoty KPI:** Celtic 46,20 → 46,26 %, Bioprodukt 47,70 % (beze změny),
+Prirozeny-beh 52,93 → 59,92 %, Sardinerie 34,02 → 31,67 %, Úleva 14,96 % (beze změny).
+KPI box a Ø badge nyní všude vychází ze stejného čitatele i jmenovatele.
+
+**Pozor:** oprava generátorů se v uložených datech projeví až při dalším přegenerování.
