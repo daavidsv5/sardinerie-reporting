@@ -12,10 +12,14 @@ import { marginDataCZ } from '@/data/marginDataCZ';
 import { marginDataSK as _marginDataSK } from '@/data/marginDataSK';
 import { useFilters } from '@/hooks/useFilters';
 import { useHlavniDashboard } from '@/hooks/useHlavniDashboard';
-import { SK_LAUNCH_DATE } from '@/data/types';
+import { retentionDataCZ } from '@/data/retentionDataCZ';
+import { retentionDataSK as _retentionDataSK } from '@/data/retentionDataSK';
+import { computeMonthlyLtvBezDph } from '@/lib/retentionUtils';
+import { SK_LAUNCH_DATE, SK_PURCHASE_COST_FROM } from '@/data/types';
 import type { Country } from '@/data/types';
 
 const marginDataSK = _marginDataSK.filter(r => r.date >= SK_LAUNCH_DATE);
+const retentionDataSK = _retentionDataSK.filter(c => c.dates[0] >= SK_LAUNCH_DATE);
 
 // ─── Constants ───────────────────────────────────────────────────────────────
 
@@ -74,6 +78,31 @@ function aggregateMonthly(
   return months;
 }
 
+/** LTV (bez DPH) ke konci každého měsíce roku — kumulativní tržby bez DPH / kumulativní počet zákazníků
+ *  (stejná definice jako box „LTV (bez DPH)" na /dashboard). Měsíce před prvními a po posledních datech = 0. */
+function monthlyLtv(year: number, countries: Country[], eurToCzk: number): number[] {
+  const isSKOnly = countries.length === 1 && countries[0] === 'sk';
+  const customers = [
+    ...(countries.includes('cz') ? retentionDataCZ : []),
+    ...(countries.includes('sk')
+      ? retentionDataSK.map(c => isSKOnly ? c : { ...c, revenues: c.revenues.map(v => v * eurToCzk) })
+      : []),
+  ];
+  const points = computeMonthlyLtvBezDph(customers);
+  if (points.length === 0) return Array(12).fill(0);
+  const lastMonth = points[points.length - 1].date.slice(0, 7);
+  return Array.from({ length: 12 }, (_, i) => {
+    const month = `${year}-${String(i + 1).padStart(2, '0')}`;
+    if (month > lastMonth) return 0;
+    let value = 0;
+    for (const p of points) {
+      if (p.date.slice(0, 7) > month) break;
+      value = p.ltvBezDph;
+    }
+    return value;
+  });
+}
+
 // ─── Formatters ──────────────────────────────────────────────────────────────
 
 function fmtCZK(v: number): string {
@@ -99,6 +128,10 @@ function fmtAxisEUR(v: number): string {
 
 function fmtAxisPct(v: number): string {
   return `${v.toFixed(1).replace('.', ',')} %`;
+}
+
+function fmtAxisRatio(v: number): string {
+  return `${v.toFixed(1).replace('.', ',')}×`;
 }
 
 function fmtAxisCount(v: number): string {
@@ -145,9 +178,11 @@ interface ChartCardProps {
   axisFormatter: (v: number) => string;
   tooltipFormatter: (v: number) => string;
   headerRight?: ReactNode;
+  /** Zvýrazní podnadpis jako upozornění */
+  subtitleWarning?: boolean;
 }
 
-function ChartCard({ title, subtitle, data, colorA, colorB, yearA, yearB, axisFormatter, tooltipFormatter, headerRight }: ChartCardProps) {
+function ChartCard({ title, subtitle, data, colorA, colorB, yearA, yearB, axisFormatter, tooltipFormatter, headerRight, subtitleWarning }: ChartCardProps) {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const CustomTooltip = ({ active, payload, label }: any) => {
     if (!active || !payload?.length) return null;
@@ -178,7 +213,7 @@ function ChartCard({ title, subtitle, data, colorA, colorB, yearA, yearB, axisFo
       <div className="flex items-start justify-between gap-2">
         <div>
           <h3 className="text-sm font-semibold text-slate-700 mb-0.5">{title}</h3>
-          {subtitle && <p className="text-xs text-slate-400 mb-2">{subtitle}</p>}
+          {subtitle && <p className={`text-xs mb-2 ${subtitleWarning ? 'text-amber-600 font-medium' : 'text-slate-400'}`}>{subtitle}</p>}
         </div>
         {headerRight}
       </div>
@@ -260,6 +295,8 @@ export default function HlavniDashboardPage() {
 
   const monthsA = useMemo(() => aggregateMonthly(yearA, countries, eurToCzk), [yearA, countries, eurToCzk]);
   const monthsB = useMemo(() => aggregateMonthly(yearB, countries, eurToCzk), [yearB, countries, eurToCzk]);
+  const ltvA = useMemo(() => monthlyLtv(yearA, countries, eurToCzk), [yearA, countries, eurToCzk]);
+  const ltvB = useMemo(() => monthlyLtv(yearB, countries, eurToCzk), [yearB, countries, eurToCzk]);
 
   const chartData = useMemo(() => MONTHS_CS.map((month, i) => {
     const a = monthsA[i];
@@ -275,14 +312,22 @@ export default function HlavniDashboardPage() {
       marginPct:   { a: a.marginRev > 0 ? ((a.marginRev - a.purchaseCost) / a.marginRev) * 100 : 0,
                      b: b.marginRev > 0 ? ((b.marginRev - b.purchaseCost) / b.marginRev) * 100 : 0 },
       cpa:         { a: a.orders > 0 ? a.cost / a.orders : 0,                               b: b.orders > 0 ? b.cost / b.orders : 0 },
+      poas:        { a: a.cost > 0 ? (a.marginRev - a.purchaseCost) / a.cost : 0,             b: b.cost > 0 ? (b.marginRev - b.purchaseCost) / b.cost : 0 },
+      ltv:         { a: ltvA[i],                                                              b: ltvB[i] },
     };
-  }), [monthsA, monthsB]);
+  }), [monthsA, monthsB, ltvA, ltvB]);
+
+  // SK nákupní ceny až od SK_PURCHASE_COST_FROM → dřívější POAS je nadhodnocený
+  const skPoasNote = countries.includes('sk') && yearB <= Number(SK_PURCHASE_COST_FROM.slice(0, 4))
+    ? '⚠ SK bez nákupních cen před 5/2025 – POAS nadhodnocený'
+    : undefined;
 
   function makeData(key: keyof typeof chartData[0]): { month: string; a: number; b: number }[] {
     return chartData.map(d => ({ month: d.month, ...(d[key] as { a: number; b: number }) }));
   }
 
   const pctFmt = (v: number) => `${v.toFixed(1).replace('.', ',')} %`;
+  const ratioFmt = (v: number) => `${v.toFixed(2).replace('.', ',')}×`;
   const countFmt = (v: number) => Math.round(v).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
 
   return (
@@ -342,6 +387,21 @@ export default function HlavniDashboardPage() {
         <ChartCard title="Cena za objednávku (CPA)"
           data={makeData('cpa')}
           colorA="#7c3aed" colorB="#c4b5fd"
+          yearA={yearA} yearB={yearB}
+          axisFormatter={moneyAxis} tooltipFormatter={fmtMoney}
+        />
+        <ChartCard title="POAS"
+          subtitle={skPoasNote ?? 'Marže / marketingové investice'}
+          subtitleWarning={!!skPoasNote}
+          data={makeData('poas')}
+          colorA="#059669" colorB="#6ee7b7"
+          yearA={yearA} yearB={yearB}
+          axisFormatter={fmtAxisRatio} tooltipFormatter={ratioFmt}
+        />
+        <ChartCard title="LTV (bez DPH)"
+          subtitle="Kumulativně ke konci měsíce: tržby bez DPH / počet zákazníků"
+          data={makeData('ltv')}
+          colorA="#0284c7" colorB="#7dd3fc"
           yearA={yearA} yearB={yearB}
           axisFormatter={moneyAxis} tooltipFormatter={fmtMoney}
         />

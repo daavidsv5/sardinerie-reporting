@@ -1,12 +1,12 @@
 'use client';
 
-import { useMemo } from 'react';
+import { useMemo, type ReactNode, type ComponentProps } from 'react';
 import { useFilters, getDateRange } from '@/hooks/useFilters';
 import { useDashboardData } from '@/hooks/useDashboardData';
 import { mockData } from '@/data/mockGenerator';
 import { marginDataCZ } from '@/data/marginDataCZ';
 import { marginDataSK as _marginDataSK } from '@/data/marginDataSK';
-import { SK_LAUNCH_DATE } from '@/data/types';
+import { SK_LAUNCH_DATE, SK_PURCHASE_COST_FROM } from '@/data/types';
 
 const marginDataSK = _marginDataSK.filter(r => r.date >= SK_LAUNCH_DATE);
 import { retentionDataCZ } from '@/data/retentionDataCZ';
@@ -16,10 +16,11 @@ const retentionDataSK = _retentionDataSK.filter(c => c.dates[0] >= SK_LAUNCH_DAT
 import KpiCard from '@/components/kpi/KpiCard';
 import KpiLineCharts from '@/components/charts/KpiLineCharts';
 import { AovChart, CpaChart } from '@/components/charts/AovCpaChart';
+import PoasChart, { type PoasChartPoint } from '@/components/charts/PoasChart';
 import DailyTable from '@/components/tables/DailyTable';
 import CountryDistribution from '@/components/tables/CountryDistribution';
 import { formatCurrency, formatPercent, formatNumber, formatDate, localIsoDate } from '@/lib/formatters';
-import { Wallet, Banknote, ShoppingCart, BarChart2, TrendingUp, Percent, Tag, Users, Repeat, Scale } from 'lucide-react';
+import { Wallet, Banknote, ShoppingCart, BarChart2, TrendingUp, Percent, Tag, Users, Repeat, Scale, Gauge } from 'lucide-react';
 
 const periodTitles: Record<string, string> = {
   current_year: 'tento rok',
@@ -27,6 +28,25 @@ const periodTitles: Record<string, string> = {
   last_14_days: 'posledních 14 dní',
   custom: 'vlastní období',
 };
+
+function KpiGroup({ title, badge, cards, cols = 'grid-cols-1 sm:grid-cols-2 xl:grid-cols-4' }: {
+  title: string;
+  badge?: string;
+  cards: ComponentProps<typeof KpiCard>[];
+  cols?: string;
+}) {
+  return (
+    <section>
+      <div className="flex items-center gap-2 mb-2">
+        <h2 className="text-xs font-bold text-slate-500 uppercase tracking-wider">{title}</h2>
+        {badge && <span className="text-[10px] font-medium text-slate-500 bg-slate-100 rounded px-1.5 py-0.5">{badge}</span>}
+      </div>
+      <div className={`grid ${cols} gap-3 sm:gap-4`}>
+        {cards.map((card) => <KpiCard key={card.title} {...card} />)}
+      </div>
+    </section>
+  );
+}
 
 export default function DashboardPage() {
   const { filters, eurToCzk } = useFilters();
@@ -94,6 +114,25 @@ export default function DashboardPage() {
   const yoyGrossProfit = hasPrevData && prevGrossProfit !== 0 ? ((grossProfit - prevGrossProfit) / Math.abs(prevGrossProfit)) * 100 : null;
   const yoyGrossPct    = hasPrevData && prevGrossPct !== 0    ? ((grossPct - prevGrossPct) / Math.abs(prevGrossPct)) * 100      : null;
 
+  // POAS = Marže / Marketingové investice (marže z tržeb bez DPH)
+  const poas     = kpi.cost > 0 ? margin / kpi.cost : 0;
+  const prevPoas = (prevKpi?.cost ?? 0) > 0 ? prevMargin / (prevKpi?.cost ?? 0) : 0;
+  const yoyPoas  = hasPrevData && prevPoas !== 0 ? ((poas - prevPoas) / Math.abs(prevPoas)) * 100 : null;
+
+  // POAS po dnech pro graf — marže dne / náklady dne; loňská řada zarovnaná stejně jako v useDashboardData (+1 rok)
+  const poasChartData: PoasChartPoint[] = useMemo(() => {
+    const marginByDate: Record<string, number> = {};
+    const add = (date: string, value: number) => { marginByDate[date] = (marginByDate[date] ?? 0) + value; };
+    if (filters.countries.includes('cz')) for (const r of marginDataCZ) add(r.date, r.revenue - r.purchaseCost);
+    if (filters.countries.includes('sk')) for (const r of marginDataSK) add(r.date, (r.revenue - r.purchaseCost) * skMult);
+    const ratio = (m: number | undefined, cost: number | null) => (cost && cost > 0 && m !== undefined ? m / cost : null);
+    return chartDataExtended.map(d => ({
+      date: d.date,
+      poas:      ratio(marginByDate[d.date], d.cost),
+      poas_prev: ratio(marginByDate[`${Number(d.date.slice(0, 4)) - 1}${d.date.slice(4)}`], d.cost_prev),
+    }));
+  }, [chartDataExtended, filters.countries, skMult]);
+
   const costPerNewCustomer     = newCustomerCounts.cur  > 0 ? kpi.cost / newCustomerCounts.cur  : 0;
   const prevCostPerNewCustomer = newCustomerCounts.prev > 0 ? (prevKpi?.cost ?? 0) / newCustomerCounts.prev : 0;
   const yoyCostPerNewCustomer  = hasPrevData && prevCostPerNewCustomer !== 0
@@ -138,27 +177,52 @@ export default function DashboardPage() {
 
   const fc = (v: number) => formatCurrency(v, currency);
 
-  const kpiCards = [
+  // SK nákupní ceny existují až od SK_PURCHASE_COST_FROM — dřívější SK marže vychází 100 %,
+  // takže metriky z marže (vč. YoY) jsou pro takové období nadhodnocené → upozornění na boxech
+  const skIncluded = filters.countries.includes('sk');
+  const touchesOldSk = (from: Date, to: Date) =>
+    localIsoDate(from) < SK_PURCHASE_COST_FROM && localIsoDate(to) >= SK_LAUNCH_DATE;
+  const skMarginNote = skIncluded && (touchesOldSk(start, end) || (hasPrevData && touchesOldSk(prevStart, prevEnd)))
+    ? 'SK bez nákupních cen před 5/2025 – marže nadhodnocená'
+    : undefined;
+
+  type Card = {
+    title: string; value: string; yoy: number | null; icon: ReactNode;
+    invertColors?: boolean; hasPrevData?: boolean; variant?: 'default' | 'green' | 'red'; note?: string;
+  };
+  const withDefaults = (cards: Card[]) => cards.map(c => ({ hasPrevData, ...c }));
+
+  const revenueCards = withDefaults([
     { title: 'Tržby s DPH',            value: fc(kpi.revenuevat), yoy: yoy.revenuevat, icon: <Wallet size={16} /> },
     { title: 'Tržby bez DPH',          value: fc(kpi.revenue),    yoy: yoy.revenue,    icon: <Banknote size={16} /> },
     { title: 'Počet objednávek',        value: formatNumber(kpi.orders), yoy: yoy.orders, icon: <ShoppingCart size={16} /> },
     { title: 'AOV',                     value: fc(kpi.aov),        yoy: yoy.aov,        icon: <BarChart2 size={16} /> },
+  ]);
+
+  const profitCards = withDefaults([
+    { title: 'Marže',        value: fc(margin),               yoy: yoyMargin,      icon: <Banknote size={16} />,   note: skMarginNote },
+    { title: 'Marže %',      value: formatPercent(marginPct), yoy: yoyMarginPct,   icon: <Percent size={16} />,    note: skMarginNote },
+    { title: 'Hrubý zisk',   value: fc(grossProfit),          yoy: yoyGrossProfit, icon: <TrendingUp size={16} />, variant: 'green', note: skMarginNote },
+    { title: 'Hrubý zisk %', value: formatPercent(grossPct),  yoy: yoyGrossPct,    icon: <BarChart2 size={16} />,  variant: 'green', note: skMarginNote },
+  ]);
+
+  const marketingCards = withDefaults([
     { title: 'Marketingové investice',  value: fc(kpi.cost),       yoy: yoy.cost,       icon: <TrendingUp size={16} />,  invertColors: true },
     { title: 'PNO (%)',                 value: formatPercent(kpi.pno), yoy: yoy.pno,    icon: <Percent size={16} />,     invertColors: true },
+    { title: 'POAS',                    value: kpi.cost > 0 ? `${poas.toFixed(2).replace('.', ',')}×` : '–', yoy: yoyPoas, icon: <Gauge size={16} />, note: skMarginNote },
     { title: 'Cena za objednávku',      value: fc(kpi.cpa),        yoy: yoy.cpa,        icon: <Tag size={16} />,         invertColors: true },
-    { title: 'Marže',                   value: fc(margin),            yoy: yoyMargin,      icon: <Banknote size={16} /> },
-    { title: 'Marže %',                 value: formatPercent(marginPct),       yoy: yoyMarginPct,   icon: <Percent size={16} /> },
-    { title: 'Cena za nového zákazníka', value: newCustomerCounts.cur > 0 ? fc(costPerNewCustomer) : '–', yoy: yoyCostPerNewCustomer, icon: <Users size={16} />, invertColors: true },
-    { title: 'Hrubý zisk na objednávku', value: kpi.orders > 0 ? fc(grossPerOrder) : '–', yoy: yoyGrossPerOrder, icon: <Banknote size={16} /> },
-    { title: 'LTV (bez DPH)',           value: ltvSources.length > 0 ? fc(ltvPerCustomer) : '–', yoy: null, icon: <Repeat size={16} />, hasPrevData: false },
-    { title: 'Ziskové LTV',             value: ltvSources.length > 0 ? fc(ltvProfit) : '–', yoy: null, icon: <TrendingUp size={16} />, hasPrevData: false },
-    { title: 'Poměr LTV a CAC (dle marže)', value: costPerNewCustomer > 0 ? `${ltvCacRatio.toFixed(1)}x` : '–', yoy: null, icon: <Scale size={16} />, hasPrevData: false },
-  ].map(c => ({ hasPrevData, ...c }));
+  ]);
 
-  const grossKpiCards = [
-    { title: 'Hrubý zisk',   value: fc(grossProfit),         yoy: yoyGrossProfit, icon: <TrendingUp size={16} />, variant: 'green' as const, hasPrevData },
-    { title: 'Hrubý zisk %', value: formatPercent(grossPct), yoy: yoyGrossPct,    icon: <BarChart2 size={16} />,  variant: 'green' as const, hasPrevData },
-  ];
+  const unitCards = withDefaults([
+    { title: 'Cena za nového zákazníka', value: newCustomerCounts.cur > 0 ? fc(costPerNewCustomer) : '–', yoy: yoyCostPerNewCustomer, icon: <Users size={16} />, invertColors: true },
+    { title: 'Hrubý zisk na objednávku', value: kpi.orders > 0 ? fc(grossPerOrder) : '–', yoy: yoyGrossPerOrder, icon: <Banknote size={16} />, note: skMarginNote },
+  ]);
+
+  const customerValueCards = withDefaults([
+    { title: 'LTV (bez DPH)',           value: ltvSources.length > 0 ? fc(ltvPerCustomer) : '–', yoy: null, icon: <Repeat size={16} />, hasPrevData: false },
+    { title: 'Ziskové LTV',             value: ltvSources.length > 0 ? fc(ltvProfit) : '–', yoy: null, icon: <TrendingUp size={16} />, hasPrevData: false, note: skMarginNote },
+    { title: 'Poměr LTV a CAC (dle marže)', value: costPerNewCustomer > 0 ? `${ltvCacRatio.toFixed(1)}x` : '–', yoy: null, icon: <Scale size={16} />, hasPrevData: false, note: skMarginNote },
+  ]);
 
   return (
     <div className="space-y-6">
@@ -168,18 +232,15 @@ export default function DashboardPage() {
         <p className="text-sm text-slate-500 mt-0.5">{subtitle}</p>
       </div>
 
-      {/* KPI Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4">
-        {kpiCards.map((card) => (
-          <KpiCard key={card.title} {...card} />
-        ))}
-      </div>
-
-      {/* Hrubý zisk — vlastní řádek */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-        {grossKpiCards.map((card) => (
-          <KpiCard key={card.title} {...card} />
-        ))}
+      {/* KPI Cards — skupiny řazené jako výsledovka */}
+      <div className="space-y-5">
+        <KpiGroup title="Obrat" cards={revenueCards} />
+        <KpiGroup title="Ziskovost" cards={profitCards} />
+        <KpiGroup title="Marketingová efektivita" cards={marketingCards} />
+        <div className="grid grid-cols-1 xl:grid-cols-[2fr_3fr] gap-5 xl:gap-4">
+          <KpiGroup title="Náklady a zisk na objednávku / zákazníka" cards={unitCards} cols="grid-cols-1 sm:grid-cols-2" />
+          <KpiGroup title="Hodnota zákazníka" badge="celé období" cards={customerValueCards} cols="grid-cols-1 sm:grid-cols-2 md:grid-cols-3" />
+        </div>
       </div>
 
       {/* Country Distribution */}
@@ -190,8 +251,9 @@ export default function DashboardPage() {
       {/* KPI line charts — Tržby, Objednávky, Náklady, PNO */}
       <KpiLineCharts data={chartDataExtended} currency={currency} hasPrevData={hasPrevData} isMonthly={isMonthly} />
 
-      {/* AOV + CPA charts */}
+      {/* POAS (5. pozice) + AOV + CPA charts */}
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+        <PoasChart data={poasChartData} hasPrevData={hasPrevData} isMonthly={isMonthly} note={skMarginNote} />
         <AovChart data={chartDataExtended} currency={currency} hasPrevData={hasPrevData} />
         <CpaChart data={chartDataExtended} currency={currency} hasPrevData={hasPrevData} />
       </div>

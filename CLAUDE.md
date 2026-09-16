@@ -95,7 +95,11 @@ Výchozí stránka aplikace (redirect z `/`). Zobrazuje 8 grouped bar chartů s 
 
 **Stav** — spravován v `hooks/useHlavniDashboard.tsx` (`HlavniDashboardProvider` je v `ConditionalLayout`). Stránka stav pouze čte přes `useHlavniDashboard()`, lokální state nepoužívá.
 
-**Grafy (2×4 grid + 1):** Tržby bez DPH (modrá), Hrubý zisk (zelená), Počet objednávek (modrá), Marketingové investice (červená), PNO % (cyan), AOV (indigo), Marže % (zelená), CPA (fialová), **Konverzní poměr** (teal — GA4, CZ+SK). Světlejší barva = starší rok, tmavší = novější rok.
+**Grafy (2 sloupce):** Tržby bez DPH (modrá), Hrubý zisk (zelená), Počet objednávek (modrá), Marketingové investice (červená), PNO % (cyan), AOV (indigo), Marže % (zelená), CPA (fialová), **POAS** (emerald), **LTV (bez DPH)** (sky), Návštěvnost webu + **Konverzní poměr** (GA4, CZ+SK).
+
+**POAS** (měsíc) = `(marginRev − purchaseCost) / cost`. Pokud trh obsahuje SK a srovnávaný rok ≤ 2025, podnadpis zobrazí oranžové upozornění na chybějící SK nákupní ceny před 5/2025 (prop `subtitleWarning` v `ChartCard`).
+
+**LTV (bez DPH)** (měsíc) = kumulativní tržby bez DPH / kumulativní počet zákazníků ke konci měsíce — `monthlyLtv()` nad `computeMonthlyLtvBezDph()` z `lib/retentionUtils.ts` (SK filtrováno přes `SK_LAUNCH_DATE`, při „Vše" SK tržby × `eurToCzk`). Měsíce po posledních datech = 0. Světlejší barva = starší rok, tmavší = novější rok.
 
 **Tooltip s YoY:** Každý graf zobrazuje v tooltipu hodnoty obou roků + řádek `YoY: ±X,X %` (zelená = růst, červená = pokles). Pokud je hodnota předchozího roku 0, YoY se nezobrazí.
 
@@ -150,7 +154,17 @@ Funkce v `lib/formatters.ts` — vrací datum jako `"YYYY-MM-DD"` v **lokálním
 
 ### `/dashboard` — Klíčové ukazatele (KPI)
 
-KPI boxy (14 + 2 ve vlastním řádku): Tržby s/bez DPH, Počet obj., AOV, Marketing. investice, PNO, CPA, Marže, Marže %, Cena za nového zákazníka, Hrubý zisk na objednávku, **LTV (bez DPH)**, **Ziskové LTV**, **Poměr LTV a CAC (dle marže)** + **samostatný řádek: Hrubý zisk, Hrubý zisk %** (variant='green').
+KPI boxy (15) jsou rozdělené do skupin s nadpisem (`KpiGroup` v `app/dashboard/page.tsx`), řazeno jako výsledovka:
+- **Obrat** — Tržby s DPH, Tržby bez DPH, Počet objednávek, AOV
+- **Ziskovost** — Marže, Marže %, Hrubý zisk, Hrubý zisk % (oba `variant='green'`)
+- **Marketingová efektivita** — Marketingové investice, PNO, **POAS**, Cena za objednávku
+- **Náklady a zisk na objednávku / zákazníka** — Cena za nového zákazníka, Hrubý zisk na objednávku
+- **Hodnota zákazníka** (štítek „celé období“) — LTV (bez DPH), Ziskové LTV, Poměr LTV a CAC
+
+**POAS** = `Marže / Marketingové investice` (marže z tržeb bez DPH), formát `2,40×`, s YoY. 1,0× = marketing spotřebuje celou marži.
+
+**Upozornění na staré SK marže:** `marginDataSK` má nákupní ceny až od `SK_PURCHASE_COST_FROM = '2025-05-01'` (`data/types.ts`), dřív `purchaseCost = 0` → marže 100 %. Pokud je ve filtru SK a aktuální nebo srovnávané (YoY) období zasahuje před toto datum, boxy počítané z marže (Marže, Marže %, Hrubý zisk, Hrubý zisk %, POAS, Hrubý zisk na obj., Ziskové LTV, LTV:CAC) zobrazí oranžovou poznámku přes prop `note` v `KpiCard` (nahrazuje patičku).
+
 
 **LTV (bez DPH)** — obratové LTV: `revenues` (bez DPH) / počet zákazníků, z `retentionDataCZ`/`retentionDataSK` (SK filtrováno přes `SK_LAUNCH_DATE`). Počítá se **all-time**, nezávisle na period filtru z TopBaru (stejná logika jako `/retention` — LTV je lifetime metrika). Bez YoY badge (`yoy: null`).
 
@@ -158,7 +172,9 @@ KPI boxy (14 + 2 ve vlastním řádku): Tržby s/bez DPH, Počet obj., AOV, Mark
 
 **Poměr LTV a CAC (dle marže)** = `Ziskové LTV / CAC`, kde CAC = `costPerNewCustomer` (stejná hodnota jako box "Cena za nového zákazníka"). Zobrazeno jako `X.Xx`. Bez YoY badge.
 
-**Grafy (4 celkem, 2×2 mřížka):** Tržby+Objednávky, Náklady+PNO, AOV (YoY), Cena za objednávku/CPA (YoY) — komponenty `AovChart` a `CpaChart` z `components/charts/AovCpaChart.tsx`.
+**Grafy (7 celkem, 2 sloupce):** Tržby bez DPH, Počet objednávek, Náklady, PNO % (`KpiLineCharts`), **POAS (YoY)** na 5. pozici (`components/charts/PoasChart.tsx`), AOV, Cena za objednávku (`AovChart`, `CpaChart` z `components/charts/AovCpaChart.tsx`).
+
+**Graf POAS** — denní (resp. dle osy) `marže dne / náklady dne` z `marginDataCZ`/`marginDataSK`, loňská řada posunutá o +1 rok stejně jako v `useDashboardData`. Dny bez nákladů = `null` (`connectNulls`). Přerušovaná referenční čára na 1,0×. Při staré SK marži zobrazí pod nadpisem stejné oranžové upozornění jako KPI boxy.
 
 **Grafy prodloužené do konce měsíce/roku (`chartDataExtended`, 2026-08):** U otevřených period (`current_month`/`current_year`) `hooks/useDashboardData.ts` vrací kromě `chartData` (jen dny s reálnými daty) i `chartDataExtended` — sjednocení dní aktuálního období s loňskými daty rozšířenými až do konce měsíce/roku, takže loňská (přerušovaná) křivka pokračuje až na konec osy X, zatímco letošní křivka viditelně končí posledním dostupným dnem (pole = `null` pro dny bez letošních dat). `KpiLineCharts.tsx` a `AovCpaChart.tsx` přijímají `ExtendedChartDataPoint[]`; jejich tooltipy filtrují `p.value != null`, aby u budoucích dnů nezobrazily zavádějící „0". Sparklines v KPI kartách nadále používají nerozšířený `chartData`. Stejný princip jako u Celtic-supply reportingu.
 
@@ -320,7 +336,7 @@ Hourly grid na stránce `/behavior` je **all-time agregace** — nezohledňuje v
 
 ### SK marže
 
-Nákupní ceny pro SK nejsou dostupné — `marginDataSK` obsahuje nuly v `costPrice`. Maržový report pro SK je nepřesný.
+Nákupní ceny pro SK jsou v `marginDataSK` až od **května 2025** (`SK_PURCHASE_COST_FROM`). Pro dřívější období je `purchaseCost = 0` a SK marže vychází 100 % — maržové metriky za tato období jsou nadhodnocené.
 
 ### SK launch date
 
