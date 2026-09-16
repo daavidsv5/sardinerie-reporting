@@ -67,6 +67,7 @@ app/(dashboard|orders|marketing|products|margin|analytics|behavior|crosssell|ret
 | `/crosssell` | Cross-sell potenciál — top 100 produktových párů, přepočítáno vždy za vybrané období z TopBaru (selektor trhu skrytý, selektor období aktivní) |
 | `/retention` | Retenční analýza — RFM segmentace (+ měsíční vývoj segmentů), LTV, AOV, repeat purchase rate, měsíční grafy Noví vs. stávající zákazníci (počty + tržby bez DPH, absolutní hodnoty s YoY tooltipem) |
 | `/shipping` | Doprava a platby — KPI vč. zisku/ztráty dopravy + **Doprava zdarma %** (bez Osobního odběru), ceník dopravců (CZ/SK), P&L tabulka per dopravce, **graf Doprava zdarma % v čase** (sloupcový s průměrnou referenční čarou). Layout donutů + tabulek: **pies v řádku 1, tabulky v řádku 2** (4 položky v jednom `grid-cols-2`) — tabulky jsou vždy zarovnané vedle sebe. |
+| `/slovnik` | **Slovník klíčových metrik** — popis, vzorec, orientační benchmark segmentu a aktuální hodnota Sardinerie (12 měsíců) pro každou metriku; vyhledávání + filtr kategorií. Viz sekce níže. |
 | `/login` | Přihlášení (NextAuth) |
 | `/admin/users` | Správa uživatelů (admin only) |
 
@@ -409,6 +410,7 @@ Položky jsou organizovány do skupin `navGroups` se sekčními hlavičkami:
 | Produktová analytika | Produktový žebříček → `/products`, Cross-sell potenciál → `/crosssell`, Stav skladu → `/stock` |
 | Zákazníci a retence | Nákupní chování → `/behavior`, Retenční analýza → `/retention` |
 | Akvizice a kanály | Webová návštěvnost (GA4) → `/analytics`, Meta Ads → `/meta` |
+| Nápověda | Slovník klíčových metrik → `/slovnik` |
 | Admin (admin only) | Správa uživatelů → `/admin/users` |
 
 **Google Ads (rozpracováno):** `app/google-ads/` a `app/api/google-ads/` existují, ale odkaz v sidebaru je dočasně odebraný (sekce zatím není dokončená). Stránka je přístupná přímo přes URL, jen bez navigace. Až bude hotová, přidat zpět položku `{ icon: BarChart, label: 'Google Ads', href: '/google-ads' }` do skupiny „Akvizice a kanály" v `components/layout/Sidebar.tsx`.
@@ -507,3 +509,15 @@ Filtr se aplikuje na: `dailyRes`, agregované totals (současnost i loňsko), `s
 
 Implementačně převzato z Celtic-supply reportingu, kde filtr existoval dřív; nyní shodné
 ve všech 6 projektech.
+
+## `/slovnik` — Slovník klíčových metrik (2026-09-16)
+
+Stránka pro management: u každé metriky **co vyjadřuje**, **jak se počítá** (vzorec odpovídá kódu), **kde se v aplikaci zobrazuje**, **orientační benchmark** segmentu (prémiové rybí konzervy a delikatesy, CZ/SK) a případné **upozornění** k interpretaci.
+
+- **Obsah je v `lib/metricsGlossary.ts`** (`METRICS`, `CATEGORY_LABELS`, `SEGMENT_DESCRIPTION`) — při změně výpočtu metriky v aplikaci aktualizovat i vzorec zde. Stránka `app/slovnik/page.tsx` jen vykresluje.
+- **Kategorie:** Obrat a objednávky, Ziskovost, Marketingová efektivita, Zákazníci a retence, Webová návštěvnost (GA4), Meta Ads, Produkty a doprava. Vyhledávání + filtr kategorií na klientovi.
+- **Hodnota Sardinerie** v pravém horním rohu karty (`current.key` → `useCurrentValues()`): posledních 12 měsíců končících včera, CZ + SK v Kč (`eurToCzk`), stejné vzorce jako `/dashboard`. LTV, míra opakovaného nákupu a Ø dní mezi nákupy jsou all-time. GA4 a Meta metriky hodnotu nemají (data jsou jen přes API).
+- **Štítek „v pořádku“ / „ke sledování“** z číselného benchmarku (`min`/`max`/`better`: higher/lower/range). Benchmarky jsou orientační rozpětí z praxe potravinových e-shopů, ne oficiální statistika — stránka to uvádí v úvodu.
+- **TopBar** na `/slovnik` skrývá selektor trhu i období (`isGlossary`), protože stránka na filtrech nezávisí.
+- **Známé nekonzistence popsané ve slovníku (v kódu neřešeno):** AOV je na `/dashboard` s DPH, na `/hlavni-dashboard` bez DPH; LTV je na `/dashboard` a `/hlavni-dashboard` bez DPH, na `/retention` s DPH.
+- **Rollout na ostatní projekty:** zkopírovat `app/slovnik/page.tsx` + `lib/metricsGlossary.ts`, upravit `SEGMENT_DESCRIPTION`, benchmarky podle segmentu, seznam metrik podle toho, co projekt má (např. Celtic: bez Brandu, 6 trhů; Zboží z Bali: bez marže), a výpočet `useCurrentValues` podle datového zdroje projektu.
