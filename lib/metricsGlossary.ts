@@ -105,7 +105,7 @@ export const METRICS: MetricDefinition[] = [
     where: ['Hlavní Dashboard', 'Hlavní KPI'],
     benchmark: {
       text: 'Specializované potravinové a delikatesní e-shopy mají AOV orientačně 800 až 1 500 Kč s DPH. Důležitější než trh je poměr k hranici dopravy zdarma: AOV by měl být těsně nad ní.',
-      min: 800, max: 1500, better: 'range',
+      min: 800, max: 1500, better: 'higher',
     },
     note: 'Pozor: na Hlavních KPI je AOV s DPH, na Hlavním Dashboardu bez DPH, hodnoty se proto liší zhruba o sazbu DPH.',
     current: { key: 'aov', format: 'currency' },
