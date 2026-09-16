@@ -3,7 +3,7 @@
  *
  * Vzorce odpovídají skutečnému výpočtu v aplikaci (odkazy na soubory v `source`).
  * Benchmarky jsou orientační rozpětí z praxe e-shopů s potravinami / delikatesami v CZ/SK
- * — nejde o oficiální statistiku, slouží k rychlému zasazení čísla do kontextu.
+ * a nejde o oficiální statistiku; slouží k rychlému zasazení čísla do kontextu.
  */
 
 export type MetricCategory =
@@ -48,7 +48,7 @@ export interface MetricDefinition {
   id: string;
   name: string;
   category: MetricCategory;
-  /** Co metrika vyjadřuje (1–3 věty, byznysově) */
+  /** Co metrika vyjadřuje (1 až 3 věty, byznysově) */
   meaning: string;
   /** Vzorec tak, jak se počítá v aplikaci */
   formula: string;
@@ -62,7 +62,7 @@ export interface MetricDefinition {
 
 export const SEGMENT_DESCRIPTION =
   'Sardinerie prodává prémiové rybí konzervy a delikatesy (CZ + SK). Jde o spotřební zboží s nižší až střední hodnotou ' +
-  'objednávky, u kterého rozhoduje opakovaný nákup — proto je vedle akvizičních metrik (PNO, CPA) klíčová marže, POAS a retence.';
+  'objednávky, u kterého rozhoduje opakovaný nákup. Proto je vedle akvizičních metrik (PNO, CPA) klíčová marže, POAS a retence.';
 
 export const METRICS: MetricDefinition[] = [
   // ─── Obrat a objednávky ────────────────────────────────────────────────────
@@ -73,7 +73,7 @@ export const METRICS: MetricDefinition[] = [
     meaning: 'Celková hodnota objednávek, kterou zákazníci zaplatili, včetně DPH. Odpovídá tomu, co vidí zákazník v košíku.',
     formula: 'Σ hodnota objednávek s DPH\n(bez stornovaných a vrácených objednávek)',
     where: ['Hlavní KPI', 'Výkon prodeje'],
-    benchmark: { text: 'Absolutní hodnota nemá tržní benchmark — sledujte meziroční vývoj (YoY) a sezónnost (Vánoce, Velikonoce).' },
+    benchmark: { text: 'Absolutní hodnota nemá tržní benchmark, sledujte meziroční vývoj (YoY) a sezónnost (Vánoce, Velikonoce).' },
     current: { key: 'revenueVat', format: 'currency' },
   },
   {
@@ -83,7 +83,7 @@ export const METRICS: MetricDefinition[] = [
     meaning: 'Obrat, který skutečně zůstává firmě (bez DPH odvedené státu). Je základem pro PNO, marži i hrubý zisk.',
     formula: 'Σ hodnota objednávek bez DPH\n(bez stornovaných a vrácených objednávek)',
     where: ['Hlavní Dashboard', 'Hlavní KPI', 'Výkon prodeje', 'Produktový žebříček'],
-    benchmark: { text: 'Bez tržního benchmarku — hlavní měřítko růstu. Zdravý e-shop v růstové fázi roste meziročně dvouciferně.' },
+    benchmark: { text: 'Bez tržního benchmarku, jde o hlavní měřítko růstu. Zdravý e-shop v růstové fázi roste meziročně dvouciferně.' },
     current: { key: 'revenue', format: 'currency' },
   },
   {
@@ -93,21 +93,21 @@ export const METRICS: MetricDefinition[] = [
     meaning: 'Počet dokončených objednávek. Ukazuje, zda růst tržeb táhne víc nákupů, nebo jen vyšší hodnota košíku.',
     formula: 'Σ objednávek (bez storen)',
     where: ['Hlavní Dashboard', 'Hlavní KPI', 'Výkon prodeje'],
-    benchmark: { text: 'Bez tržního benchmarku — porovnávejte YoY a v poměru k návštěvnosti (konverzní poměr).' },
+    benchmark: { text: 'Bez tržního benchmarku. Porovnávejte YoY a v poměru k návštěvnosti (konverzní poměr).' },
     current: { key: 'orders', format: 'number' },
   },
   {
     id: 'aov',
-    name: 'AOV – průměrná hodnota objednávky',
+    name: 'AOV (průměrná hodnota objednávky)',
     category: 'obrat',
     meaning: 'Kolik zákazník v průměru utratí za jednu objednávku. Vyšší AOV rozkládá náklady na dopravu a marketing na větší částku.',
     formula: 'Hlavní KPI:        Tržby s DPH / Počet objednávek\nHlavní Dashboard:  Tržby bez DPH / Počet objednávek',
     where: ['Hlavní Dashboard', 'Hlavní KPI'],
     benchmark: {
-      text: 'Specializované potravinové a delikatesní e-shopy mají AOV orientačně 800–1 500 Kč s DPH. Důležitější než trh je poměr k hranici dopravy zdarma — AOV by měl být těsně nad ní.',
+      text: 'Specializované potravinové a delikatesní e-shopy mají AOV orientačně 800 až 1 500 Kč s DPH. Důležitější než trh je poměr k hranici dopravy zdarma: AOV by měl být těsně nad ní.',
       min: 800, max: 1500, better: 'range',
     },
-    note: 'Pozor: na Hlavních KPI je AOV s DPH, na Hlavním Dashboardu bez DPH — hodnoty se proto liší zhruba o sazbu DPH.',
+    note: 'Pozor: na Hlavních KPI je AOV s DPH, na Hlavním Dashboardu bez DPH, hodnoty se proto liší zhruba o sazbu DPH.',
     current: { key: 'aov', format: 'currency' },
   },
 
@@ -116,11 +116,11 @@ export const METRICS: MetricDefinition[] = [
     id: 'marze',
     name: 'Marže',
     category: 'ziskovost',
-    meaning: 'Obchodní přirážka v korunách — kolik zbude z tržeb po odečtení nákupní ceny zboží. Z ní se platí marketing, doprava i provoz.',
+    meaning: 'Obchodní přirážka v korunách, tedy kolik zbude z tržeb po odečtení nákupní ceny zboží. Z ní se platí marketing, doprava i provoz.',
     formula: 'Tržby bez DPH − Nákupní cena prodaného zboží',
     where: ['Hlavní KPI', 'Analýza marží'],
-    benchmark: { text: 'Absolutní hodnota bez benchmarku — sledujte YoY a poměr k marketingovým investicím (POAS).' },
-    note: 'SK nemá v datech nákupní ceny před 5/2025 — za starší období vychází SK marže 100 % a je nadhodnocená.',
+    benchmark: { text: 'Absolutní hodnota bez benchmarku, sledujte YoY a poměr k marketingovým investicím (POAS).' },
+    note: 'SK nemá v datech nákupní ceny před 5/2025, za starší období proto vychází SK marže 100 % a je nadhodnocená.',
     current: { key: 'margin', format: 'currency' },
   },
   {
@@ -131,7 +131,7 @@ export const METRICS: MetricDefinition[] = [
     formula: 'Marže / Tržby bez DPH × 100',
     where: ['Hlavní Dashboard', 'Hlavní KPI', 'Analýza marží'],
     benchmark: {
-      text: 'Potraviny a delikatesy v e-commerce orientačně 30–45 %. Prémiové a importované zboží se drží spíš v horní polovině.',
+      text: 'Potraviny a delikatesy v e-commerce orientačně 30 až 45 %. Prémiové a importované zboží se drží spíš v horní polovině.',
       min: 30, max: 45, better: 'higher',
     },
     current: { key: 'marginPct', format: 'percent' },
@@ -140,7 +140,7 @@ export const METRICS: MetricDefinition[] = [
     id: 'hruby-zisk',
     name: 'Hrubý zisk',
     category: 'ziskovost',
-    meaning: 'Co zbude z marže po zaplacení marketingu (příspěvek na úhradu provozu). V aplikaci nejde o účetní hrubý zisk — neodečítá dopravu, platby ani mzdy.',
+    meaning: 'Co zbude z marže po zaplacení marketingu (příspěvek na úhradu provozu). V aplikaci nejde o účetní hrubý zisk, neodečítá dopravu, platby ani mzdy.',
     formula: 'Marže − Marketingové investice',
     where: ['Hlavní Dashboard', 'Hlavní KPI', 'Analýza marží'],
     benchmark: { text: 'Musí být kladný; absolutní výši porovnávejte s fixními náklady firmy (sklad, mzdy, software).' },
@@ -154,7 +154,7 @@ export const METRICS: MetricDefinition[] = [
     formula: 'Hrubý zisk / Tržby bez DPH × 100\n= Marže % − PNO',
     where: ['Hlavní KPI', 'Analýza marží'],
     benchmark: {
-      text: 'Orientačně 15–25 % je zdravé pásmo pro potravinový e-shop. Pod 10 % marketing „sní“ většinu marže.',
+      text: 'Orientačně 15 až 25 % je zdravé pásmo pro potravinový e-shop. Pod 10 % marketing „sní“ většinu marže.',
       min: 15, max: 25, better: 'higher',
     },
     current: { key: 'grossPct', format: 'percent' },
@@ -166,7 +166,7 @@ export const METRICS: MetricDefinition[] = [
     meaning: 'Kolik korun hrubého zisku v průměru přinese jedna objednávka. Z této částky se musí zaplatit balení, doprava zdarma a provoz.',
     formula: 'Hrubý zisk / Počet objednávek',
     where: ['Hlavní KPI'],
-    benchmark: { text: 'Mělo by pokrýt náklady na vychystání a dopravu jedné objednávky (orientačně 80–150 Kč) s rezervou.' },
+    benchmark: { text: 'Mělo by pokrýt náklady na vychystání a dopravu jedné objednávky (orientačně 80 až 150 Kč) s rezervou.' },
     current: { key: 'grossPerOrder', format: 'currency' },
   },
 
@@ -178,18 +178,18 @@ export const METRICS: MetricDefinition[] = [
     meaning: 'Celkové náklady na placenou reklamu za období.',
     formula: 'Σ náklady Google Ads + Meta (Facebook/Instagram) + Sklik',
     where: ['Hlavní Dashboard', 'Hlavní KPI', 'Marketingový Mix & PNO'],
-    benchmark: { text: 'Bez absolutního benchmarku — hodnotí se vždy v poměru k tržbám (PNO) nebo marži (POAS).' },
+    benchmark: { text: 'Bez absolutního benchmarku, hodnotí se vždy v poměru k tržbám (PNO) nebo marži (POAS).' },
     current: { key: 'cost', format: 'currency' },
   },
   {
     id: 'pno',
-    name: 'PNO – podíl nákladů na obratu',
+    name: 'PNO (podíl nákladů na obratu)',
     category: 'marketing',
     meaning: 'Kolik procent z tržeb bez DPH stojí marketing. Nejběžnější metrika efektivity reklamy v Česku.',
     formula: 'Marketingové investice / Tržby bez DPH × 100',
     where: ['Hlavní Dashboard', 'Hlavní KPI', 'Marketingový Mix & PNO'],
     benchmark: {
-      text: 'Potravinové a delikatesní e-shopy orientačně 10–20 %; v akviziční fázi (budování zákaznické báze) i 20–25 %. Tvrdá hranice: PNO musí být nižší než Marže %, jinak marketing prodělává.',
+      text: 'Potravinové a delikatesní e-shopy orientačně 10 až 20 %; v akviziční fázi (budování zákaznické báze) i 20 až 25 %. Tvrdá hranice: PNO musí být nižší než Marže %, jinak marketing prodělává.',
       min: 10, max: 20, better: 'lower',
     },
     note: 'PNO počítá všechny tržby (i organické a opakované nákupy), ne jen tržby přivedené reklamou.',
@@ -197,13 +197,13 @@ export const METRICS: MetricDefinition[] = [
   },
   {
     id: 'poas',
-    name: 'POAS – zisk z investice do reklamy',
+    name: 'POAS (zisk z investice do reklamy)',
     category: 'marketing',
     meaning: 'Kolik korun marže přinese každá koruna vložená do marketingu. Na rozdíl od PNO/ROAS zohledňuje marži, takže lépe ukazuje skutečnou ziskovost reklamy.',
     formula: 'Marže / Marketingové investice',
     where: ['Hlavní Dashboard', 'Hlavní KPI'],
     benchmark: {
-      text: 'Pod 1,0× marketing prodělává marži · 1–2× akviziční / růstová fáze · 2–3× zdravý stav · nad 3× prostor přidat rozpočet.',
+      text: 'Pod 1,0× marketing prodělává marži · 1 až 2× akviziční / růstová fáze · 2 až 3× zdravý stav · nad 3× prostor přidat rozpočet.',
       min: 2, max: 3, better: 'higher',
     },
     note: 'POAS 1,0× = hranice, kdy marketing spotřebuje celou marži. POAS = Marže % / PNO.',
@@ -223,12 +223,12 @@ export const METRICS: MetricDefinition[] = [
   },
   {
     id: 'cpc',
-    name: 'CPC – cena za proklik',
+    name: 'CPC (cena za proklik)',
     category: 'marketing',
     meaning: 'Kolik stojí jeden proklik z reklamy. Sleduje se zvlášť pro Google Ads, Meta a Sklik.',
     formula: 'Náklady kanálu / Počet prokliků kanálu',
     where: ['Marketingový Mix & PNO'],
-    benchmark: { text: 'Potraviny v CZ orientačně: Google Ads 3–10 Kč, Sklik 2–8 Kč, Meta 3–10 Kč. Brandové kampaně bývají výrazně levnější.' },
+    benchmark: { text: 'Potraviny v CZ orientačně: Google Ads 3 až 10 Kč, Sklik 2 až 8 Kč, Meta 3 až 10 Kč. Brandové kampaně bývají výrazně levnější.' },
   },
 
   // ─── Zákazníci a retence ───────────────────────────────────────────────────
@@ -239,8 +239,8 @@ export const METRICS: MetricDefinition[] = [
     meaning: 'Kolik marketingu připadá na jednoho zákazníka, který v období nakoupil poprvé.',
     formula: 'Marketingové investice / Počet nových zákazníků\n(nový = první objednávka vůbec padla do období)',
     where: ['Hlavní KPI', 'Retenční analýza'],
-    benchmark: { text: 'Samostatně bez benchmarku — hodnotí se vůči ziskovému LTV (poměr LTV a CAC).' },
-    note: 'Celé marketingové náklady se dělí jen novými zákazníky, i když část rozpočtu přivádí stávající zákazníky — CAC je tedy spíš horní odhad.',
+    benchmark: { text: 'Samostatně bez benchmarku, hodnotí se vůči ziskovému LTV (poměr LTV a CAC).' },
+    note: 'Celé marketingové náklady se dělí jen novými zákazníky, i když část rozpočtu přivádí stávající zákazníky, CAC je tedy spíš horní odhad.',
     current: { key: 'cac', format: 'currency' },
   },
   {
@@ -250,7 +250,7 @@ export const METRICS: MetricDefinition[] = [
     meaning: 'Průměrný obrat, který e-shop od jednoho zákazníka získal za celou dobu vztahu.',
     formula: 'Σ tržby bez DPH všech zákazníků / Počet zákazníků\n(celé období, nezávisí na filtru období)',
     where: ['Hlavní Dashboard', 'Hlavní KPI'],
-    benchmark: { text: 'U spotřebního zboží by LTV mělo být výrazně vyšší než AOV — orientačně 1,5–2,5násobek AOV bez DPH.' },
+    benchmark: { text: 'U spotřebního zboží by LTV mělo být výrazně vyšší než AOV, orientačně 1,5 až 2,5násobek AOV bez DPH.' },
     note: 'Retenční analýza zobrazuje LTV s DPH (z revsVat), Hlavní KPI a Hlavní Dashboard bez DPH.',
     current: { key: 'ltv', format: 'currency' },
   },
@@ -261,7 +261,7 @@ export const METRICS: MetricDefinition[] = [
     meaning: 'Kolik marže (ne obratu) přinese průměrný zákazník za celou dobu. Říká, kolik maximálně dává smysl zaplatit za jeho získání.',
     formula: 'LTV (bez DPH) × Marže %',
     where: ['Hlavní KPI', 'Retenční analýza'],
-    benchmark: { text: 'Bez samostatného benchmarku — porovnává se s CAC.' },
+    benchmark: { text: 'Bez samostatného benchmarku, porovnává se s CAC.' },
     current: { key: 'ltvProfit', format: 'currency' },
   },
   {
@@ -272,7 +272,7 @@ export const METRICS: MetricDefinition[] = [
     formula: 'Ziskové LTV / CAC',
     where: ['Hlavní KPI', 'Retenční analýza'],
     benchmark: {
-      text: 'Pod 1× akvizice prodělává · 1–3× hraniční · 3× a více zdravý stav (obecně uznávané pravidlo v e-commerce).',
+      text: 'Pod 1× akvizice prodělává · 1 až 3× hraniční · 3× a více zdravý stav (obecně uznávané pravidlo v e-commerce).',
       min: 3, better: 'higher',
     },
     current: { key: 'ltvCac', format: 'ratio' },
@@ -285,7 +285,7 @@ export const METRICS: MetricDefinition[] = [
     formula: 'Zákazníci s 2+ objednávkami / Všichni zákazníci × 100',
     where: ['Retenční analýza'],
     benchmark: {
-      text: 'E-commerce obecně 20–30 %; spotřební potraviny a delikatesy orientačně 25–40 %.',
+      text: 'E-commerce obecně 20 až 30 %; spotřební potraviny a delikatesy orientačně 25 až 40 %.',
       min: 25, max: 40, better: 'higher',
     },
     current: { key: 'repeatRate', format: 'percent' },
@@ -298,7 +298,7 @@ export const METRICS: MetricDefinition[] = [
     formula: 'Průměr mezer mezi po sobě jdoucími objednávkami\n(jen zákazníci s 2+ objednávkami)',
     where: ['Retenční analýza'],
     benchmark: {
-      text: 'Spotřební potraviny s delší trvanlivostí orientačně 60–120 dní.',
+      text: 'Spotřební potraviny s delší trvanlivostí orientačně 60 až 120 dní.',
       min: 60, max: 120, better: 'lower',
     },
     current: { key: 'daysBetween', format: 'days' },
@@ -307,7 +307,7 @@ export const METRICS: MetricDefinition[] = [
     id: 'rfm',
     name: 'RFM segmenty',
     category: 'zakaznici',
-    meaning: 'Rozdělení zákazníků podle toho, jak nedávno (R) a jak často (F) nakupují — na Šampiony, Věrné, Ohrožené, Nové, Jednorázové a Ztracené.',
+    meaning: 'Rozdělení zákazníků podle toho, jak nedávno (R) a jak často (F) nakupují: Šampioni, Věrní, Ohrožení, Noví, Jednorázoví a Ztracení.',
     formula: 'Ztracení:  poslední nákup > 365 dní\nŠampioni:  3+ nákupy a poslední ≤ 90 dní\nVěrní:     2+ nákupy a poslední ≤ 180 dní\nOhrožení:  2+ nákupy a poslední > 180 dní\nNoví:      1 nákup a poslední ≤ 90 dní\nJednorázoví: ostatní',
     where: ['Retenční analýza'],
     benchmark: { text: 'Cílem je růst podílu Šampionů a Věrných a včasná reaktivace Ohrožených (dřív, než přejdou mezi Ztracené).' },
@@ -321,7 +321,7 @@ export const METRICS: MetricDefinition[] = [
     meaning: 'Počet návštěv webu podle Google Analytics 4. Jeden uživatel může mít více návštěv.',
     formula: 'GA4 metrika sessions',
     where: ['Hlavní Dashboard', 'Webová návštěvnost (GA4)'],
-    benchmark: { text: 'Bez tržního benchmarku — sledujte YoY a podíl zdrojů (organika, placené, e-mail, přímé).' },
+    benchmark: { text: 'Bez tržního benchmarku, sledujte YoY a podíl zdrojů (organika, placené, e-mail, přímé).' },
   },
   {
     id: 'cvr',
@@ -330,7 +330,7 @@ export const METRICS: MetricDefinition[] = [
     meaning: 'Jaký podíl návštěv skončí nákupem. Ukazuje kvalitu návštěvnosti i to, jak dobře web prodává.',
     formula: 'Konverze (nákupy) / Sessions × 100',
     where: ['Hlavní Dashboard', 'Webová návštěvnost (GA4)'],
-    benchmark: { text: 'E-commerce obecně 1–3 %; potraviny a delikatesy díky opakovaným nákupům orientačně 2–4 %. Mobil bývá o třetinu až polovinu níž než desktop.' },
+    benchmark: { text: 'E-commerce obecně 1 až 3 %; potraviny a delikatesy díky opakovaným nákupům orientačně 2 až 4 %. Mobil bývá o třetinu až polovinu níž než desktop.' },
   },
   {
     id: 'bounce',
@@ -339,7 +339,7 @@ export const METRICS: MetricDefinition[] = [
     meaning: 'Podíl návštěv bez zapojení (krátká návštěva bez interakce). V GA4 jde o doplněk míry zapojení.',
     formula: '1 − míra zapojení (GA4)',
     where: ['Webová návštěvnost (GA4)'],
-    benchmark: { text: 'E-shopy orientačně 35–55 %. Vysoké hodnoty u konkrétního zdroje nebo vstupní stránky ukazují na nesoulad reklamy a obsahu.' },
+    benchmark: { text: 'E-shopy orientačně 35 až 55 %. Vysoké hodnoty u konkrétního zdroje nebo vstupní stránky ukazují na nesoulad reklamy a obsahu.' },
   },
   {
     id: 'delka-navstevy',
@@ -348,7 +348,7 @@ export const METRICS: MetricDefinition[] = [
     meaning: 'Jak dlouho v průměru návštěva trvá.',
     formula: 'GA4 průměrná délka relace',
     where: ['Webová návštěvnost (GA4)'],
-    benchmark: { text: 'E-shopy orientačně 1,5–3 minuty. Samostatně má omezenou vypovídací hodnotu — čtěte spolu s CVR.' },
+    benchmark: { text: 'E-shopy orientačně 1,5 až 3 minuty. Samostatně má omezenou vypovídací hodnotu, čtěte spolu s CVR.' },
   },
   {
     id: 'checkout-funnel',
@@ -357,7 +357,7 @@ export const METRICS: MetricDefinition[] = [
     meaning: 'Kolik zákazníků, kteří zahájí pokladnu, nákup opravdu dokončí. Odhaluje problémy v dopravě, platbě nebo formuláři.',
     formula: 'purchase / begin_checkout × 100\n(kroky: begin_checkout → add_shipping_info → add_payment_info → purchase)',
     where: ['Webová návštěvnost (GA4)'],
-    benchmark: { text: 'Orientačně 40–60 % dokončených pokladen. Propad hlavně u kroku dopravy obvykle znamená vysokou cenu dopravy.' },
+    benchmark: { text: 'Orientačně 40 až 60 % dokončených pokladen. Propad hlavně u kroku dopravy obvykle znamená vysokou cenu dopravy.' },
   },
 
   // ─── Meta Ads ──────────────────────────────────────────────────────────────
@@ -368,7 +368,7 @@ export const METRICS: MetricDefinition[] = [
     meaning: 'Podíl zobrazení reklamy, na která někdo klikl. Ukazuje, jak kreativa zaujme.',
     formula: 'Kliknutí / Imprese × 100',
     where: ['Meta Ads'],
-    benchmark: { text: 'Potraviny a nápoje na Metě orientačně 0,9–1,6 %. Pod 0,7 % obvykle unavená kreativa nebo špatné cílení.' },
+    benchmark: { text: 'Potraviny a nápoje na Metě orientačně 0,9 až 1,6 %. Pod 0,7 % obvykle unavená kreativa nebo špatné cílení.' },
     note: 'Metriky Meta Ads nezahrnují kampaně MyFish (jsou vyloučené ze všech přehledů).',
   },
   {
@@ -378,7 +378,7 @@ export const METRICS: MetricDefinition[] = [
     meaning: 'Cena jednoho kliknutí na reklamu v Meta Ads.',
     formula: 'Útrata / Kliknutí',
     where: ['Meta Ads'],
-    benchmark: { text: 'CZ/SK potraviny orientačně 3–10 Kč (0,12–0,40 €).' },
+    benchmark: { text: 'CZ/SK potraviny orientačně 3 až 10 Kč (0,12 až 0,40 €).' },
   },
   {
     id: 'meta-cpa',
@@ -397,7 +397,7 @@ export const METRICS: MetricDefinition[] = [
     meaning: 'Kolik korun tržeb připsala Meta každé koruně útraty.',
     formula: 'Hodnota nákupů (purchase value) / Útrata',
     where: ['Meta Ads'],
-    benchmark: { text: 'Potravinové e-shopy orientačně 3–6× (podle Mety). Atribuce Mety bývá nadsazená — ověřujte proti PNO a POAS z e-shopu.' },
+    benchmark: { text: 'Potravinové e-shopy orientačně 3 až 6× (podle Mety). Atribuce Mety bývá nadsazená, ověřujte proti PNO a POAS z e-shopu.' },
   },
 
   // ─── Produkty a doprava ────────────────────────────────────────────────────
@@ -405,10 +405,10 @@ export const METRICS: MetricDefinition[] = [
     id: 'abc',
     name: 'ABC analýza produktů',
     category: 'provoz',
-    meaning: 'Rozdělení produktů podle podílu na tržbách — kam soustředit sklad, reklamu a péči o dostupnost.',
-    formula: 'Produkty seřazené podle tržeb bez DPH, kumulativní podíl:\nA = 0–80 % tržeb · B = 80–95 % · C = 95–100 %',
+    meaning: 'Rozdělení produktů podle podílu na tržbách, podle kterého se určuje, kam soustředit sklad, reklamu a péči o dostupnost.',
+    formula: 'Produkty seřazené podle tržeb bez DPH, kumulativní podíl:\nA = 0 až 80 % tržeb · B = 80 až 95 % · C = 95 až 100 %',
     where: ['Produktový žebříček'],
-    benchmark: { text: 'Typicky tvoří skupina A 15–25 % sortimentu (Paretovo pravidlo). Výrazně menší podíl = riziková závislost na pár produktech.' },
+    benchmark: { text: 'Typicky tvoří skupina A 15 až 25 % sortimentu (Paretovo pravidlo). Výrazně menší podíl = riziková závislost na pár produktech.' },
   },
   {
     id: 'doprava-zdarma',
@@ -417,16 +417,16 @@ export const METRICS: MetricDefinition[] = [
     meaning: 'Podíl doručovaných objednávek, u kterých zákazník za dopravu neplatil.',
     formula: 'Objednávky s dopravou zdarma / Doručované objednávky × 100\n(bez osobního odběru a nedoručovacích metod)',
     where: ['Doprava a platba'],
-    benchmark: { text: 'Orientačně 20–40 %. Vysoký podíl při nízké marži ukrajuje z hrubého zisku — hlídejte hranici dopravy zdarma vůči AOV.' },
+    benchmark: { text: 'Orientačně 20 až 40 %. Vysoký podíl při nízké marži ukrajuje z hrubého zisku, hlídejte hranici dopravy zdarma vůči AOV.' },
   },
   {
     id: 'doprava-zisk',
-    name: 'Doprava – zisk / ztráta',
+    name: 'Doprava: zisk / ztráta',
     category: 'provoz',
     meaning: 'Rozdíl mezi tím, co za dopravu zaplatili zákazníci, a tím, co e-shop zaplatil dopravcům.',
     formula: 'Příjmy za dopravu od zákazníků − Náklady na dopravu (dle ceníku dopravců)',
     where: ['Doprava a platba'],
-    benchmark: { text: 'Mírná ztráta je běžná (doprava zdarma jako marketingový nástroj) — ztráta by ale neměla přesáhnout pár procent tržeb.' },
+    benchmark: { text: 'Mírná ztráta je běžná (doprava zdarma jako marketingový nástroj), ztráta by ale neměla přesáhnout pár procent tržeb.' },
     note: 'Počítá se jen pokud je vyplněný ceník dopravců (uložený v prohlížeči).',
   },
 ];

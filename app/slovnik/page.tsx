@@ -113,14 +113,14 @@ function MetricCard({ metric, value }: { metric: MetricDefinition; value: number
   const verdict = value !== null && metric.current ? evaluate(metric.benchmark, value) : null;
 
   return (
-    <article id={metric.id} className="bg-white rounded-xl border border-slate-100 shadow-sm flex flex-col scroll-mt-24">
-      <header className="px-5 pt-4 pb-3 border-b border-slate-100 flex items-start justify-between gap-3">
+    <article id={metric.id} className="bg-white rounded-2xl border-2 border-blue-800 shadow-sm flex flex-col overflow-hidden scroll-mt-24">
+      <header className="px-5 pt-4 pb-3 bg-slate-50 border-b-2 border-blue-800 flex items-start justify-between gap-3">
         <div className="min-w-0">
           <h3 className="text-base font-semibold text-slate-800">{metric.name}</h3>
           <div className="flex flex-wrap items-center gap-1.5 mt-1.5">
             <MapPin size={12} className="text-slate-400" />
             {metric.where.map(w => (
-              <span key={w} className="text-[11px] text-slate-500 bg-slate-50 border border-slate-100 rounded px-1.5 py-0.5">{w}</span>
+              <span key={w} className="text-[11px] text-slate-600 bg-white border border-slate-200 rounded px-1.5 py-0.5">{w}</span>
             ))}
           </div>
         </div>
@@ -140,18 +140,23 @@ function MetricCard({ metric, value }: { metric: MetricDefinition; value: number
       </header>
 
       <div className="px-5 py-4 space-y-3 text-sm flex-1">
-        <p className="text-slate-600 leading-relaxed">{metric.meaning}</p>
+        <div className="rounded-lg border border-slate-200 px-3 py-2">
+          <p className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-1">
+            <Info size={12} /> Co vyjadřuje
+          </p>
+          <p className="text-slate-600 leading-relaxed">{metric.meaning}</p>
+        </div>
 
-        <div>
+        <div className="rounded-lg border border-slate-200 px-3 py-2">
           <p className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-1">
             <Calculator size={12} /> Výpočet
           </p>
-          <pre className="text-[12.5px] leading-relaxed text-slate-700 bg-slate-50 border border-slate-100 rounded-lg px-3 py-2 whitespace-pre-wrap font-mono">{metric.formula}</pre>
+          <pre className="text-[12.5px] leading-relaxed text-slate-700 bg-slate-50 rounded-md px-2.5 py-1.5 whitespace-pre-wrap font-mono">{metric.formula}</pre>
         </div>
 
         {metric.benchmark && (
-          <div>
-            <p className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-1">
+          <div className="rounded-lg border border-blue-200 bg-blue-50/40 px-3 py-2">
+            <p className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider text-blue-700 mb-1">
               <Target size={12} /> Benchmark
             </p>
             <p className="text-slate-600 leading-relaxed">{metric.benchmark.text}</p>
@@ -208,9 +213,9 @@ export default function SlovnikPage() {
           <p>{SEGMENT_DESCRIPTION}</p>
           <p className="text-slate-500">
             <strong className="font-semibold text-slate-600">Hodnota Sardinerie</strong> u metrik = posledních 12 měsíců
-            ({formatDate(start)} – {formatDate(end)}), CZ + SK přepočtené do Kč. Metriky zákazníků (LTV, míra opakovaného nákupu)
+            (od {formatDate(start)} do {formatDate(end)}), CZ + SK přepočtené do Kč. Metriky zákazníků (LTV, míra opakovaného nákupu)
             jsou za celou historii. <strong className="font-semibold text-slate-600">Benchmarky jsou orientační</strong> rozpětí
-            z praxe e-shopů s potravinami a delikatesami v CZ/SK, ne oficiální statistika — štítek „ke sledování“ neznamená chybu,
+            z praxe e-shopů s potravinami a delikatesami v CZ/SK, ne oficiální statistika. Štítek „ke sledování“ neznamená chybu,
             jen že hodnota leží mimo běžné pásmo.
           </p>
         </div>
