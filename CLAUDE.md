@@ -519,7 +519,21 @@ Stránka pro management: u každé metriky **co vyjadřuje**, **jak se počítá
 - **Hodnota Sardinerie** v pravém horním rohu karty (`current.key` → `useCurrentValues()`): posledních 12 měsíců končících včera, CZ + SK v Kč (`eurToCzk`), stejné vzorce jako `/dashboard`. LTV, míra opakovaného nákupu a Ø dní mezi nákupy jsou all-time. GA4 a Meta metriky hodnotu nemají (data jsou jen přes API).
 - **Štítek „v pořádku“ / „ke sledování“** z číselného benchmarku (`min`/`max`/`better`: higher/lower/range). Benchmarky jsou orientační rozpětí z praxe potravinových e-shopů, ne oficiální statistika — stránka to uvádí v úvodu.
 - **Vzhled:** každá metrika je ohraničený box (`border-2 border-blue-800`, stejně jako KPI karty) s hlavičkou (název, kde se zobrazuje, hodnota Sardinerie) a třemi vnitřními rámečky: Co vyjadřuje, Výpočet, Benchmark (modrý); případné upozornění oranžově.
-- **Texty bez pomlček** (na přání uživatele): rozpětí se píše „10 až 20 %“, vsuvky čárkou nebo dvojtečkou, název metriky se zkratkou jako „PNO (podíl nákladů na obratu)“. Matematické minus (−) ve vzorcích zůstává.
+- **Texty bez pomlček a bez dvojteček** (na přání uživatele): rozpětí se píše „10 až 20 %“, vsuvky čárkou, název metriky se zkratkou jako „PNO (podíl nákladů na obratu)“. Ve vzorcích se místo dvojtečky používá „=“ nebo závorka, matematické minus (−) zůstává.
 - **TopBar** na `/slovnik` skrývá selektor trhu i období (`isGlossary`), protože stránka na filtrech nezávisí.
 - **Známé nekonzistence popsané ve slovníku (v kódu neřešeno):** AOV je na `/dashboard` s DPH, na `/hlavni-dashboard` bez DPH; LTV je na `/dashboard` a `/hlavni-dashboard` bez DPH, na `/retention` s DPH.
 - **Rollout na ostatní projekty:** zkopírovat `app/slovnik/page.tsx` + `lib/metricsGlossary.ts`, upravit `SEGMENT_DESCRIPTION`, benchmarky podle segmentu, seznam metrik podle toho, co projekt má (např. Celtic: bez Brandu, 6 trhů; Zboží z Bali: bez marže), a výpočet `useCurrentValues` podle datového zdroje projektu.
+
+## `/rocni-prehled` — Roční přehled (2026-09-24)
+
+Převzato z Úlevy pro nohy (pilot). Stejné metriky jako **Měsíční přehled** (/hlavni-dashboard, dřív „Hlavní Dashboard“), ale osa X = roky: jeden sloupec na rok, poslední vybraný rok tmavší, nad sloupcem změna proti předchozímu roku.
+
+- **Období:** minulé roky celé, aktuální rok od 1. 1. do cutoffu. Cutoff = den před `lastUpdate` (`CUTOFF_DATE` v `lib/rocniPrehled.ts`), při denní aktualizaci = včerejšek.
+- **Změna:** minulé roky celý rok proti celému předchozímu roku; **aktuální rok proti loňsku za 1. 1. až cutoff** (režim `ytd`, u GA4 samostatný dotaz `period=ytd`). PNO, Marže %, CVR v p. b., ostatní v %. U PNO, CPA a nákladů je pokles zelený. Tooltip uvádí srovnávané období.
+- **Roky:** jen roky s objednávkami (`getYearInfos()`). Rok bez objednávek od 1. 1. je `partial` — ve výchozím výběru není, v TopBaru s hvězdičkou, změna se u něj ani u následujícího roku nepočítá. Neúplnost se počítá pro aktuálně vybraný trh.
+- **TopBar:** vícenásobný výběr roků + přepínač trhu Vše / CZ / SK (sdílený s Měsíčním přehledem přes `useHlavniDashboard().market`). Stav v `hooks/useRocniPrehled.tsx` (provider v `ConditionalLayout`).
+- **Výpočty:** `aggregateMonthly()` a `monthlyLtv()` byly přesunuty z `app/hlavni-dashboard/page.tsx` do `lib/hlavniDashboardData.ts` (parametr `dateFilter`), Roční přehled sčítá měsíce přes `sumKpiRows()`. Ve „Vše“ se SK přepočítá na Kč (`eurToCzk`), samotné SK je v EUR. Poměrové metriky se počítají ze součtů za rok přes `deriveKpi()` v `lib/kpiMetrics.ts`, nikdy průměrem měsíců. LTV = stav ke konci období (měsíční granularita, `ltvAtPeriodEnd()`).
+- **Graf:** `components/charts/YearChartCard.tsx` (`YearChartCard`, `buildYearPoints`, formátování, `DeviceSelect`).
+- **GA4:** `app/api/analytics/yearly/route.ts?years=&cutoff=&period=&device=&country=` — jeden `runReport` na rok a property, metrika `conversions`, ve „Vše“ součet CZ + SK property.
+- **Sidebar:** Roční přehled je první ve skupině „Strategický přehled“, pod ním Měsíční přehled (URL `/hlavni-dashboard` beze změny).
+- Oranžové upozornění u Hrubého zisku, Marže % a POAS, pokud je ve výběru SK a rok ≤ 2025 (`SK_PURCHASE_COST_FROM`).

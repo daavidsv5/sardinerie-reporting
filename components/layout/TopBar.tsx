@@ -10,6 +10,7 @@ import { RefreshCw, Menu } from 'lucide-react';
 import { useSidebar } from './ConditionalLayout';
 import { lastUpdate } from '@/data/lastUpdate';
 import { useHlavniDashboard, HlavniMarket } from '@/hooks/useHlavniDashboard';
+import { useRocniPrehled } from '@/hooks/useRocniPrehled';
 
 interface TopBarProps {
   filters: FilterState;
@@ -39,8 +40,10 @@ export default function TopBar({ filters, onChange }: TopBarProps) {
   const isRetention = pathname === '/retention' || pathname === '/crosssell';
   const hideAll = pathname === '/shipping' || pathname === '/analytics' || pathname === '/meta';
   const isHlavniDashboard = pathname === '/hlavni-dashboard';
+  const isRocniPrehled = pathname === '/rocni-prehled';
   const isGlossary = pathname === '/slovnik';
   const dash = useHlavniDashboard();
+  const rocni = useRocniPrehled();
 
   const handleUpdate = async () => {
     setUpdating(true);
@@ -83,7 +86,7 @@ export default function TopBar({ filters, onChange }: TopBarProps) {
           <Menu size={20} />
         </button>
 
-        {/* ── Hlavní Dashboard selectors ── */}
+        {/* ── Měsíční přehled (/hlavni-dashboard) selectors ── */}
         {isHlavniDashboard ? (
           <>
             {/* Market toggle */}
@@ -135,6 +138,60 @@ export default function TopBar({ filters, onChange }: TopBarProps) {
                 ))}
               </div>
               <span className="text-xs text-slate-400 hidden sm:inline">vs. {dash.yearB}</span>
+            </div>
+          </>
+        ) : isRocniPrehled ? (
+          <>
+            {/* Market toggle */}
+            <div className="flex items-center gap-1.5 flex-shrink-0">
+              <div className="flex rounded-lg border border-slate-200 overflow-hidden bg-white">
+                {([
+                  { label: 'Vše', value: 'all' },
+                  { label: '🇨🇿 CZ', value: 'cz' },
+                  { label: '🇸🇰 SK', value: 'sk' },
+                ] as { label: string; value: HlavniMarket }[]).map(({ label, value }, idx) => (
+                  <button
+                    key={value}
+                    onClick={() => dash.setMarket(value)}
+                    className={`px-2.5 md:px-4 py-1.5 text-sm font-medium transition-colors focus:outline-none ${
+                      idx > 0 ? 'border-l border-slate-200' : ''
+                    } ${
+                      dash.market === value
+                        ? 'bg-blue-600 text-white'
+                        : 'text-slate-600 hover:bg-slate-50'
+                    }`}
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Roční přehled: výběr roků (více voleb) */}
+            <div className="flex items-center gap-1.5 flex-shrink-0">
+              <span className="text-xs text-slate-400 font-medium hidden sm:inline">Roky:</span>
+              <div className="flex rounded-lg border border-slate-200 overflow-hidden bg-white">
+                {rocni.yearInfos.map(({ year, partial }, idx) => {
+                  const active = rocni.selectedYears.includes(year);
+                  return (
+                    <button
+                      key={year}
+                      onClick={() => rocni.toggleYear(year)}
+                      aria-pressed={active}
+                      title={partial ? 'Neúplný rok, objednávky nejsou od 1. 1.' : undefined}
+                      className={`px-2.5 md:px-4 py-1.5 text-sm font-medium transition-colors focus:outline-none ${
+                        idx > 0 ? 'border-l border-slate-200' : ''
+                      } ${
+                        active
+                          ? 'bg-blue-600 text-white'
+                          : 'text-slate-600 hover:bg-slate-50'
+                      }`}
+                    >
+                      {year}{partial ? '*' : ''}
+                    </button>
+                  );
+                })}
+              </div>
             </div>
           </>
         ) : isGlossary ? null : (

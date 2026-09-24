@@ -7,101 +7,16 @@ import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
   Legend, ResponsiveContainer,
 } from 'recharts';
-import { mockData } from '@/data/mockGenerator';
-import { marginDataCZ } from '@/data/marginDataCZ';
-import { marginDataSK as _marginDataSK } from '@/data/marginDataSK';
 import { useFilters } from '@/hooks/useFilters';
 import { useHlavniDashboard } from '@/hooks/useHlavniDashboard';
-import { retentionDataCZ } from '@/data/retentionDataCZ';
-import { retentionDataSK as _retentionDataSK } from '@/data/retentionDataSK';
-import { computeMonthlyLtvBezDph } from '@/lib/retentionUtils';
-import { SK_LAUNCH_DATE, SK_PURCHASE_COST_FROM } from '@/data/types';
+import { aggregateMonthly, monthlyLtv } from '@/lib/hlavniDashboardData';
+import { deriveKpi } from '@/lib/kpiMetrics';
+import { SK_PURCHASE_COST_FROM } from '@/data/types';
 import type { Country } from '@/data/types';
-
-const marginDataSK = _marginDataSK.filter(r => r.date >= SK_LAUNCH_DATE);
-const retentionDataSK = _retentionDataSK.filter(c => c.dates[0] >= SK_LAUNCH_DATE);
 
 // ─── Constants ───────────────────────────────────────────────────────────────
 
 const MONTHS_CS = ['Led', 'Úno', 'Bře', 'Dub', 'Kvě', 'Čvn', 'Čvc', 'Srp', 'Zář', 'Říj', 'Lis', 'Pro'];
-
-// ─── Data aggregation ────────────────────────────────────────────────────────
-
-interface MonthlyRow {
-  revenue: number;
-  orders: number;
-  cost: number;
-  purchaseCost: number;
-  marginRev: number;
-}
-
-function aggregateMonthly(
-  year: number,
-  countries: Country[],
-  eurToCzk: number,
-): MonthlyRow[] {
-  const isSKOnly = countries.length === 1 && countries[0] === 'sk';
-  const months: MonthlyRow[] = Array.from({ length: 12 }, () => ({
-    revenue: 0, orders: 0, cost: 0, purchaseCost: 0, marginRev: 0,
-  }));
-
-  for (const r of mockData) {
-    if (!countries.includes(r.country)) continue;
-    const [y, m] = r.date.split('-').map(Number);
-    if (y !== year) continue;
-    const mult = r.country === 'sk' && !isSKOnly ? eurToCzk : 1;
-    const i = m - 1;
-    months[i].revenue += r.revenue * mult;
-    months[i].orders  += r.orders;
-    months[i].cost    += r.cost * mult;
-  }
-
-  if (countries.includes('cz')) {
-    for (const r of marginDataCZ) {
-      const [y, m] = r.date.split('-').map(Number);
-      if (y !== year) continue;
-      months[m - 1].purchaseCost += r.purchaseCost;
-      months[m - 1].marginRev    += r.revenue;
-    }
-  }
-
-  if (countries.includes('sk')) {
-    const mult = isSKOnly ? 1 : eurToCzk;
-    for (const r of marginDataSK) {
-      const [y, m] = r.date.split('-').map(Number);
-      if (y !== year) continue;
-      months[m - 1].purchaseCost += r.purchaseCost * mult;
-      months[m - 1].marginRev    += r.revenue * mult;
-    }
-  }
-
-  return months;
-}
-
-/** LTV (bez DPH) ke konci každého měsíce roku — kumulativní tržby bez DPH / kumulativní počet zákazníků
- *  (stejná definice jako box „LTV (bez DPH)" na /dashboard). Měsíce před prvními a po posledních datech = 0. */
-function monthlyLtv(year: number, countries: Country[], eurToCzk: number): number[] {
-  const isSKOnly = countries.length === 1 && countries[0] === 'sk';
-  const customers = [
-    ...(countries.includes('cz') ? retentionDataCZ : []),
-    ...(countries.includes('sk')
-      ? retentionDataSK.map(c => isSKOnly ? c : { ...c, revenues: c.revenues.map(v => v * eurToCzk) })
-      : []),
-  ];
-  const points = computeMonthlyLtvBezDph(customers);
-  if (points.length === 0) return Array(12).fill(0);
-  const lastMonth = points[points.length - 1].date.slice(0, 7);
-  return Array.from({ length: 12 }, (_, i) => {
-    const month = `${year}-${String(i + 1).padStart(2, '0')}`;
-    if (month > lastMonth) return 0;
-    let value = 0;
-    for (const p of points) {
-      if (p.date.slice(0, 7) > month) break;
-      value = p.ltvBezDph;
-    }
-    return value;
-  });
-}
 
 // ─── Formatters ──────────────────────────────────────────────────────────────
 
@@ -299,21 +214,21 @@ export default function HlavniDashboardPage() {
   const ltvB = useMemo(() => monthlyLtv(yearB, countries, eurToCzk), [yearB, countries, eurToCzk]);
 
   const chartData = useMemo(() => MONTHS_CS.map((month, i) => {
-    const a = monthsA[i];
-    const b = monthsB[i];
+    const a = deriveKpi(monthsA[i]);
+    const b = deriveKpi(monthsB[i]);
+    const pair = (k: keyof typeof a) => ({ a: a[k], b: b[k] });
     return {
       month,
-      revenue:     { a: a.revenue,                                                           b: b.revenue },
-      grossProfit: { a: a.marginRev - a.purchaseCost - a.cost,                               b: b.marginRev - b.purchaseCost - b.cost },
-      orders:      { a: a.orders,                                                             b: b.orders },
-      cost:        { a: a.cost,                                                               b: b.cost },
-      pno:         { a: a.revenue > 0 ? (a.cost / a.revenue) * 100 : 0,                     b: b.revenue > 0 ? (b.cost / b.revenue) * 100 : 0 },
-      aov:         { a: a.orders > 0 ? a.revenue / a.orders : 0,                             b: b.orders > 0 ? b.revenue / b.orders : 0 },
-      marginPct:   { a: a.marginRev > 0 ? ((a.marginRev - a.purchaseCost) / a.marginRev) * 100 : 0,
-                     b: b.marginRev > 0 ? ((b.marginRev - b.purchaseCost) / b.marginRev) * 100 : 0 },
-      cpa:         { a: a.orders > 0 ? a.cost / a.orders : 0,                               b: b.orders > 0 ? b.cost / b.orders : 0 },
-      poas:        { a: a.cost > 0 ? (a.marginRev - a.purchaseCost) / a.cost : 0,             b: b.cost > 0 ? (b.marginRev - b.purchaseCost) / b.cost : 0 },
-      ltv:         { a: ltvA[i],                                                              b: ltvB[i] },
+      revenue:     pair('revenue'),
+      grossProfit: pair('grossProfit'),
+      orders:      pair('orders'),
+      cost:        pair('cost'),
+      pno:         pair('pno'),
+      aov:         pair('aov'),
+      marginPct:   pair('marginPct'),
+      cpa:         pair('cpa'),
+      poas:        pair('poas'),
+      ltv:         { a: ltvA[i], b: ltvB[i] },
     };
   }), [monthsA, monthsB, ltvA, ltvB]);
 
@@ -334,7 +249,7 @@ export default function HlavniDashboardPage() {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-xl font-bold text-slate-900">Hlavní Dashboard</h1>
+        <h1 className="text-xl font-bold text-slate-900">Měsíční přehled</h1>
         <p className="text-sm text-slate-500 mt-0.5">
           Měsíční přehled klíčových metrik · srovnání s předchozím rokem
         </p>
